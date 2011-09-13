@@ -1,6 +1,3 @@
-/cache/*/
-/cache/*.ini
-/cache/*.php
 *vanillaforums*
 /applications/wiki*
 /uploads/*/
