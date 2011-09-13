@@ -14,16 +14,20 @@ $(document).ready(function() {
 	$('table.Heading').click(function() {
 		$(this).next('ol').toggle('fast');
 	});
-	$('.TabButton').hover(function() {
-		$(this).next('ul').show();
-	}, function() {
-		$(this).next('ul').hover(function() {
-			$(this).show();
-		}, function() {
-			$(this).hide();
-		});
-		$(this).next('ul').hide();
-	});
+	var toggle = function(direction, display) {
+    return function() {
+      var self = this;
+      var ul = $("ul", this);
+      if( ul.css("display") == display && !self["block" + direction] ) {
+        self["block" + direction] = true;
+        ul["slide" + direction]("fast", function() {
+          self["block" + direction] = false;
+        });
+      }
+    };
+  }
+  $("li.Navigation").hover(toggle("Down", "none"), toggle("Up", "block"));
+  $("li.Navigation ul").hide();
 /*--------------------------------- Functions -----------------------------------*/
 
 /*--------------------------------- QTips ---------------------------------------*/

@@ -151,7 +151,6 @@ class ItemController extends GalleriesController {
 	/*
 	 * Render function for upload page
 	 */
-
 	public function Upload($Args) {
 
 		$this->Permission('Gallery.Items.Upload');

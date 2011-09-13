@@ -1868,14 +1868,15 @@ div.Tabs li a:visited {
    -moz-border-radius: 3px;
    -webkit-border-radius: 3px;
    background: url('images/grey_in_40.png') repeat-x center center;
-   display: inline;
+   display: inline-block;
    font-weight: bold;
    color: #6c6c6c;
    text-decoration: none;
    padding: 5px 10px;
-	line-height: 2.6;
-   height: 30px;
-   width: 200px;
+	line-height: 1.2;
+   height: 17px;
+   min-width: 100px;
+   text-align: center;
 }
 div.Tabs li a.Active {
     background: transparent;

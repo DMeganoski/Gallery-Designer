@@ -1,5 +1,6 @@
 <?php if (!defined('APPLICATION')) exit();
 $ActiveClass = GalleryController::$Class;
+$ActiveCategory = GalleryController::$Category;
 ?>
 <div class="Tabs">
     <ul>
@@ -12,17 +13,23 @@ $ActiveClass = GalleryController::$Class;
 				} else {
 					$CSS = 'Depth';
 				}
-			echo '<li'.($this->RequestMethod == '' ? ' class="Gallery Images '.$CSS.'"' : '').'>'
-					.Anchor(T($Label), 'gallery'.DS.$Label, 'TabButton Home');
+			echo '<li'.($this->RequestMethod == '' ? ' class="Navigation Images '.$CSS.'"' : '').'>'
+					.'<a href="/gallery/'.$Label.'" class="TabButton">'.T($Label).'</a>';
 			}
 			?><ul class="Sublist"><?
 			$Categories = $this->GetCategories($Label);
 			foreach ($Categories as $Category) {
-				echo '<li class="Gallery Images">'.Anchor(T($Category->CategoryLabel), 'gallery'.DS.$Label.DS.$Category->CategoryLabel).'</li>';
+				if ($Category->Visible == '1') {
+					if ($Category->Label == $ActiveCategory) {
+						$CatCSS = 'Active';
+					} else {
+						$CatCSS = 'Depth';
+					}
+					echo '<li>'.Anchor(T($Category->CategoryLabel), 'gallery'.DS.$Label.DS.$Category->CategoryLabel).'</li>';
+				}
 			}
-			echo '</ul></li>';
+			?></ul></li><?
 		}
-        ?>
-    </ul>
+    ?></ul>
 </div>
 

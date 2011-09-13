@@ -39,21 +39,35 @@ img.FireEvent {
 .ClearFix {
 	clear: both;
 }
+/*------------------Tabs and SubTabs -----------------*/
+div.Tabs {
+	z-index: 140;
+}
 div.Tabs li.Home a {
     margin: 0 5px 0 0;
 }
-/*------------------Tabs and SubTabs -----------------*/
+div.Tabs li.Navigation {
+	position: relative;
+}
 ul.Sublist {
+	background: url("/themes/TinsDirect/design/images/grey_out_40.png") repeat-x bottom #FFF;
 	position: absolute;
+	top: 25px;
+	left: 0;
+	min-width: 120px;
+	padding: 3px;
 	z-index: 120;
-	t
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 ul.Sublist li {
-	display: inline-block;
+	display: block;
 }
-ul.sublist li a {
+ul.Sublist li a {
+	display: block;
 	border: 1px solid #CCC;
-	padding: 4px;
+	padding: 0px;
 }
 /*----------------- Side Panel --------------------*/
 h4#CategoryLabel,
