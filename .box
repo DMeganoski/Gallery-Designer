@@ -1,0 +1,2 @@
+php_extensions: [pdo_mysql, pdo, curl, gd]
+shared_writable_dirs: [/cache, /conf, /uploads]
