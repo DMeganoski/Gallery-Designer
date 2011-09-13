@@ -1,0 +1,22 @@
+/*
+    Document   : settings
+    Created on : Sep 12, 2011, 12:19:56 PM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+div#Project {
+	border: 1px solid #CCC;
+}
+div#Project h2 {
+	font-size: medium;
+}

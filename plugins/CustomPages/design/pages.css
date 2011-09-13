@@ -1,0 +1,20 @@
+/* 
+    Document   : pages
+    Created on : Jun 23, 2011, 9:00:53 AM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+H2 {
+    color: #CC0000
+}
+

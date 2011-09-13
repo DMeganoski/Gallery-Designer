@@ -1,0 +1,143 @@
+/*
+    Document   : gallerycustom
+    Created on : Aug 22, 2011, 9:12:24 AM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+/*------------------- For Custom Pages -------------------*/
+/*------------------- Multiple Uses ----------------------*/
+div#Custom ul.Sublist li,
+div#Custom ul.HowTo li {
+   margin: 10px 0;
+    border: 1px solid #CCC;
+	width: 100%;
+}
+div#Custom li a {
+	text-decoration: underline;
+}
+/*------------------- Home Class -------------------------*/
+div.AnimationWrapper {
+	position: relative;
+}
+div.Welcome {
+    position: absolute;
+    width: 340px;
+    top: 10px;
+    right: 50px;
+    float: left;
+    color: #FFF;
+}
+div.Welcome h1 {
+    color: #0063dc;
+    border: none;
+    font-size: 22px;
+    margin: 0 0 23px;
+}
+div.Welcome p {
+    padding: 0 0px 0 0;
+    color: #FFF;
+    border: none;
+}
+div#AnimationWrapper
+div#Animation {
+    width: 355px;
+    height: 240px;
+    background: url('/themes/TinsDirect/design/images/animation.gif') no-repeat left top;
+    float: left;
+}
+/*------------------ How It Works Page -------------------*/
+div.ListWrapper {
+	border: 1px solid #CCC;
+	margin: 10px 50px;
+	padding: 0 30px 0 10px;
+}
+div#Custom h2.Step {
+	cursor: pointer;
+	padding: 5px;
+}
+div#Custom ul.HowTo li.Special {
+	color: #FFF;
+}
+div#Custom ul.HowTo li.Classic {
+	background: #A27D35;
+}
+div#Custom ul.HowTo li.Future {
+	background: #0066ff;
+}
+/*------------------- Download Choices -------------------*/
+div#Custom ul.Downloads{
+    padding-left: 100px;
+    padding-right: 100px;
+}
+div.Format {
+	width: 400px;
+	margin: 10px auto;
+	padding: 10px;
+	border: 1px solid #CCC;
+}
+div.Format h2.Format {
+		cursor: pointer;
+}
+div.Format li.File a {
+	font-weight: bold;
+	width: 100%;
+}
+div.Options a {
+    border: 1px solid #CCC;
+    padding: 2px 4px;
+    -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   border-radius: 3px;
+}
+div.Options li {
+    margin: 5px 3px;
+    list-style: none;
+}
+div.Box li a {
+
+}
+/*------------------- Pricing Page -------------------------*/
+table {
+	padding: 5px;
+   border: 1px solid #CCC;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   color: #333;
+}
+td.Head {
+   font-weight: bold;
+
+}
+td.Price {
+   border-left: 1px solid;
+   border-bottom: 1px solid;
+   border-color: #CCC;
+   min-width: 50px;
+   text-align: center;
+}
+td.Label {
+}
+td.Main {
+   font-weight: bold;
+   border-top: 1px solid;
+   border-bottom: 1px solid;
+   border-color: #333;
+   padding: 0px 5px;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+}
+
+/*------------- Unsorted ---------------*/
+
+div.PriceLink a.BigButton {
+   width: 248px;
+   margin: 0px auto;
+}

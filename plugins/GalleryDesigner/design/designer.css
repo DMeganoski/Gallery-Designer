@@ -1,0 +1,70 @@
+/*
+    Document   : design
+    Created on : Aug 5, 2011, 3:16:35 PM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+/*------------------- Frame Choices --------------------*/
+div#FrameWrapper {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	width: 340px;
+	min-height: 340px;
+}
+.webkit div#FrameWrapper {
+	top: 195px;
+}
+ul.Frames {
+
+}
+li#Click {
+	border: 1px solid #CCC;
+	cursor: pointer;
+	float: left;
+	padding: 3px 5px;
+	width: 140px;
+}
+div#Custom li.Active {
+	color: #0063DC;
+	box-shadow: 0px 0px 3px #333;
+-moz-box-shadow: 0px 0px 3px #333;
+-webkit-box-shadow: 0px 0px 3px #333;
+}
+li#Click:hover {
+	color: #0063DC;
+	box-shadow: 0px 0px 3px #333;
+-moz-box-shadow: 0px 0px 3px #333;
+-webkit-box-shadow: 0px 0px 3px #333;
+}
+div.PewterFrame {
+	background: url('/uploads/item/frames/pewter.png') no-repeat center center;
+}
+div.GoldEmblemFrame {
+	background: url('/uploads/item/frames/goldemblem.png') no-repeat center center;
+}
+div.TraditionalFrame {
+	background: url('/uploads/item/frames/traditional.png') no-repeat center center;
+}
+div.ModernFrame {
+	background: url('/uploads/item/frames/modern.png') no-repeat center center;
+}
+div.WoodFrame {
+	background: url('/uploads/item/frames/wood.png') no-repeat center center;
+}
+div.GoldLeafFrame {
+	background: url('/uploads/item/frames/goldleaf.png') no-repeat center center;
+}
+li.Selection {
+	clear: both;
+}

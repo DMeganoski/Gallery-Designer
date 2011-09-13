@@ -1,0 +1,243 @@
+/*
+    Document   : galleries
+    Created on : Jun 23, 2011, 9:00:53 AM
+    Author     : ZodiacDM
+    Description: The main stylesheet for the galleries application.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+p {
+    color: #666666;
+    padding: 10px;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+
+}
+div#Custom p a {
+    text-decoration: underline;
+}
+h1 {
+    color: #000FFF;
+    margin: 5px 0;
+    padding: 10px 0 10px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #CCC;
+    text-align: center;
+}
+h2 {
+    color: #FF6600;
+    margin: 5px 0;
+    border: none;
+    text-align: center;
+}
+div#Custom {
+    float: left;
+   height: auto;
+   width: 100%;
+   text-align: left;
+   vertical-align: bottom;
+   z-index: 20;
+}
+
+div#Custom li {
+    margin: 5px;
+    color: #6C6C6C;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+    list-style: none;
+}
+div#Custom li.Category {
+    border: 1px solid #CCC;
+}
+/* How it works page */
+div#Custom ul.HowTo {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+div#Custom ul.HowTo li {
+    border: 1px solid #CCC;
+       float: left;
+       width: 100%;
+
+}
+div#Custom ul.HowTo li.Format {
+   list-style: decimal;
+}
+div#Custom ul.HowTo li.Sizes {
+   width: 50px;
+   float: left;
+}
+div#Custom ul.HowTo li.File {
+   width: 50px;
+   float: left;
+
+}
+div.Tabs li.Home a {
+    margin: 0 5px 0 0;
+}
+div#AnimationWrapper {
+    margin: 5px 0;
+    height: 235px;
+    background: url('/themes/TinsDirect/design/images/bg-mr.gif') no-repeat right top;
+}
+div.Welcome {
+    position: absolute;
+    width: 340px;
+    top: 80px;
+    right: 360px;
+    float: left;
+    color: #FFF;
+}
+div.Welcome h1 {
+    color: #0000FF;
+    border: none;
+    font-size: 22px;
+    margin: 0 0 23px;
+}
+div.Welcome p {
+    padding: 0 0px 0 0;
+    color: #FFF;
+    border: none;
+}
+div.Contact h2 {
+    color: #0000FF;
+    border: none;
+    font-size: 22px;
+    margin: 10px 0 10px;
+    text-align: center;
+}
+div#Animation {
+    width: 355px;
+    height: 240px;
+    background: url('/themes/TinsDirect/design/images/animation.gif') no-repeat left top;
+    float: left;
+}
+body#dashboard_plugin_page.TabButton {
+    margin: 0 0 0 5px;
+}
+ul.Gallery {
+    height: 630px;
+    display: inline;
+}
+li.Image {
+   width: 150px;
+   margin: 5px;
+   float: left;
+   display: block;
+}
+img.Image {
+    width: 150px;
+    height: 150px;
+}
+img.Category {
+    float: left;
+    width: 200px;
+    height: 230px;
+}
+ul#Item li {
+    float: left;
+}
+li.Category span.Count {
+    float: right;
+    margin-right: 8px;
+}
+ul.Gallery li.Category {
+    margin: 3px;
+    height: 260px;
+    width: 200px;
+    float: left;
+    border: 1px solid #CCC;
+    -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+   border-radius: 4px;
+   font-weight: bold;
+}
+li.Category a {
+    margin: 0px 5px;
+    text-align: center;
+}
+div#Custom div.Label {
+    height: 35px;
+    text-align: center;
+}
+
+
+div.Options a {
+    border: 1px solid #CCC;
+    padding: 2px 4px;
+    -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   border-radius: 3px;
+}
+div.Options li {
+    margin: 5px 3px;
+    list-style: none;
+}
+div.Box li a {
+
+}
+div.Pager {
+    padding: 0 15px 0 45px;
+    margin: 0px auto;
+    width: 100%;
+    display: inline;
+    float: right;
+
+}
+div.Pager li {
+    padding: 0px 5px;
+    border: 1px solid #CCC;
+    list-style: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+
+}
+div.Pager li.Page {
+    width: auto;
+    margin-top: 2px;
+    text-align: center;
+}
+div.Pager li.More {
+      background: url('images/category_button.png') no-repeat left center;
+    float: right;
+}
+div.Pager li.Less {
+    float: left;
+    background: url('images/category_button.png') no-repeat left center;
+}
+li.Page a {
+    padding: 2px 3px;
+    border: 1px solid #CCC;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+li.Page a.Active {
+    font-size: 14px;
+    color: #F60;
+}
+table#Tin {
+   width: 600px;
+}
+body#Gallery td.Description {
+   width: 400px;
+   font-weight: bold;
+}
+div#Custom td.Size {
+   font-weight: bold;
+   padding: 0 3px;
+}

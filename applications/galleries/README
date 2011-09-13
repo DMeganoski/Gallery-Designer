@@ -1,0 +1,10 @@
+This application is intended to cover a variety of uses, specifically targeted at small businesses who want to 'show things off', though it can also serve as, say, a family photo album. There is alot that you can do with this.
+
+There are a few key files that you should know about, as they are used multiple times and you may want to make some changes to them.
+
+The helper files found in /galleries/views/helper
+	itemdisplay.php is the file that will display certain images in a gallery fashion.
+		itemdisplay.php contains the other file,
+	pager.php. This is the file that contains the html and php for the page buttons at the bottom of the gallery pages.
+
+Each item in the gallery can have a variety of properties.

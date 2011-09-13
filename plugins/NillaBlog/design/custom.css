@@ -1,0 +1,45 @@
+/* Blog category styles  */
+.Discussions .Item {
+	background: #F5F5F5;
+	border-style: none !important;
+	margin-top: 15px !important;
+	margin-bottom: 15px !important;
+	padding: 8px 0px !important;
+}
+
+.Discussions .Message {
+	padding-top: 12px;
+	color: #5E5E5E;
+}
+
+.Discussion .Title {
+	font-size: 140% !important;
+	font-family: Verdana, 'lucida grande', 'Lucida Sans Unicode', tahoma, sans-serif;
+}
+
+.DiscussionsTabs {
+	display: none !important;
+}
+
+/* Blog thread styles  */
+.FirstComment {
+	background: #F5F5F5;
+	color: #5E5E5E;
+	margin-bottom: 30px !important;
+	padding-bottom: 8px;
+} 
+
+.FirstComment .Author img {
+	display: none;
+} 
+
+.SubTab {
+	font-family: Verdana, 'lucida grande', 'Lucida Sans Unicode', tahoma, sans-serif;
+	font-size: 140% !important;
+	line-height: 1.8 !important;
+}
+	
+.DiscussionTabs {
+	background: #F5F5F5 !important;
+	border-bottom: 1px solid #808080 !important;
+}

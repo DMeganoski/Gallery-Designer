@@ -1,0 +1,386 @@
+/*
+    Document   : custom
+    Created on : Jul 19, 2011, 7:32:25 PM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+h1 {
+    color: #0063dc;
+    margin: 5px 0;
+    padding: 10px 0 10px;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #CCC;
+    text-align: center;
+	width: 100%;
+}
+h2 {
+    color: #FF6600;
+    margin: 5px 0;
+    border: none;
+    text-align: center;
+}
+p {
+    color: #666666;
+    padding: 10px;
+    border: 1px solid #CCC;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+
+}
+root {
+   display: block;
+}
+#Content {
+	display: inline;
+}
+#Panel {
+	display: inline-block;
+}
+body#dashboard_plugin_page.TabButton {
+    margin: 0 0 0 5px;
+}
+/*------ Main Menu --------------*/
+div.Menu {
+   width: auto;
+   height: 33px;
+   position: absolute;
+   text-align: left;
+   vertical-align: bottom;
+   z-index: 20;
+   margin: 0px auto;
+   padding: 3px 10px 0;
+   background: url('images/grey_out_40.png') repeat-x center;
+   -moz-border-radius-bottomleft: 3px;
+   -moz-border-radius-bottomright: 3px;
+   -webkit-border-bottom-left-radius: 3px;
+   -webkit-border-bottom-right-radius: 3px;
+   border-bottom-left-radius: 3px;
+   border-bottom-right-radius: 3px;
+}
+div.Account {
+	background: #E6E6E6;
+   display: inline-block;
+   position: relative;
+   float: right;
+   right: 20px;
+   top: 0px;
+   text-align: right;
+   vertical-align: bottom;
+   z-index: 300;
+   padding: 3px 10px 0;
+   border: 1px solid #CCC;
+   -moz-border-radius: 3px 0 0;
+   -webkit-border-radius: 3px 0 0;
+   border-radius: 3px 0 0;
+   box-shadow: 0 0 3px #333;
+   -moz-box-shadow: 0 0 3px #333;
+   -webkit-box-shadow: 0 0 3px #333;
+}
+.ie div.Account {
+}
+div.Logo {
+    float: left;
+    margin: 40px 0px 0 10px;
+	left: 10px;
+    width: 250px;
+    position: absolute;
+    z-index: 30;
+    background: transparent;
+    height: auto;
+}
+ul#Menu {
+   display: inline-block;
+   /*margin-right: 280px;*/
+   vertical-align: bottom;
+}
+#Menu ul,
+#Menu li.Active {
+   background: #777777;
+}
+#Menu a {
+   color: #6C6C6C;
+}
+#Menu li.Active a {
+   color: #0063dc;
+   font-size: 12px;
+}
+#Menu a:hover {
+   background: transparent;
+   color: #0063dc;
+}
+#Menu a:hover, #Menu li.NonTab a:hover {
+    color: #0063dc;
+}
+/* Numbers next to menu items */
+#Menu a span, #Menu li.Active a span, #Menu li.Highlight a:hover span {
+   background: orange;
+   color: #FFF;
+}
+#Head .Search, #Head #Search {
+	position: relative;
+	text-align: right;
+	background: url('images/grey_out_40.png') repeat-x bottom;
+    z-index: 50;
+	top: 70px;
+	right: 60px;
+    float: right;
+    padding: 1px 0px 0px 0px;
+    width: 260px;
+    -moz-border-radius: 3px;
+	-webkit-borderradius: 3px;
+	border-radius: 3px;
+}
+div#AnimationWrapper {
+	position: relative;
+    margin: 5px 0;
+    height: 235px;
+    background: url('/themes/TinsDirect/design/images/bg-mr.gif') no-repeat right top;
+}
+div#Animation {
+    width: 355px;
+    height: 240px;
+    background: url('/themes/TinsDirect/design/images/animation.gif') no-repeat left top;
+    float: left;
+}
+#Menu li.Home a {
+	background: url('images/stuttgart_icons/16/home.png') no-repeat left center;
+}
+#Menu li.Discussions a {
+	background: url('images/stuttgart_icons/16/comment.png') no-repeat left center;
+}
+#Menu li.Gallery a {
+	background: url('images/stuttgart_icons/16/brainstorming.png') no-repeat left center;
+}
+#Menu li.Contact a {
+	background: url('images/stuttgart_icons/16/business-contact.png') no-repeat left center;
+}
+#Menu ul {
+	display: none;
+}
+#Menu li {
+
+	line-height: 25px;
+	margin: 0 2px;
+	float: left;
+	display: inline-block;
+	font-weight: bold;
+	text-align: left;
+	border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+    max-width: 150px;
+}
+.ie #Menu li {
+	margin: 0px 2px 4px;
+}
+* html #Menu li {
+	display: inline;
+}
+#Menu a {
+   position: relative;
+   display: inline;
+   margin: 0 2px 0 12px;
+   white-space: nowrap;
+   font-size: 13px;
+   height: 23px;
+   padding: 2px 13px 2px 19px;
+
+   color: #6C6C6C;
+}
+#Menu li:hover, #Account li:hover {
+	border: 1px solid #ddd;
+   background: transparent;
+   text-decoration: none;
+}
+* html #Menu li  {
+   margin: 6px 10px;
+}
+#Menu li.NonTab,
+#Menu li.NonTab a {
+}
+#Menu a span, #Account a span, #Menu li.Active a span, #Account li.Active a span, #Menu li.Highlight a:hover span, #Account li.Highlight a:hover span {
+   -moz-border-radius: 2px;
+   -webkit-border-radius: 2px;
+   border-radius: 2px;
+   padding: 0 3px;
+   font-size: 9px;
+   line-height: 12px;
+   font-weight: normal;
+}
+.Account div {
+    width: auto;
+   display: block;
+   /*margin-right: 280px;*/
+   vertical-align: bottom;
+   margin: 4px 0;
+   color: #777777;
+
+}
+.gecko .Account div {
+	margin: 2px 0;
+}
+.ie .Account div {
+	margin: 2px 0;
+}
+.Account strong {
+	float: right;
+   margin: 5px 2px;
+   border-radius: 3px;
+   -moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   padding: 2px 15px 2px 15px;
+}
+.Account div a {
+	float: right;
+	border: 1px solid #CCC;
+	padding: 2px 4px;
+	margin: 4px 5px;
+	display: inline-block;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0 1px 1px #666;
+	-moz-box-shadow: 0 1px 1px #666;
+	-webkit-box-shadow: 0 1px 1px #666;
+	background: url('images/gray_out_30.png') repeat-x center;
+}
+.Account a.Text {
+	padding-left: 4px;
+}
+.Account a span {
+	min-width: 20px;
+	min-height: 20px;
+	display: inline-block;
+	margin-top: 1px;
+	float: left;
+}
+.Account a:hover {
+   background: url('images/gray_in_30.png') repeat-x center;
+   color: #0063dc;
+   box-shadow: none;
+   -webkit-box-shadow: none;
+   -moz-box-shadow: none;
+}
+.Account a:hover,
+.Account a.NonTab:hover {
+    color: #0063dc;
+}
+.Account a.Dashboard span {
+	min-width: 20px;
+	min-height: 20px;
+	background: url('images/stuttgart_icons/16/settings.png') no-repeat center center;
+}
+.Account a.Messages span {
+	background: url('images/stuttgart_icons/16/email.png') no-repeat left center;
+}
+.Account a.Profile span {
+	background: url('images/stuttgart_icons/16/user.png') no-repeat left center;
+}
+.Account a.Notif span {
+	background: url('images/stuttgart_icons/16/flag.png') no-repeat left center;
+}
+.Account a.SignIn span {
+	background: url('images/stuttgart_icons/16/sign-in.png') no-repeat left center;
+}
+.Account a.SignOut span {
+	min-width: 20px;
+	min-height: 20px;
+	background: url('images/stuttgart_icons/16/sign-out.png') no-repeat center center;
+}
+/*----------- Footer ------------*/
+#Foot {
+	background: #EEE;
+	color: #6c6c6c;
+}
+#Foot a {
+	color: #6c6c6c;
+}
+#Foot a:hover {
+	color: #F60;
+}
+#FooterWrapper {
+	width: 960px;
+	padding: 10px;
+	margin: 0px auto;
+}
+div.Text {
+	background: #FFF;
+	border: 1px solid #CCC;
+	margin: 0px 6px;
+	width: 225px;
+	height: 300px;
+	float: left;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	box-shadow: 0px 2px 2px #CCC;
+	-moz-box-shadow: 0px 2px 2px #CCC;
+	-webkit-box-shadow: 0px 2px 2px #CCC;
+	display: block;
+}
+div.Text p {
+	border: none;
+}
+div.Text a {
+	padding: 5px 10px;
+}
+div.Text h2 {
+	border-bottom :1px solid #CCC;
+	padding: 5px;
+	margin: 0px 10px;
+}
+ul#FootMenu {
+	height: 25px;
+	position: relative;
+	bottom: 35px;
+	background: #FFF;
+	padding: 5px 5px;
+	margin: 10px 0px;
+	color: #DDD;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	box-shadow: 0px 2px 2px #CCC;
+	-moz-box-shadow: 0px 2px 2px #CCC;
+	-webkit-box-shadow: 0px 2px 2px #CCC;
+}
+#FootMenu li {
+	float: left;
+	border: 1px solid #ddd;
+	margin: 2px 5px;
+	padding: 2px 5px 4px;
+	-moz-border-radius: 3px;
+   -webkit-border-radius: 3px;
+   border-radius: 3px;
+}
+ul.Normal li {
+	color: #666;
+}
+div#Thanks {
+	margin: 10px;
+	width: auto;
+	margin: 0px auto;
+}
+div#Thanks h1 {
+	color: #6c6c6c;
+}
+div#Thanks li {
+	margin: 5px 10px 0;
+	float: left;
+	list-style: none;
+}
+div#Clear {
+	clear: both;
+}
+.ClearFix {
+	clear: both;
+}

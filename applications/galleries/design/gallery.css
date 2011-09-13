@@ -1,0 +1,309 @@
+/*
+    Document   : gallery
+    Created on : Jun 23, 2011, 9:00:53 AM
+    Author     : ZodiacDM
+    Description: This is the general stylesheet for the universal gallery styles.
+				 You will probably want to add to this when you create custom pages.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+/* ----------------- General Styles ---------------------*/
+root {
+    display: block;
+}
+div#Custom p a {
+    text-decoration: underline;
+}
+div#Custom {
+    float: left;
+   height: auto;
+   width: 100%;
+   text-align: left;
+   vertical-align: bottom;
+   z-index: 20;
+}
+div.FireEvent {
+	background: #F1D031;
+	display: inline;
+	padding: 2px;
+}
+img.FireEvent {
+	width: 20px;
+	height: 24px;
+	position: relative;
+	top: 5px;
+}
+.ClearFix {
+	clear: both;
+}
+div.Tabs li.Home a {
+    margin: 0 5px 0 0;
+}
+/*------------------Tabs and SubTabs -----------------*/
+ul.Sublist {
+	position: absolute;
+	z-index: 120;
+}
+ul.Sublist li {
+	display: inline-block;
+}
+ul.sublist li a {
+	border: 1px solid #CCC;
+	padding: 4px;
+}
+/*----------------- Side Panel --------------------*/
+h4#CategoryLabel,
+h4#ActionLabel {
+	font-weight: bold;
+	background: url('images/icons/32/communication.png') no-repeat right center;
+	cursor: pointer;
+	padding: 5px;
+	color: #0063dc;
+
+}
+#Panel li {
+	max-width: 250px;
+}
+/*----------------- Category Pages ----------------*/
+div#Custom li {
+    margin: 5px;
+	padding: 10px;
+    color: #6C6C6C;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+    list-style: none;
+	box-shadow: 0px 2px 2px #CCC;
+	-moz-box-shadow: 0px 2px 2px #CCC;
+	-webkit-box-shadow: 0px 2px 2px #CCC;
+}
+div#Custom li.Form {
+	text-align: right;
+}
+div#Custom li.Form textarea {
+	float: right;
+	margin: 0 3 5px 0;
+	display: inline;
+}
+div#Custom ul.ItemInfo input {
+	text-align: right;
+}
+ul.Gallery li.Category {
+    margin: 3px;
+    height: auto;
+    width: 190px;
+    float: left;
+    border: 1px solid #CCC;
+    -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+   border-radius: 4px;
+   font-weight: bold;
+}
+div.Gallery div.PriceLink {
+   margin: 3px;
+   width: 100%;
+   float: left;
+   border: 1px solid #CCC;
+   -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+   border-radius: 4px;
+}
+li.Image {
+	text-align: center;
+}
+ul.Gallery {
+    height: 630px;
+    display: inline;
+	margin: 0px auto;
+}
+li.Image {
+   width: 150px;
+   min-height: 150px;
+   float: left;
+   position: relative;
+}
+img.Image {
+	margin: auto;
+    width: 120px;
+    height: 120px;
+	position: relative;
+	vertical-align: bottom;
+}
+div.Label {
+   text-align: center;
+}
+img.Category {
+    float: left;
+    width: 200px;
+    height: 230px;
+}
+ul#Item li {
+    float: left;
+}
+div#Custom div.Label {
+    height: 35px;
+    text-align: center;
+}
+li.Category span.Count {
+    float: right;
+    margin-right: 8px;
+}
+
+li.Category a {
+    margin: 0px 5px;
+    text-align: center;
+}
+div.Gallery {
+   width: 640px;
+   display: block;
+}
+div.Gallery div.Image {
+   margin: 3px;
+   width: 100%;
+   float: left;
+   border: 1px solid #CCC;
+   -moz-border-radius: 4px;
+   -webkit-border-radius: 4px;
+   border-radius: 4px;
+}
+div.Image img {
+   width: 170px;
+}
+div.Image table {
+   width: 400px;
+   float: right;
+   padding: 0 5px;
+   margin: 5px 5px;
+}
+div.Image table td.Size {
+   border-bottom: 1px solid #CCC;
+}
+li.Category a {
+    margin: 0px 5px;
+    text-align: center;
+}
+/*------------- Single Item Page ----------------------*/
+div.DetailsWrapper {
+	margin:10px;
+}
+div.Picture {
+	height: 440px;
+}
+div.Picture table {
+	margin-bottom: 10px;
+}
+div.Picture img {
+	float: left;
+	z-index: 100;
+}
+img.Individual {
+	max-width: 300px;
+	max-height: 300px;
+}
+table#ItemInfo {
+   width: 320px;
+   float: right;
+   margin: 0 5px 0 0;
+}
+table#ItemInfo td {
+   padding: 0 5px;
+}
+
+/*----------------- Loader ----------------------*/
+#loader { margin:10px 0 0 36px; }
+#loader span { display:block; width:6px; float:left; margin-right:6px; border:1px solid #336633; position:relative; background-color:#ccffcc; }
+#loader .bar-0 { height:15px; bottom:-20px; }
+#loader .bar-1 { height:25px; bottom:-10px; }
+#loader .bar-2 { height:35px; margin-right:0; }
+strong.Load {
+	border: 1px solid #CCC;
+	width: 50px;
+}
+/*----------------- Profile ---------------------*/
+ul#Uploads li {
+	text-align: left;
+}
+ul#Uploads strong {
+	font-weight: bold;
+}
+li div.Image img.Thumb {
+	float: left;
+	margin: 0 10px;
+}
+/*----------------- Pager Module ----------------*/
+div.Pager {
+    padding: 0px 0px 2px 0px;
+    margin: 0px auto;
+	height: 32px;
+    width: 100%;
+	clear: both;
+}
+div.Pager li {
+    padding: 4px 5px;
+	height: 24px;
+    border: 1px solid #CCC;
+    list-style: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+
+}
+div.Pager li.Page {
+   padding: 4px 5px 2px;
+   height: 26px;
+    width: auto;
+    margin-top: 2px;
+    text-align: center;
+}
+div.Pager li.More {
+    float: right;
+	position: relative;
+	top: 36px;
+}
+div.Pager li.Less {
+    float: left;
+	position: relative;
+	top: 36px;
+}
+li.Page a {
+   margin: 2px 3px;
+    padding: 2px 6px;
+    border: 1px solid #CCC;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+li.Page a.Active {
+    font-size: 16px;
+    color: #F60;
+}
+/*------------------ Settings Pages --------------*/
+ol.Sortable h2 {
+	text-align: left;
+	width: auto;
+
+}
+table.Heading {
+	cursor: pointer;
+}
+ol.Sortable td.Secret {
+	background: #F3F3F3;
+}
+ol.Sortable td.Secret h2 {
+	color: #D95252;
+}
+ol.Sortable td.Category {
+	min-width: 100px;
+	border: 1px solid #CCC;
+}
+ol.Sortable a.Button {
+	float: right;
+}
+/*------------------- Uploads Box -----------------*/
+.UploadSubmit {
+	float: right;
+}

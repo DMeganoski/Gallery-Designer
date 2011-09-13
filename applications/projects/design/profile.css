@@ -1,0 +1,34 @@
+/*
+    Document   : profile.css
+    Created on : Sep 1, 2011, 9:36:48 AM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+/*----------------------- Profile ---------------------------------*/
+ul#Projects h2{
+	width: 50%;
+	float: left;
+	border-bottom: 1px solid #CCC;
+}
+div#Custom li.Project {
+}
+ul#Projects li div.Type {
+	display: inline-block;
+	float: left;
+}
+ul#Projects img {
+	display: inline-block;
+}
+ul#Projects strong {
+	width: 50%;
+}

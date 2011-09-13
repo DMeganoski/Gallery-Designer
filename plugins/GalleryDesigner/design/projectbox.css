@@ -1,0 +1,93 @@
+/*
+    Document   : projectbox.css
+    Created on : Aug 26, 2011, 1:32:29 PM
+    Author     : ZodiacDM
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/*
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root {
+    display: block;
+}
+/*--------------------------------- Top Box --------------------*/
+#Project {
+	width: auto;
+	background: none;
+	z-index: 100;
+	padding: 0 10px;
+}
+#ToggleUploads,
+#ToggleProject {
+	position: relative;
+	float: left;
+	top: 90px;
+	left: 660px;
+	width: 120px;
+	margin: 0 5px;
+	background: #006edf;
+	cursor: pointer;
+	border-radius: 0 0px 3px 3px;
+	-moz-border-radius: 0 0px 3px 3px;
+	-webkit-border-radius: 0px 0px 3px 3px;
+	z-index: 200;
+}
+.gecko #ToggleUploads,
+.gecko #ToggleProject {
+	top: 82px;
+}
+.webkit #ToggleProject,
+.webkit #ToggleUploads {
+	top: 80px;
+}
+.ProjectBox {
+	position: absolute;
+	margin: 0 5px 0;
+	padding: 20px 0 0;
+	top: 80px;
+	left: 660px;
+	width: 270px;
+	z-index: 80;
+}
+#UploadItems img,
+#ProjectItems img {
+	margin: 0 auto;
+}
+#ProjectItems table {
+	margin: 0 auto;
+}
+#ProjectItems table th {
+	text-align: center;
+}
+#ProjectItems table img {
+	float: left;
+	width: 100px;
+	height: 100px;
+}
+#ProjectItems table li {
+	text-align: right;
+}
+/*--------------------------- Project Page --------------------*/
+ul.Project {
+	margin: 10px;
+}
+ul.Project img {
+	height: 100px;
+	width: 100px;
+	margin: 0 auto;
+}
+ul.Active {
+	background: #e6e6e6;
+}
+ul.Project li.Float {
+	min-width: 330px;
+	float: left;
+}
+
+.ui-state-highlight {
+	background: #000FFF;
+}

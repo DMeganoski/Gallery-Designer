@@ -1,0 +1,255 @@
+// Uploadify 3.0.0 whith no erros and some new features, 100% working
+
+////////////////////////////////////////////////////////
+//////////////////////// HINTS /////////////////////////
+////////////////////////////////////////////////////////
+
+// Upload Button is now defined in uploadify.css file, you can customize it any way you want by editing uploadify.css file, you can create your own button
+// You can translate Uploadify to your language by creating a file named uploadifyLang_XX.js, where XX is the ISO Code for your languagem then you need to copy everything from uploadifyLang_en.js to your new file and translate vars content to your language, your file MUST BE in UTF-8 format
+
+
+////////////////////////////////////////////////////////
+//////////////////////// REQUIRED SETTINGS /////////////
+////////////////////////////////////////////////////////
+
+ // string - change to your language file path, you can translate any language file and save with your own name, just remember to use UTF-8 in language files
+'langFile' : '/_scripts/jquery.uploadify-v3.0.0/uploadifyLang_pt-br.js', // default uploadifyLang_en.js
+
+// string - change to your uploadify.swf path
+'swf' : '/_scripts/jquery.uploadify-v3.0.0/uploadify.swf', // default uploadify.swf
+
+// string - change to your uploadify.php path
+'uploader' : '/_scripts/jquery.uploadify-v3.0.0/uploadify.php', // default uploadify.php
+
+
+////////////////////////////////////////////////////////
+//////////////////////// OPTIONS ///////////////////////
+////////////////////////////////////////////////////////
+
+// boolean (false/true) - if set to true, upload of selected file(s) will start as soon as the Dialog Windows closes, if set to false uploads will start only when uploadifyUpload() is called
+'auto' : false, // default false
+
+// string - this option replaces uploadifyLang['buttonText'] var in langFile - if not set, will be loaded later via settings.langFile - button apearance is now defined in uploadify.css
+'buttonText' : 'Select Images', // default 'SELECT FILES' (from uploadifyLang_en.js)
+
+// number - width of the button - button apearance is now defined in uploadify.css
+'width' : 120, // default 120
+
+// number - height of the button - button apearance is now defined in uploadify.css
+'height' : 30, // default 30
+
+// string - change to your image to the cancel image path (the X in each file in queue)
+'cancelImage' : '/jquery.uploadify-v3.0.0/uploadify-cancel.png', // default 'uploadify-cancel.png'
+
+// string - change to your uploadify-check-exists.php path, this option will check if file exists in server and prompt for replace or cancel
+'checkExisting' : '/jquery.uploadify-v3.0.0/uploadify-check-exists.php', // default 'uploadify-check-exists.php'
+
+// number - the max file size in bytes (0 = unlimited)
+'fileSizeLimit' : 1*1024*1024, // 1MB // default 0
+
+// string - this option replaces uploadifyLang['fileTypeDesc'] var in uploadifyLang_XX.js - it will be displayed in the Dialogs Window
+'fileTypeDesc' : 'Image Files', // default 'All Files (*.*)' (from uploadifyLang_en.js)
+
+// string - this options defines the file types allowed, '*.*' will allow all file types
+'fileTypeExts' : '*.gif;*.jpg;*.png', // default '*.*'
+
+// string ('post' or 'get') - this option changes the method of sending your data
+'method' : 'post', // default 'post'
+
+// boolean (false/true) - if set to true you can select more than 1 file in Dialog Window, if set to false only one file can be selected in Dialog Window
+'multi' : true, // default false
+
+// false/string - if set to a DIV ID, this DIV will be used as your queue location, false will create a queue below Select Button
+'queueID' : false, // default false
+
+// number - this option defines the number of allowed uploads in queue, if 'multi' is set to true, this value must be bigger than 1
+'queueSizeLimit' : 999, // default 999
+
+// boolean (false/true) - if set to false, completed files will not be removed from queue ultil all uploads finish
+'removeCompleted' : true, // default true
+
+// JSON object with mixed types - this option allows you to send additional data to uploadify.php during an upload - {name:value,name:value,name:value,...}
+'postData'           : {myVarName:myVarValue}, // default {}
+
+// 'percentage'/'speed'/'all' - this option defines witch data will be displayed during file upload
+'progressData'       : 'all', // 'percentage', 'speed' or 'all'
+
+
+////////////////////////////////////////////////////////
+//////////////////////// EVENTS ////////////////////////
+////////////////////////////////////////////////////////
+
+onDialogClose : function(swfuploadifyQueue) {
+	// Triggers when the Dialog Window to select files is closed
+	// swfuploadifyQueue.filesErrored  : number - The number of files that where not added to the queue because of errors
+	// swfuploadifyQueue.errorMsg      : string - The error message, if filesErrored > 0
+	// swfuploadifyQueue.filesSelected : number - The number of files selected to add to the queue
+	// swfuploadifyQueue.filesQueued   : number - The number of files added to the queue
+	// swfuploadifyQueue.queueLength   : number - The total number of files in queue
+	alert('filesErrored: ' + swfuploadifyQueue.filesErrored + ' - errorMsg: ' + swfuploadifyQueue.errorMsg + ' - filesSelected: ' + swfuploadifyQueue.filesSelected + ' - filesQueued: ' + swfuploadifyQueue.filesQueued + ' - queueLength: ' + swfuploadifyQueue.queueLength);
+}
+
+onDialogOpen : function() {
+	// Triggers when the Dialog Window to select files is opened
+	// No vars returned
+}
+
+onSelect : function(file) {
+	// Triggers once for each file that is added to the queue
+	// file.id               : string - The file id, used for starting or cancelling and upload
+	// file.index            : number - The index of this file for use in getFile(i)
+	// file.name             : string - The file name. The path is not included
+	// file.size             : number - The file size in bytes
+	// file.type             : string - The file type (extension) as reported by the client operating system
+	// file.creationdate     : Date - The date the file was created
+	// file.modificationdate : Date - The date the file was last modified
+	// file.filestatus       : number - The file's current status
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus);
+}
+
+onSelectError : function(file,errorCode,errorMsg) {
+	// Triggers when an error is returned for a filed selected in the Dialog Window
+	// file.id               : string - The file id, used for starting or cancelling and upload
+	// file.index            : number - The index of this file for use in getFile(i)
+	// file.name             : string - The file name. The path is not included
+	// file.size             : number - The file size in bytes
+	// file.type             : string - The file type (extension) as reported by the client operating system
+	// file.creationdate     : Date - The date the file was created
+	// file.modificationdate : Date - The date the file was last modified
+	// file.filestatus       : number - The file's current status
+	// errorCode             : number - The number of the error
+	// errorMsg              : string - The description of the error
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus + ' - errorCode: ' + errorCode + ' - errorMsg: ' + errorMsg);
+}
+
+onQueueComplete : function(stats) {
+	// Triggers once when all files in the queue have finished uploading.
+	// stats.in_progress and stats.files_queued will be returned but will always be 0
+	// stats.successful_uploads : number - The number of files that have uploaded successfully (caused Upload Success to be fired)
+	// stats.upload_errors      : number - The number of files that have had errors (excluding cancelled files)
+	// stats.upload_cancelled   : number - The number of files that have been cancelled
+	// stats.queue_errors       : number - The number of files that caused Queue Errors to be fired
+	alert('successful_uploads: ' + stats.successful_uploads + ' - upload_errors: ' + stats.upload_errors + ' - upload_cancelled: ' + stats.upload_cancelled + ' - queue_errors: ' + stats.queue_errors);
+}
+
+onUploadComplete : function(file,swfuploadifyQueue) {
+	// Triggers once for each file upload that is completed
+	// file.id                         : string - The file id, used for starting or cancelling and upload
+	// file.index                      : number - The index of this file for use in getFile(i)
+	// file.name                       : string - The file name. The path is not included
+	// file.size                       : number - The file size in bytes
+	// file.type                       : string - The file type (extension) as reported by the client operating system
+	// file.creationdate               : Date - The date the file was created
+	// file.modificationdate           : Date - The date the file was last modified
+	// file.filestatus                 : number - The file's current status
+	// swfuploadifyQueue.filesErrored  : number - The number of files that where not added to the queue because of errors
+	// swfuploadifyQueue.errorMsg      : string - The error message, if filesErrored > 0
+	// swfuploadifyQueue.filesSelected : number - The number of files selected to add to the queue
+	// swfuploadifyQueue.filesQueued   : number - The number of files added to the queue
+	// swfuploadifyQueue.queueLength   : number - The total number of files in queue
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus + ' - filesErrored: ' + swfuploadifyQueue.filesErrored + ' - errorMsg: ' + swfuploadifyQueue.errorMsg + ' - filesSelected: ' + swfuploadifyQueue.filesSelected + ' - filesQueued: ' + swfuploadifyQueue.filesQueued + ' - queueLength: ' + swfuploadifyQueue.queueLength);
+}
+
+onUploadError : function(file,errorCode,errorMsg,errorString,swfuploadifyQueue) {
+	// Triggers when an error is returned for a file upload
+	// file.id                         : string - The file id, used for starting or cancelling and upload
+	// file.index                      : number - The index of this file for use in getFile(i)
+	// file.name                       : string - The file name. The path is not included
+	// file.size                       : number - The file size in bytes
+	// file.type                       : string - The file type (extension) as reported by the client operating system
+	// file.creationdate               : Date - The date the file was created
+	// file.modificationdate           : Date - The date the file was last modified
+	// file.filestatus                 : number - The file's current status
+	// errorCode                       : number - The number of the error
+	// errorMsg                        : string - The description of the error
+	// errorString                     : string - The short description of the error
+	// swfuploadifyQueue.filesErrored  : number - The number of files that where not added to the queue because of errors
+	// swfuploadifyQueue.errorMsg      : string - The error message, if filesErrored > 0
+	// swfuploadifyQueue.filesSelected : number - The number of files selected to add to the queue
+	// swfuploadifyQueue.filesQueued   : number - The number of files added to the queue
+	// swfuploadifyQueue.queueLength   : number - The total number of files in queue
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus + ' - errorCode: ' + errorCode + ' - errorMsg: ' + errorMsg + ' - errorString: ' + errorString + ' - filesErrored: ' + swfuploadifyQueue.filesErrored + ' - errorMsg: ' + swfuploadifyQueue.errorMsg + ' - filesSelected: ' + swfuploadifyQueue.filesSelected + ' - filesQueued: ' + swfuploadifyQueue.filesQueued + ' - queueLength: ' + swfuploadifyQueue.queueLength);
+}
+
+onUploadProgress : function(file,fileBytesLoaded,fileTotalBytes,queueBytesLoaded,swfuploadifyQueueUploadSize) {
+	// Triggers each time the progress of a file upload changes
+	// file.id                     : string - The file id, used for starting or cancelling and upload
+	// file.index                  : number - The index of this file for use in getFile(i)
+	// file.name                   : string - The file name. The path is not included
+	// file.size                   : number - The file size in bytes
+	// file.type                   : string - The file type (extension) as reported by the client operating system
+	// file.creationdate           : Date - The date the file was created
+	// file.modificationdate       : Date - The date the file was last modified
+	// file.filestatus             : number - The file's current status
+	// fileBytesLoaded             : number - The total in bytes of the file uploaded so far
+	// fileTotalBytes              : number - The total size of the file current uploading in bytes
+	// queueBytesLoaded            : number - The total in bytes of all the files in queue uploaded so far
+	// swfuploadifyQueueUploadSize : number - The total in bytes of all the files in queue
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus+ ' - fileBytesLoaded: ' + fileBytesLoaded + ' - fileTotalBytes: ' + fileTotalBytes + ' - queueBytesLoaded: ' + queueBytesLoaded + ' - swfuploadifyQueueUploadSize: ' + swfuploadifyQueueUploadSize);
+}
+
+onUploadStart : function(file) {
+	// Triggers once for each file upload that starts
+	// file.id               : string - The file id, used for starting or cancelling and upload
+	// file.index            : number - The index of this file for use in getFile(i)
+	// file.name             : string - The file name. The path is not included
+	// file.size             : number - The file size in bytes
+	// file.type             : string - The file type (extension) as reported by the client operating system
+	// file.creationdate     : Date - The date the file was created
+	// file.modificationdate : Date - The date the file was last modified
+	// file.filestatus       : number - The file's current status
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus);
+}
+
+onUploadSuccess : function(file,data,response) {
+	// Triggers once for each file upload that is completed successfully
+	// file.id               : string - The file id, used for starting or cancelling and upload
+	// file.index            : number - The index of this file for use in getFile(i)
+	// file.name             : string - The file name. The path is not included
+	// file.size             : number - The file size in bytes
+	// file.type             : string - The file type (extension) as reported by the client operating system
+	// file.creationdate     : Date - The date the file was created
+	// file.modificationdate : Date - The date the file was last modified
+	// file.filestatus       : number - The file's current status
+	// data                  : string - The 'echo' response from uploadify.php
+	// response              : boolean - True or False for the success of the upload
+	alert('id: ' + file.id + ' - index: ' + file.index + ' - name: ' + file.name + ' - size: ' + file.size + ' - type: ' + file.type + ' - creationdate: ' + file.creationdate + ' - modificationdate: ' + file.modificationdate + ' - filestatus: ' + file.filestatus+ ' - data: ' + data + ' - response: ' + response);
+}
+
+
+////////////////////////////////////////////////////////
+//////////////////////// METHODS ///////////////////////
+////////////////////////////////////////////////////////
+
+// Use this to create an instance of uploadify in your page
+$('#someId').uploadify({ REQUIRED SETTINGS, OPTIONS, EVENTS });
+
+// Get rid of the instance of Uploadify
+$('#someId').uploadifyDestroy();
+
+// Use this to remove all files in queue
+$('#someId').uploadifyCancel('*');
+
+// Use this to remove one of the files in queue, the ID is generated by the Uploadify script when a file is selected and added to the queue
+$('#someId').uploadifyCancel(ID);
+
+// Disable the select button
+$('#someId').uploadifyDisable();
+
+// Return the number of files in queue (you can use this to avoid uploads when no images are in queue)
+$('#someID').uploadifySettings('queueLength')
+
+// Return any setting of uplioadify instance
+$('#someID').uploadifySettings(SETTING)
+
+// Change the value of settings defined by you (any setting defined in OPTIONS can be changed)
+$('#someID').uploadifySettings(SETTING, NEWVALUE)
+
+// Stop the current upload and requeue what is in progress
+$('#someID').uploadifyStop();
+
+// Use this to initiate the upload of all files in queue
+$('#someID').uploadifyUpload();
+
+// Use this to initiate the upload of one of the files in queue, the ID is generated by the Uploadify script when a file is selected and added to the queue
+$('#someID').uploadifyUpload(ID);

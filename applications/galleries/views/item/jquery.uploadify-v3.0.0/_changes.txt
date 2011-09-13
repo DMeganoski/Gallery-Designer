@@ -1,0 +1,33 @@
+/*
+Uploadify v3.0.0
+Copyright (c) 2010 Ronnie Garcia
+
+All credits goes to Ronnie Garcia, I only made a few adjustments to get it going...
+bccsergio
+*/
+
+// uploadify.css
+// -> changed to use custom png files as button background
+// -> a few corrections so you can use uploadify in a container with align: center and not mess with queue display
+// -> you MUST edit uploadify.css so you can set your directories to button files
+
+// jquery.uploadify.js
+// -> all options, events and methods documented in _help.txt file
+// -> a few corrections so you can use uploadify in a container with align:center and not mess with queue display
+// -> options and events corrected to suit v 3.0.0
+// -> added option to display both percentage and speed during file upload
+// -> changes in this file to allow use of language file
+// -> 'langFile' added in required options, default is 'uploadifyLang_en.js'
+// -> added a method to load langFile On the fly, so you can set your language file in uploadify options
+// -> corrected error that was causing multi uploads to upload only first file (onUploadComplete)
+// -> corrected error that was firing onQueueComplete before onUploadComplete on last upload (onUploadComplete)
+// -> corrected error return of onQueueComplete in onUploadComplete function
+// -> corrected error in uploadifyCancel
+// -> corrected any errors that i found and can´t remember right now
+
+// uploadify.php
+// -> added rotines to prevent invalid characters in file names
+// -> if you don´t want to override a fila, but still want the file to be uploaded, added a routine to rename the file on the fly (it adds a sufix in file name)
+
+
+// -> Documentation in _help.txt

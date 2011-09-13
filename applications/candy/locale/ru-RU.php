@@ -1,0 +1,31 @@
+<?php if(!defined('APPLICATION')) exit();
+
+$Definition['Content pages'] = 'Статические страницы';
+$Definition['New page'] = 'Новая страница';
+$Definition['Parent page'] = 'Родительская страница';
+$Definition['Add page'] = 'Добавить страницу';
+$Definition['Edit page'] = 'Редактировать страницу';
+$Definition['Page Identify'] = 'ID (URL)';
+$Definition['Title'] = 'Заголовок';
+$Definition['Format'] = 'Форматирование';
+$Definition['Master View'] = 'Мастер шаблон';
+$Definition['%s: Parent page not found.'] = '%s: Родительская страница не найдена.';
+$Definition['Sort'] = 'Сортировка';
+$Definition['Published'] = 'Опубликовано';
+$Definition['Pages'] = 'Страницы';
+$Definition['Page deleted'] = 'Страница удалена';
+$Definition['Site map'] = 'Карта сайта';
+$Definition['Create section'] = 'Создать раздел';
+$Definition['Saved. You can check it here: %s'] = 'Изменения сохранены, можете посмотреть: %s';
+$Definition['Nothing.'] = 'Ничего.';
+$Definition['There are nothing.'] = 'Ничего нет.';
+$Definition['Add chunk'] = 'Добавить кусочек';
+$Definition['Section URI'] = 'Раздел (URI)';
+$Definition['Meta tags?'] = 'Мета тэги?';
+$Definition['Meta tag (description)'] = 'Мета (description)';
+$Definition['Meta tag (keywords)'] = 'Мета (keywords)';
+$Definition['Meta tag (robots)'] = 'Мета (robots)';
+$Definition['ValidateUrlPath'] = '%s: Недопустимый формат, значение должно содержать только символы [a-z0-9].';
+$Definition["The page you're looking for doesn't exist (yet), do you want to <a href=\"%s\">create one</a>?"] 
+= 'Страница не существует (пока), хотите <a href="%s">создать</a>?';
+$Definition['Slug from title?'] = 'Четкий УРЛ?';
