@@ -102,12 +102,10 @@ class DesignerController extends ProjectsController {
 	 * This is most useful for custom uploads
 	 */
 	public function Resize() {
+		$this->PrepareController();
 		$ItemSlug = GetValue(0, $this->RequestArgs, '');
 		if ($ItemSlug != '') {
-			$this->PrepareController();
 			$this->AddModule('GalleryHeadModule');
-			$this->AddModule('ProjectBoxModule');
-			$this->AddModule('GallerySideModule');
 			$Session = Gdn::Session();
 			$UserID = $Session->UserID;
 			$this->CurrentItem = $this->GalleryItemModel->GetWhere(array('Slug' => $ItemSlug))->FirstRow();
@@ -122,22 +120,21 @@ class DesignerController extends ProjectsController {
 
 	public function Text() {
 		$this->PrepareController();
-		$this->AddModule(GalleryModule);
-		$this->AddModule(GallerySideModule);
 		//$this->Form = new Gdn_Form('Project');
 		$this->Form->SetModel($this->ProjectModel);
-		$ProjectData = $this->ProjectModel->GetCurrent(Gdn::Session()->UserID);
-		echo $ProjectData->ProjectKey;
-		$this->Form->AddHidden('ProjectKey', $ProjectData->ProjectKey);
+		$UserID = Gdn::Session()->UserID;
+		$ProjectData = $this->ProjectModel->GetCurrent($UserID);
+		$this->Form->SetData($ProjectData);
+		//$this->Form->AddHidden('ProjectKey', $ProjectData->ProjectKey);
 		if ($this->Form->AuthenticatedPostBack()) {
-
-			if ($this->Form->Save('Project')) {
+			if ($this->Form->Save()) {
                 $this->StatusMessage = T("Your changes have been saved successfully.");
                 //$this->RedirectUrl = Url('/item/'.$Item->Slug);
 			} else {
-				$this->StatusMessage = T("Your changes have NOT been saved successfully.");
+				$FormValues = $this->Form->FormValues();
+				$this->StatusMessage = T("Your changes have been saved successfully.");
 				$this->ProjectModel->Update('Project', array(
-					'Message' => $this->Form->FormValues('Message')
+					'Message' => $FormValues['Message']
 				), array('ProjectKey' => $ProjectData->ProjectKey));
 			}
 		} else {

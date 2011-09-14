@@ -48,7 +48,10 @@ $(document).ready(function() {
 			},
 
 			onQueueComplete: function (stats) {
-				$("#myForm").append("<input type='hidden' id='numImgs' name='numImgs' value='"+img+"' />"); // INSERT NUMBER OF IMAGES UPLOADED IN A HIDDEN FORM FIELD
+				$("#myForm").append("<input type='hidden' id='numImgs' name='numImgs' value='" + img + "' />");// INSERT NUMBER OF IMAGES UPLOADED IN A HIDDEN FORM FIELD
+				$("#myForm").append("<input type='hidden' id='submitting' name='submitting' value='yes' />");
+				$("#myForm").append("<input type='hidden' id='UserID' name='UserID' value='<?php echo $this->UserID; ?>'/>");
+				$("#myForm").append("<input type='hidden' id='TransientKey' name='TransientKey' value='<?php echo $this->TransientKey; ?>'/>");
 				$('#myForm').submit(); // THIS IS AN EXAMPLE, YOU CAN SUBMIT YOUR INFOS WITH AJAX IF YOU WANT
 			}
 		});

@@ -1,35 +1,19 @@
 
 $(document).ready(function() {
 	$('.PanelActions li').hide();
-	$('.Sublist').hide();
 	// Toggles Categories
-	$('#CategoryLabel').click(function() {
-		$('.PanelCategories li').toggle();
-	});
 	// Toggles Actions
-	$('#ActionLabel').live('click', function() {
+	$('#ToggleActions').live('click', function() {
 		$('.PanelActions li').toggle();
 	});
 	$('ol.Category').hide();
 	$('table.Heading').click(function() {
 		$(this).next('ol').toggle('fast');
 	});
-	var toggle = function(direction, display) {
-    return function() {
-      var self = this;
-      var ul = $("ul", this);
-      if( ul.css("display") == display && !self["block" + direction] ) {
-        self["block" + direction] = true;
-        ul["slide" + direction]("fast", function() {
-          self["block" + direction] = false;
-        });
-      }
-    };
-  }
-  $("li.Navigation").hover(toggle("Down", "none"), toggle("Up", "block"));
-  $("li.Navigation ul").hide();
-/*--------------------------------- Functions -----------------------------------*/
+	// toggle variable for navigation menus.
 
+
+/*--------------------------------- Functions -----------------------------------*/
 /*--------------------------------- QTips ---------------------------------------*/
 	$('.Icon').qtip({ /* For links containing no text */
 		content: {
@@ -63,7 +47,7 @@ $(document).ready(function() {
 			height: '120px' /* Set height back to default */
 		}, 400);
 	});
-
+	//$("li.Navigation ul").hide('200');
 	/*$('li.Image img').qtip({
 	content: {
 		text: function(api) {

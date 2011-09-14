@@ -20,11 +20,10 @@ root {
 	z-index: 100;
 	padding: 5px 2px;
 }
-.ProjectBox {
+.ProjectBox,
+.UploadBox {
 	position: relative;
 	margin: 10px 5px 0;
-	padding: 20px 0 0;
-	top: -25px;
 	left: 0px;
 	z-index: 30;
 	min-height: 100px;
@@ -63,18 +62,43 @@ ul.Project li.Float {
 div.ProjectWrapper {
 	position: relative;
 }
+.ProjectBox table td div#UploadWrapper {
+	float: left;
+	max-width: 108px;
+}
 img.FrameSmall {
-	position: absolute;
+	display: block;
 	width: 117px;
 	height: 117px;
-	top: -10px;
+	top: -9px;
 	left: 45px;
 }
 body.Gallery img.FrameSmall {
 	top: 180px;
 	left: -6px;
 }
-
+/*---------------------------- All Projects Page -----------------------*/
+div#ProjectPage table {
+	float: left;
+	width: 200px;
+}
+div#ProjectPage table td,
+div#ProjectPage table th {
+	text-align: center;
+}
+div.Active {
+	background: #e6e6e6;
+}
+/*----------------------------- Side Panel -----------------------------*/
+h4.Toggle {
+	font-weight: bold;
+	background: url('/applications/galleries/design/images/icons/32/communication.png') no-repeat right center;
+	cursor: pointer;
+	padding: 5px;
+	color: #0063dc;
+	line-height: 2.0;
+	margin: 5px 0 10px;
+}
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
 	float: right;

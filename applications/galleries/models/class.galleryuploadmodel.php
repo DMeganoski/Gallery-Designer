@@ -46,8 +46,9 @@ class GalleryUploadModel extends Gdn_Model {
 
       return $this->SQL
          ->Limit($Limit, $Offset)
-         ->Get();
+         ->Get()->FirstRow();
    }
+
 
 	public function GetCount($Wheres = '') {
 
@@ -96,6 +97,12 @@ class GalleryUploadModel extends Gdn_Model {
 
 	 $this->SQL->Put();
      }
+
+	 public function Remove($UploadID) {
+		 if ($UploadID != '' ) {
+			 $this->SQL->Delete('GalleryUpload', array('UploadKey' => $UploadID));
+		 }
+	 }
 
 
 

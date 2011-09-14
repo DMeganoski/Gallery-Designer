@@ -23,6 +23,8 @@ class ProjectsHooks implements Gdn_IPlugin {
 		if ($Sender->Head) {
 			$Sender->AddJsFile('/applications/projects/js/designer.js');
 			$Sender->AddCssFile('/applications/projects/design/designer.css');
+			$Sender->AddJsFile('/applications/projects/js/projectbox.js');
+			$Sender->AddCssFile('/applications/projects/design/projectbox.css');
 			$Sender->AddJsFile('/applications/galleries/js/jquery-ui-1.8.15.custom.min.js');
 			$Sender->AddJsFile('jquery.jrac.js');
 			$Sender->AddCssFile('style.jrac.css');

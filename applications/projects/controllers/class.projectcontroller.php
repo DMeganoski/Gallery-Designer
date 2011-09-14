@@ -26,31 +26,20 @@ class ProjectController extends ProjectsController {
 		$this->FireEvent('WhileHeadInit');
 
       }
-		//$this->AddJsFile('/applications/projects/js/projectbox.js');
-		//$this->AddCssFile('/applications/projects/design/projectbox.css');
       $this->MasterView = 'default';
 	  parent::Initialize();
    }
 
-	public function PrepareController() {
-		$this->AddJsFile('jquery.qtip.js');
-		$this->AddCssFile('jquery.qtip.css');
+    public function PrepareController() {
 
-		$this->AddJsFile('jquery-ui-1.8.15.custom.min.js');
-		$this->AddCssFile('jquery-ui-1.8.15.custom.css');
+		$this->AddModule('GalleryHeadModule');
+		$this->AddModule('ProjectBoxModule');
+		$this->AddModule('GallerySideModule');
 
-		$this->AddJsFile('gallery.js');
-		$this->AddJsFile('loader.js');
-		$this->AddCssFile('gallery.css');
-
+		$this->AddJsFile('jquery.event.drag.js');
 		$this->AddJsFile('/applications/galleries/js/gallery.js');
+		$this->AddCssFile('/applications/galleries/design/gallery.css');
 
-        //$GalleryHeadModule->GetData();
-
-		if (C('Galleries.ShowFireEvents'))
-			$this->DisplayFireEvent('AfterItemPrepare');
-
-		$this->FireEvent('AfterItemPrepare');
 	}
 
 	public function Index() {
@@ -108,7 +97,7 @@ class ProjectController extends ProjectsController {
 			echo '<div class="Heading">';
 				echo '<table align="Center">';
 				echo '<tr class="Heading">';
-				echo '<th><h2>My Current Project:  '.$this->CurrentProject->ProjectName.'</a><h2></th>';
+				echo '<th><h2>My Current Project:  '.$this->CurrentProject->ProjectName.'<h2></th>';
 				echo '</tr>';
 				$Selection = $this->MyExplode($this->CurrentProject->Selected);
 				if (!empty($Selection)) {
@@ -171,7 +160,7 @@ class ProjectController extends ProjectsController {
 			if (is_array($IncludedUploads)) {
 				echo '<tr>';
 				echo '<th colspan="2">Included Uploaded Images</th>';
-				echo '</tr><tr><td colspan="2">';
+				echo '</tr><tr><td>';
 
 				foreach ($IncludedUploads as $Upload) {
 					$UploadData = $this->GalleryUploadModel->GetWhere(array('UploadKey' => $Upload))->FirstRow();
@@ -181,15 +170,21 @@ class ProjectController extends ProjectsController {
 						$LeftPositions = $this->MyExplode($CurrentProject->LeftPositions);
 						$LeftPosition = $LeftPositions[$UploadData->FileName];
 						$this->UploadList[$UploadData->FileName] = array('top' => $TopPosition, 'left' => $LeftPosition);
-				}
+					}
 				}
 				foreach ($this->UploadList as $Upload => $Positions) {
 					if (!empty($UploadData)) {
 					$FileParts = pathinfo($Upload);
 					$BaseName = $FileParts['filename'];?>
-							<img src="/uploads/<? echo $BaseName ?>-Thumb.jpg" class="Upload Draggable Individual" id="<? echo $Upload ?>"
-								 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
-						<? }}
+							<div id="UploadWrapper">
+							<img src="/uploads/<? echo $BaseName ?>-Thumb.jpg" class="Upload" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
+							<button type="button" id="<? echo $Upload ?>" class="UploadRemove Button" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Remove</button>
+							</div>
+					<? }
+				}
+				if (!empty($CurrentProject->Message)) {
+					?><div class="MessageDisplay"><? echo $CurrentProject->Message ?></div><?
+				}
 				echo '</td></tr></table>';
 				echo '</div>';
 				}
@@ -365,12 +360,16 @@ class ProjectController extends ProjectsController {
 	/*
 	 *
 	 */
-	public function Delete($ProjectID) {
-		$ProjectID = GetValue(0, $this->RequestArgs, '');
-		if (Gdn::Session()->IsValid()){
+	public function Delete() {
+		$Request = Gdn::Request();
+		$ProjectID = $Request->Post('ProjectID');
+		$UserID = $Request->Post('UserID');
+		$TransientKey = $Request->Post('TransientKey');
+		$UserModel = new UserModel();
+		$User = $UserModel->GetSession($UserID);
+		if ($User->Attributes['TransientKey'] == $TransientKey) {
 			$this->ProjectModel->DeleteProject($ProjectID);
 		}
-		Redirect('/project');
 	}
 
 	/*

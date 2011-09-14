@@ -25,7 +25,7 @@ $FileInfo = $this->FileData;
 			<?php
 		echo '<div id="ImageWrapper"  file="'.$PublicDir.$FileInfo->ClassLabel.DS.$FileInfo->FileName.'">';
 		echo '<div id="FrameWrapper"></div>';
-		echo '<img src="'.$PublicDir.$FileInfo->ClassLabel.DS.$FileInfo->FileName.'" class="Individual"></img>';
+		echo '<img src="'.$PublicDir.$FileInfo->ClassLabel.DS.$FileInfo->Slug.'L.jpg" class="Single"></img>';
 		echo '</div>';
 		include(PATH_APPLICATIONS.DS.'galleries/customfiles/detailedinfo.php');
 		?>

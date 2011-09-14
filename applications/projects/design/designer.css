@@ -94,3 +94,6 @@ div#DesignBox img {
 input#SubmitProjectCheck {
 	margin: 0px auto;
 }
+div.MessageDisplay {
+	text-align: center;
+}

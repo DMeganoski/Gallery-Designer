@@ -48,39 +48,39 @@ div.Tabs li.Home a {
 }
 div.Tabs li.Navigation {
 	position: relative;
+	height: 33px;
 }
-ul.Sublist {
-	background: url("/themes/TinsDirect/design/images/grey_out_40.png") repeat-x bottom #FFF;
+div.Tabs ul.Sublist {
+	background: url("/applications/galleries/design/images/grey_out_40.png") repeat-x bottom #FFF;
 	position: absolute;
-	top: 25px;
-	left: 0;
-	min-width: 120px;
+	top: 24px;
+	left: -7px;
+	width: 130px;
 	padding: 3px;
 	z-index: 120;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 }
-ul.Sublist li {
+div.Tabs ul.Sublist li {
 	display: block;
+	margin: 0px auto;
 }
-ul.Sublist li a {
+div.Tabs ul.Sublist li a {
 	display: block;
 	border: 1px solid #CCC;
-	padding: 0px;
-}
-/*----------------- Side Panel --------------------*/
-h4#CategoryLabel,
-h4#ActionLabel {
-	font-weight: bold;
-	background: url('images/icons/32/communication.png') no-repeat right center;
-	cursor: pointer;
-	padding: 5px;
-	color: #0063dc;
 
 }
 #Panel li {
 	max-width: 250px;
+}
+a.Active, div.Tabs li.Active ul.Sublist li a {
+	background: url("/applications/galleries/design/images/grey_in_40.png") repeat-x bottom #FFF;
+	color: #6C6C6C;
+}
+a.Active, div.Tabs li.Active ul.Sublist li a:hover {
+	background: url("applications/galleries/design/images/grey_out_40.png") repeat-x top #FFF;
+	color: #0063DC;
 }
 /*----------------- Category Pages ----------------*/
 div#Custom li {

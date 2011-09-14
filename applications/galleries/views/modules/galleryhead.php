@@ -25,10 +25,12 @@ $ActiveCategory = GalleryController::$Category;
 					} else {
 						$CatCSS = 'Depth';
 					}
+					if ($Category->CategoryLabel != 'home')
 					echo '<li>'.Anchor(T($Category->CategoryLabel), 'gallery'.DS.$Label.DS.$Category->CategoryLabel).'</li>';
 				}
 			}
-			?></ul></li><?
+			?><li class="ClearFix"></li>
+			</ul></li><?
 		}
     ?></ul>
 </div>

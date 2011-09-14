@@ -26,7 +26,14 @@ if (!empty($this->Frame)) {
 						$Count = $Count + 1; ?>
 						<img src="/uploads/<? echo $Upload ?>" class="Upload Draggable Individual" id="<? echo $Upload ?>"
 							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
-					<? } ?>
+					<? }
+			if (!empty($CurrentProject->Message)) {
+
+			}
+	?></div>
+	<div class="MessageDisplay">
+		<h1>Included Message:</h1>
+		<? echo $this->CurrentProject->Message ?>
 	</div>
 	<div id="NoticeBox"></div>
 	<div class="Buttons">

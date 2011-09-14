@@ -363,6 +363,38 @@ class ItemController extends GalleriesController {
 		}
 	}
 
+
+	public function UploadDelete() {
+		$Request = Gdn::Request();
+		$UserID = $Request->Post('UserID');
+		$UploadID = $Request->Post('ItemID');
+		$TransientKey = $Request->Post('TransientKey');
+		$UserModel = new UserModel();
+		$User = $UserModel->GetSession($UserID);
+		if ($User->Attributes['TransientKey'] == $TransientKey) {
+			$Upload = $this->GalleryUploadModel->GetUploadID($ItemID);
+			$Path = PATH_UPLOADS.DS;
+			$UploadPath = $Path.$Upload->FileName;
+			if (file_exists($UploadPath)) {
+				echo "Original File Removed<br/>";
+				fclose($UploadPath);
+				chmod($UploadPath ,0777);
+				unlink($UploadPath);
+				$FileParts = pathinfo($UploadPath);
+				if (file_exists($Path.$FileParts['filename'].'-Thumb.jpg')) {
+					fclose($Path.$FileParts['filename'].'-Thumb.jpg');
+					chmod($Path.$FileParts['filename'].'-Thumb.jpg', 0777);
+					unlink($Path.$FileParts['filename'].'-Thumb.jpg');
+					echo "Thumbnai Removed Too";
+
+				}
+			} else {
+					echo "File already Deleted";
+			}
+			$this->GalleryUploadModel->Remove($UploadID);
+		}
+	}
+
 /*-------------------------------------------------- Ajax functions ------------------------*/
 
 	/*
@@ -393,8 +425,8 @@ class ItemController extends GalleriesController {
 			$HTML .= '</br>';
 			$HTML .= $File->Description;
 			$HTML .= '<br/>';
-			$HTML .= '<button type="button" class="UploadRemove Button" id="Remove" uploadid="'.$File->UploadKey.'">Delete Image</button>';
-			$HTML .= '<button type="button" class="UploadSubmit Button" id="Upload" uploadid="'.$File->UploadKey.'">Add to current project</button>';
+			$HTML .= '<button type="button" class="UploadDelete Button" id="Delete" uploadid="'.$File->UploadKey.'">Delete Image</button>';
+			$HTML .= '<button type="button" class="UploadSubmit Button" id="Upload" uploadid="'.$File->UploadKey.'">Add to Project</button>';
 			$HTML .= '<div class="ClearFix"></div>';
 			$HTML .= '</li>';
 

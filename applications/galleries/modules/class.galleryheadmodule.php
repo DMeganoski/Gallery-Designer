@@ -4,6 +4,7 @@ class GalleryHeadModule extends Gdn_Module {
 
 	public function __construct(&$Sender = '') {
 		parent::__construct($Sender);
+		$Sender->AddJsFile('/applications/galleries/js/headmodule.js');
 	}
 
 

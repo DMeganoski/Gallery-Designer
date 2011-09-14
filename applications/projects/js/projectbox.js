@@ -3,17 +3,20 @@ $(document).ready(function() {
 /*--------------------------------------------------- Set up the page ---------------------------------------------*/
 	//start by hiding the box
 	$('.ProjectBox').hide();
+	$('.UploadBox').hide();
 	/*-------------------------------------------- define some variables for data ---------------------------------*/
 	var frameChoice = 'none';
 	var dragging = false;
-	// User ID
+	// Scan page to aquire php variables
 	var userID = $('.Account').attr("userid");
 	var transientKey = $('.Account').attr("transientkey");
 	var currentProjectID = $('.Account').attr("projectid");
-	var newProjectID = $('ul.Project').attr("projectid");
-	var imageLocation = $('img.Individual').attr("src");
+	var imageLocation = $('img.Single').attr("src");
+	// action variable for adding or removing items from the project.
+	// not currently implemented
 	var action = 'add';
-	$('.ProjectBox img').hover(function() {
+	// attempt at creating a button to remove images
+	$('img.Upload').hover(function() {
 		$(this).append('<div class="Close">X</div>');
 	});
 	var url = location.href;
@@ -31,63 +34,87 @@ $(document).ready(function() {
 	}
 	// for submtting items from the gallery in the project
 	$.fn.doProjectSubmit = function( type, itemID ) {
-		$.post("/project/projectselect", { UserID: userID, ProjectID: currentProjectID, Type: type, Slug: itemID, Action: 'add' },
+		$.post("/project/projectselect", {UserID: userID, ProjectID: currentProjectID, Type: type, Slug: itemID, Action: 'add'},
 		function(data) {
 			$('.Heading').append("<div class=\"Verify\">Item added to project.</div>" + data).updateProjectBox();
 	});
 	}
 	$.fn.doProjectRemove = function(type, itemID, projectID) {
-		$.post("/project/projectselect", { UserID: userID, ProjectID: projectID, Type: type, Slug: itemID, Action: 'remove' },
+		$.post("/project/projectselect", {UserID: userID, ProjectID: projectID, Type: type, Slug: itemID, Action: 'remove'},
 		function(data) {
 			$(this).updateProjectBox();
 		});
 	}
+	// for deleting uploaded images
+	$.fn.doUploadDelete = function(itemID) {
+		$.post("/item/uploaddelete", { ItemID: itemID, UserID: userID , TransientKey: transientKey},
+		function(data) {
+			$('.UploadNotify').html(data)
+			.updateUploadBox();
+		});
+	}
+	// for deleting projects entirely
+	$.fn.doProjectDelete = function(projectID) {
+		$.post('/project/delete', { ProjectID: projectID, UserID: userID, TransientKey: transientKey },
+			function(data) {
+				location.reload();
+			});
+	}
 	// for subitting frame choices
 	$.fn.doFrameSubmit = function() {
-		$.post("/project/frameselect", { UserID: userID, ProjectID: currentProjectID, Frame: frameChoice },
+		$.post("/project/frameselect", {UserID: userID, ProjectID: currentProjectID, Frame: frameChoice},
 		function(data) {
 		}
 	);
 	}
 	// for submitting current project
 	$.fn.doCurrentSubmit = function() {
-		$.post("/project/setcurrent", { UserID: userID, ProjectID: newProjectID },
+		var newProjectID = $(this).attr("projectid");
+		$.post("/project/setcurrent", {UserID: userID, ProjectID: newProjectID},
 		function(data) {
 			location.reload();
 		});
 	}
 	// for refreshing the project box
 	$.fn.updateProjectBox = function() {
-		$.post("/project/getproject", { UserID: userID, TransientKey: transientKey, ProjectID: currentProjectID },
+		$.post("/project/getproject", {UserID: userID, TransientKey: transientKey, ProjectID: currentProjectID},
 				function(data) {
 			$('.ProjectBox').html(data);
 		});
 	}
-
+	$.fn.updateUploadBox = function() {
+		$.post("/item/getuploads", {UserID: userID},
+				function(data) {
+					$('.UploadBox').html(data);
+				});
+	}
 	/*------------------------------------------- Define Events ----------------------------------------------------*/
-	$('#ToggleUploads').click(function() {
-		$('.ProjectBox').toggle('fast');
-		$.post("/item/getuploads", { UserID: userID },
-		function(data) {
-			$('.ProjectBox').html(data);
-		});
+	$('#ToggleUploads').live('click', function() {
+		if ( $('.UploadBox').css("display") == 'none' ){
+			$(this).updateUploadBox();
+			$('.UploadBox').slideDown('fast');
+		} else {
+			$('.UploadBox').slideUp('fast');
+		}
+
 	});
+	// hover function for dragging onto closed box
 	$('#ToggleProject').hover(function() {
 		if(dragging) {
-			$('.ProjectBox').slideDown('fast')
-			.updateProjectBox();
+			$(this).updateProjectBox();
+			$('.ProjectBox').slideDown('fast');
+
 		}
 	});
+	// click function for toggling display of the project box
 	$('#ToggleProject').click(function() {
-		if( $('.ProjectBox').css("display") == 'none' ){
-			$('.ProjectBox').slideDown('fast')
-			.updateProjectBox();
-		}
-		else{
+		if ( $('.ProjectBox').css("display") == 'none' ){
+			$(this).updateProjectBox();
+			$('.ProjectBox').slideDown('fast');
+
+		} else {
 			$('.ProjectBox').slideUp('fast');
-
 		}
-
 	});
 	$('.TinRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
@@ -103,10 +130,13 @@ $(document).ready(function() {
 		$(this).doProjectRemove(type, itemID, projectID );
 	});
 	$('.UploadRemove').live('click', function() {
-
+		var itemID = $(this).attr('id');
+		var projectID = currentProjectID;
+		$(this).doProjectRemove('uploads', itemID, projectID);
 	});
 	$('.UploadDelete').live('click', function() {
-
+		var itemID = $(this).attr('uploadid');
+		$(this).doUploadDelete(itemID);
 	});
 	$('.FrameRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
@@ -114,9 +144,13 @@ $(document).ready(function() {
 		var projectID = currentProjectID;
 		$(this).doProjectRemove(type, itemID, projectID );
 	});
-	$('.Current').click(function() {
+	$('.ProjectCurrent').click(function() {
 		$(this).doCurrentSubmit();
 	});
+	$('.ProjectDelete').click(function() {
+		var projectID = $(this).attr('projectid');
+		$(this).doProjectDelete(projectID);
+	})
 	$('.Selection').click(function() {
 		$(this).doProjectSubmit(itemSlug);
 	});
@@ -124,11 +158,7 @@ $(document).ready(function() {
 		var uploadID = $(this).attr("uploadid");
 		$(this).doProjectSubmit("uploads", uploadID);
 		if (onDesigner) {
-			$.post('/designer/', {},
-		function(data) {
-			 var content = $( data ).find( '#Content' );
-          $( "#Content" ).empty().append( content );
-		});
+			window.location = "/designer";
 		}
 	});
 	$('li#Click').click(function() {
@@ -158,13 +188,15 @@ $(document).ready(function() {
 					}
 
 			});
-	$("#ImageWrapper").draggable({ "snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": individualHelper,
+	$("#ImageWrapper").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": individualHelper,
 			"start": function(event,ui) {
+				dragging = true;
 				//$('.ProjectBox').show()
 				//.updateProjectBox();
 			},
 			"stop": function() {
 				$('img.Helper').hide();
+				dragging = false;
 			}
 	});
 
