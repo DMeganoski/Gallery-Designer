@@ -6,10 +6,6 @@
             <line>736</line>
         </file>
         <file>
-            <url>themes/TinsDirect/design/style.css</url>
-            <line>2125</line>
-        </file>
-        <file>
             <url>plugins/Galleries/class.galleriesplugin.php</url>
             <line>66</line>
             <line>573</line>
@@ -26,6 +22,10 @@
         <file>
             <url>library/database/class.sqldriver.php</url>
             <line>807</line>
+        </file>
+        <file>
+            <url>themes/TinsDirect/design/style.css</url>
+            <line>2126</line>
         </file>
     </editor-bookmarks>
 </project-private>

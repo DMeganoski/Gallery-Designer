@@ -905,7 +905,7 @@ ul#Menu {
    display: inline-block;
 }
 div.Box {
-   background: url('images/panel_bg.png') no-repeat top center;
+   background: url('images/panel_bg.png') no-repeat top center #FFF;
    color: #888;
    padding: 6px 10px;
    margin: 0 0 10px;

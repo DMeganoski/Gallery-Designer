@@ -5,9 +5,7 @@ $PublicDir = GalleryController::$PublicDir;
 $ActiveCategory = GalleryController::$Category;
 
 
-if ($Session->CheckPermission('Gallery.Docs.Download')) {
-    echo Anchor('Download a Template', '/gallery/templates', 'BigButton');
-}
+
 
 //Categories Box
 
@@ -49,6 +47,8 @@ if ($Session->CheckPermission('Gallery.Docs.Download')) {
 		}
 		echo '<li>'.Anchor('Quick-Start Guide', '/plugin/page/howitworks').'</li>';
 
-	?>
-	</ul>
+	if ($Session->CheckPermission('Gallery.Docs.Download')) {
+		echo '<li>'.Anchor('Download a Template', '/gallery/templates', 'BigButton').'</li>';
+	}
+	?></ul>
 </div>

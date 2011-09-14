@@ -91,4 +91,6 @@ div#ResizeBox{
 div#DesignBox img {
 	position: absolute;
 }
-
+input#SubmitProjectCheck {
+	margin: 0px auto;
+}

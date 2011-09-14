@@ -13,6 +13,8 @@ if (!empty($this->Frame)) {
 	<div class="Heading">
 		<h1>Welcome to the Interactive Tin Designer</h1>
 		<p>You can use items you have selected or uploaded to design your tin.</p>
+		<p>Note: the backgrounds are approximately 3000 x 3000 px images, your images will
+		appear smaller to retain definition</p>
 	</div>
 	<div id="DesignBox">
 			<div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>

@@ -29,17 +29,20 @@ class DesignerController extends ProjectsController {
 		$this->FireEvent('WhileHeadInit');
 
       }
-		$this->AddJsFile('/applications/projects/js/projectbox.js');
-		$this->AddCssFile('/applications/projects/design/projectbox.css');
       $this->MasterView = 'default';
 	  parent::Initialize();
    }
 
     public function PrepareController() {
-		$this->AddJsFile('jquery.event.drag.js');
+
 		$this->AddModule('GalleryHeadModule');
 		$this->AddModule('ProjectBoxModule');
 		$this->AddModule('GallerySideModule');
+
+		$this->AddJsFile('jquery.event.drag.js');
+		$this->AddJsFile('/applications/galleries/js/gallery.js');
+		$this->AddCssFile('/applications/galleries/design/gallery.css');
+
 	}
 
 	/*----------------------------------------Start of basic view functions --------------*/
@@ -138,7 +141,7 @@ class DesignerController extends ProjectsController {
 				), array('ProjectKey' => $ProjectData->ProjectKey));
 			}
 		} else {
-			
+
 		}
 		$this->Render();
 	}

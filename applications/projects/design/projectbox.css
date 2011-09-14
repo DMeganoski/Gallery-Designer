@@ -48,24 +48,33 @@ ul.Project li.Float {
 	min-width: 330px;
 	float: left;
 }
+.ProjectBox table {
+	border: 1px solid #CCC;
+}
 .ProjectBox table th {
 	border-top: 1px solid #CCC;
 	font-size: 110%;
+	padding: 4px;
+	text-align: center;
+}
+.ProjectBox table td {
+	text-align: center;
 }
 div.ProjectWrapper {
 	position: relative;
 }
 img.FrameSmall {
 	position: absolute;
-	width: 172px;
-	height: 172px;
-	top: -15px;
-	left: -12px;
+	width: 117px;
+	height: 117px;
+	top: -10px;
+	left: 45px;
 }
 body.Gallery img.FrameSmall {
 	top: 180px;
 	left: -6px;
 }
+
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
 	float: right;

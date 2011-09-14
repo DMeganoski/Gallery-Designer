@@ -74,17 +74,17 @@ $(document).ready(function() {
 	});
 	$('#ToggleProject').hover(function() {
 		if(dragging) {
-			$('.ProjectBox').show('fast')
+			$('.ProjectBox').slideDown('fast')
 			.updateProjectBox();
 		}
 	});
 	$('#ToggleProject').click(function() {
 		if( $('.ProjectBox').css("display") == 'none' ){
-			$('.ProjectBox').show('fast')
+			$('.ProjectBox').slideDown('fast')
 			.updateProjectBox();
 		}
 		else{
-			$('.ProjectBox').hide('fast');
+			$('.ProjectBox').slideUp('fast');
 
 		}
 

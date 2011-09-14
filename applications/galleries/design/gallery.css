@@ -215,10 +215,6 @@ div.Picture img {
 	float: left;
 	z-index: 100;
 }
-img.Individual {
-	max-width: 300px;
-	max-height: 300px;
-}
 table#ItemInfo {
    width: 320px;
    float: right;

@@ -7,7 +7,7 @@ $('body.Designer #Content img').each(function(){
 $(document).ready(function() {
 	/*----------------------------------- prepare page -----------------------------*/
 	$('#NoticeBox').hide();
-	
+
 	/*------------------------------- Get Previously Set Positions -----------------*/
 	var ElementID = $(this).attr('id');
 	var frameChoice = 'none';

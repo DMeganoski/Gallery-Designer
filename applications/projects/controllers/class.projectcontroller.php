@@ -43,6 +43,8 @@ class ProjectController extends ProjectsController {
 		$this->AddJsFile('loader.js');
 		$this->AddCssFile('gallery.css');
 
+		$this->AddJsFile('/applications/galleries/js/gallery.js');
+
         //$GalleryHeadModule->GetData();
 
 		if (C('Galleries.ShowFireEvents'))
@@ -106,21 +108,25 @@ class ProjectController extends ProjectsController {
 			echo '<div class="Heading">';
 				echo '<table align="Center">';
 				echo '<tr class="Heading">';
-				echo '<th colspan="2"><h2>My Current Project:  '.$this->CurrentProject->ProjectName.'</a><h2></th>';
+				echo '<th><h2>My Current Project:  '.$this->CurrentProject->ProjectName.'</a><h2></th>';
 				echo '</tr>';
 				$Selection = $this->MyExplode($this->CurrentProject->Selected);
 				if (!empty($Selection)) {
 					$Tin = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['tins']))->FirstRow();
 						if (!empty($Tin)) {
 							echo '<tr>';
-							if (!empty($Tin->Name))
-								echo '<th colspan="2">Selected Background:  <a href="/item/'.$Tin->Slug.'">'.$Tin->Name.'</a></th>';
-							else
-								echo '<th colspan="2">Selected Background :  <a href="/item/'.$Tin->Slug.'">'.$Tin->Slug.'</a></th>';
+							echo '<th>Selected Background:</th>';
+							echo '</tr><tr>';
+							if (!empty($Tin->Name)) {
+								echo '<th><a href="/item/'.$Tin->Slug.'">'.$Tin->Name.'</a></th>';
+							} else {
+								echo '<th><a href="/item/'.$Tin->Slug.'">'.$Tin->Slug.'</a></th>';
+							}
 						echo '</tr><tr>';
 							echo '<td align="Center" class="Background">';
 							echo '<img src="/uploads/item/tins/'.$Tin->Slug.'M.jpg"></img>';
 							echo '</td>';
+							echo '</tr><tr>';
 							echo '<td>';
 							echo '<button type="button" id="TinRemove" class="Button TinRemove" itemtype="tins" itemslug="'.$Tin->Slug.'">Remove Tin</button>';
 							echo '</td>';
@@ -129,13 +135,19 @@ class ProjectController extends ProjectsController {
 						$Background = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['covers']))->FirstRow();
 						if (!empty($Background)) {
 						echo '<tr>';
+						echo '<th colspan="2">Selected Background:</th>';
+						echo '</tr><tr>';
 							if (!empty($Background->Name))
-								echo '<th>Selected Background:  <a href="/item/'.$Background->Slug.'">'.$Background->Name.'</a></th>';
+								echo '<th><a href="/item/'.$Background->Slug.'">'.$Background->Name.'</a></th>';
 							else
-								echo '<th>Selected Background :  <a href="/item/'.$Background->Slug.'">'.$Background->Slug.'</a></th>';
+								echo '<th><a href="/item/'.$Background->Slug.'">'.$Background->Slug.'</a></th>';
 							$Frame = $Selection['frame'];
-							if (!empty($Frame))
-							echo '<th>Selected Frame: '.$Frame.'</th>';
+							if (!empty($Frame)) {
+								echo '</tr>';
+								echo '<th>Selected Frame:</th>';
+								echo '</tr><tr>';
+								echo '<th>'.$Frame.'</th>';
+							}
 						echo '</tr><tr>';
 							echo '<td align="Center" class="Background">';
 							echo '<div class=ProjectWrapper>';
@@ -144,7 +156,9 @@ class ProjectController extends ProjectsController {
 							}
 							echo '<img src="/uploads/item/covers/'.$Background->Slug.'S.jpg"></img>';
 							echo '</td>';
+							echo '</tr><tr>';
 							echo '<td>';
+							if (!empty($Frame))
 							echo '<button type="button" id="FrameRemove" class="Button FrameRemove" itemtype="frame" itemslug="'.$Frame.'">Remove Frame</button>';
 							echo '<button type="button" id="CoverRemove" class="Button CoverRemove" itemtype="covers" itemslug="'.$Background->Slug.'">Remove Background</button>';
 							echo '</td>';
