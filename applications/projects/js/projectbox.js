@@ -191,10 +191,12 @@ $(document).ready(function() {
 	$("#ImageWrapper").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": individualHelper,
 			"start": function(event,ui) {
 				dragging = true;
+				$('img.Border').css('z-index', '200');
 				//$('.ProjectBox').show()
 				//.updateProjectBox();
 			},
 			"stop": function() {
+				$('img.Border').css('z-index', '0');
 				$('img.Helper').hide();
 				dragging = false;
 			}

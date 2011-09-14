@@ -11,7 +11,9 @@ $(document).ready(function() {
 		$(this).next('ol').toggle('fast');
 	});
 	// toggle variable for navigation menus.
-
+	$('h2.Format').click( function() {
+		$(this).next('ul').toggle('fast');
+	});
 
 /*--------------------------------- Functions -----------------------------------*/
 /*--------------------------------- QTips ---------------------------------------*/

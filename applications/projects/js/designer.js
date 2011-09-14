@@ -79,9 +79,10 @@ $(document).ready(function() {
 		"grid": [10, 10],
 		"stack": ".Draggable",
 		"beforeStart": function(event,ui) {
-
+			$('img.Border').css('z-index', '400');
 		},
 		"stop": function(event,ui) {
+			$('img.Border').css('z-index', '0');
 			var pos = $(this).position();
 			var imgID = $(this).attr('id');
 

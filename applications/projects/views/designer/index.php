@@ -5,6 +5,7 @@ if (!empty($this->Frame)) {
 } else {
 	$FrameClass = 'None';
 }
+$TinSize = '5C';
 ?>
 
 
@@ -30,6 +31,9 @@ if (!empty($this->Frame)) {
 			if (!empty($CurrentProject->Message)) {
 
 			}
+			if (!empty($this->BackgroundFile)) {
+				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border"></img><?
+			}
 	?></div>
 	<div class="MessageDisplay">
 		<h1>Included Message:</h1>
@@ -37,6 +41,6 @@ if (!empty($this->Frame)) {
 	</div>
 	<div id="NoticeBox"></div>
 	<div class="Buttons">
-		<button type="button" id="SubmitProjectCheck" class="SubmitProjectCheck BigButton" projectstage="<? echo $this->ProjectStage ?>" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Submit project for review and processing</button>
+		<button type="button" id="SubmitProjectCheck" class="SubmitProjectCheck Button" projectstage="<? echo $this->ProjectStage ?>" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Submit project for review and processing</button>
 	</div>
 </div>
