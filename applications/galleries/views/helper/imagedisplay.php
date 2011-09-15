@@ -28,7 +28,8 @@ if (!is_a($AllFiles, Gdn_DataSet)) {
 	 $this->FireEvent('BeforeBrowseView');
 ?>
 	<div class="Heading">
-		<h2>Click an item for more information</h2>
+		<h2>Click an item for more information and options</h2>
+		<p>Or simply drag it to your project box</p>
 	</div>
 <ul class="Gallery">
     <?php
@@ -39,10 +40,8 @@ if (!is_a($AllFiles, Gdn_DataSet)) {
                 echo $PublicDir.$ActiveClass.DS.$Item->Slug.'M.jpg';
                 echo '" class="Gallery Image"';
 				echo 'page="/item'.DS.$Item->Slug.'"';
-				echo ' content="';
-				include(PATH_APPLICATIONS.DS.'galleries/customfiles/iteminfo.php');
-				?>"/>
-                </a></li><?php
+				echo ' itemid="'.$Item->Slug.'" type="'.$Item->ClassLabel.'"/>';
+                ?></a></li><?php
                 }?>
 </ul>
 

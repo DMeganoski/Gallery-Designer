@@ -74,12 +74,12 @@ $(document).ready(function() {
 */
 	$(".Draggable").draggable({
 		"containment": "parent",
-		"opacity": "0.3",
+		"opacity": "0.5",
 		"cursor": 'move',
 		"grid": [10, 10],
 		"stack": ".Draggable",
 		"beforeStart": function(event,ui) {
-			$('img.Border').css('z-index', '400');
+			$('img.Border').css('z-index', '4');
 		},
 		"stop": function(event,ui) {
 			$('img.Border').css('z-index', '0');

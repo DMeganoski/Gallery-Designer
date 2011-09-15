@@ -417,11 +417,17 @@ class ItemController extends GalleriesController {
 		$HTML = '';
 		foreach ($Uploads as $File) {
 			$FileName = $File->FileName;
+			if (strlen($FileName)< 28) {
+				$FileLabel = $FileName;
+			} else {
+				$FileLabel = substr($FileName, 0, 25);
+				$FileLabel .= '...';
+			}
 			$FileParts = pathinfo($FileName);
 			$BaseName = $FileParts['filename'];
 			$HTML .= '<li class="UploadData" uploadid="'.$File->UploadKey.'">';
 			$HTML .= '<img src="/uploads/'.$BaseName.'-Thumb.jpg" class="Thumb"></img>';
-			$HTML .= '<strong>'.$File->FileName.'</strong>';
+			$HTML .= '<strong>'.$FileLabel.'</strong>';
 			$HTML .= '</br>';
 			$HTML .= $File->Description;
 			$HTML .= '<br/>';

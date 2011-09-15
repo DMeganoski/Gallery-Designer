@@ -86,13 +86,14 @@ div#ResizeBox{
 	background: #F0DE7D;
 	width: 600px;
 	height: 600px;
-	margin: 10px auto;
+	margin: 25px auto;
+	z-index: 0;
 }
 div#DesignBox img {
 	position: absolute;
 }
 div#DesignBox img.Individual {
-	z-index: 100;
+	z-index: 2;
 }
 div#DesignBox img.Border {
 	left: -14px;

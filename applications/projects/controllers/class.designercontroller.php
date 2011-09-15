@@ -165,7 +165,36 @@ class DesignerController extends ProjectsController {
 		$Type = $Request->Post('imgID');
 		$ProjectID = $Request->Post('ProjectID');
 
+		$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
+
 		$this->_SaveItemPosition($ProjectID, $Type, $Top, $Left);
+		echo '<br/>';
+		print_r($Return);
+	}
+	private function _UpdateProjectOrder($ProjectID, $Type) {
+		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
+		$Order = explode('-', $CurrentProject->Order);
+		if (count($Order) > 1) {
+			$Found = array_search($Type, $Order);
+			$Empty = array_search('', $Order);
+			if ($Found) {
+				unset($Order[$Found]);
+			}
+			if ($Empty) {
+				unset($Order[$Empty]);
+			}
+
+			array_push($Order, $Type);
+			$Return = implode('-', $Order);
+		} else {
+			$Order = $Type;
+			$Return = $Order;
+		}
+			$this->ProjectModel->Update('Project', array(
+				'Order' => $Type
+			), array('ProjectKey' => $ProjectID));
+		return $Order;
+
 	}
 
 	private function _SaveItemPosition($ProjectID = '', $Type = '', $Top= '', $Left = '') {

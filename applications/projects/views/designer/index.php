@@ -17,8 +17,11 @@ $TinSize = '5C';
 		<p>Note: the backgrounds are approximately 3000 x 3000 px images, your images will
 		appear smaller to retain definition</p>
 	</div>
-	<div id="DesignBox">
-			<div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>
+	<div id="DesignBox"><?
+			if (!empty($this->BackgroundFile)) {
+				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border"></img><?
+			}
+			?><div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>
 			<img src="/uploads/item/covers/<? echo $this->BackgroundFile->FileName ?>" class="Background Large" id="Background"></img>
 			<div class="ClearFix"></div>
 
@@ -32,7 +35,7 @@ $TinSize = '5C';
 
 			}
 			if (!empty($this->BackgroundFile)) {
-				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border"></img><?
+				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border Draggable"></img><?
 			}
 	?></div>
 	<div class="MessageDisplay">

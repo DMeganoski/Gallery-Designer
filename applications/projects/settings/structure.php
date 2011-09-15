@@ -25,6 +25,7 @@ $Construct->Table('Project')
 		->Column('LeftPositions', 'varchar(255)', TRUE)
 		->Column('Message', 'varchar(255)', TRUE)
 		->Column('MessagePosition', 'varchar(50)', TRUE)
+		->Column('Order', 'varchar(100)', TRUE)
 		->Column('CurrentProject', 'tinyint(1)', TRUE)
 		->Column('ProjectStage', 'tinyint(9)', 0)
         ->Set(FALSE, FALSE);

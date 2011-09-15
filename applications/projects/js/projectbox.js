@@ -12,6 +12,8 @@ $(document).ready(function() {
 	var transientKey = $('.Account').attr("transientkey");
 	var currentProjectID = $('.Account').attr("projectid");
 	var imageLocation = $('img.Single').attr("src");
+	var browseID = $('.Gallery').attr("itemid");
+	var browsetype = $('.Gallery').attr("type");
 	// action variable for adding or removing items from the project.
 	// not currently implemented
 	var action = 'add';
@@ -31,6 +33,10 @@ $(document).ready(function() {
 	// helper for draggable items
 	function individualHelper( event ) {
 		return "<div class=\"DetailsWrapper Dragging\"><div id=\"FrameWrapper\" class=\"" + frameChoice + "Frame\"></div><img src=\"" + imageLocation + "\" class=\"Helper Individual\"></img></div>";
+	}
+	function browseHelper( src ) {
+		var imageLocation = $('img.Gallery').attr("src");
+		return "<img src=\"" + imageLocation + "\" class=\"Helper\"></img>";
 	}
 	// for submtting items from the gallery in the project
 	$.fn.doProjectSubmit = function( type, itemID ) {
@@ -191,14 +197,25 @@ $(document).ready(function() {
 	$("#ImageWrapper").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": individualHelper,
 			"start": function(event,ui) {
 				dragging = true;
-				$('img.Border').css('z-index', '200');
 				//$('.ProjectBox').show()
 				//.updateProjectBox();
 			},
 			"stop": function() {
-				$('img.Border').css('z-index', '0');
 				$('img.Helper').hide();
 				dragging = false;
+			}
+	});
+	var src = $('img.Gallery').attr("src");
+	$(".Gallery").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": browseHelper(src),
+			"start": function(event,ui) {
+				dragging = true;
+				//$('.ProjectBox').show()
+				//.updateProjectBox();
+			},
+			"stop": function() {
+				dragging = false;
+				$('img.Helper').hide();
+
 			}
 	});
 

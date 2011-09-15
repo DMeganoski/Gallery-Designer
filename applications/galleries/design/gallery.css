@@ -23,7 +23,7 @@ div#Custom {
    width: 100%;
    text-align: left;
    vertical-align: bottom;
-   z-index: 20;
+   z-index: 0;
 }
 div.FireEvent {
 	background: #F1D031;

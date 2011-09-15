@@ -99,6 +99,9 @@ h4.Toggle {
 	line-height: 2.0;
 	margin: 5px 0 10px;
 }
+div.MessageDisplay {
+	border: 1px solid #CCC;
+}
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
 	float: right;
