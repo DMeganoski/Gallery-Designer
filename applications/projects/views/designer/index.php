@@ -31,18 +31,16 @@ $TinSize = '5C';
 						<img src="/uploads/<? echo $Upload ?>" class="Upload Draggable Individual" id="<? echo $Upload ?>"
 							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
 					<? }
-			if (!empty($CurrentProject->Message)) {
-
+			if (!empty($this->CurrentProject->Message)) {
+				echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" id="Text" class="Text Draggable Individual" style="top: '.$this->MessagePosition['top'].'; left: '.$this->MessagePosition['left'].'" projectid="'.$this->CurrentProject->ProjectKey.'"/>';
 			}
-			if (!empty($this->BackgroundFile)) {
-				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border Draggable"></img><?
-			}
-	?></div>
+	?></div><div id="NoticeBox"></div>
 	<div class="MessageDisplay">
-		<h1>Included Message:</h1>
-		<? echo $this->CurrentProject->Message ?>
-	</div>
-	<div id="NoticeBox"></div>
+		<h1>Included Message:</h1><?
+		if (!empty($this->CurrentProject->Message)) {
+		echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" class=""/>';
+		} ?></div>
+
 	<div class="Buttons">
 		<button type="button" id="SubmitProjectCheck" class="SubmitProjectCheck Button" projectstage="<? echo $this->ProjectStage ?>" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Submit project for review and processing</button>
 	</div>

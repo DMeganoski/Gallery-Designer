@@ -183,8 +183,11 @@ class ProjectController extends ProjectsController {
 					<? }
 				}
 				if (!empty($CurrentProject->Message)) {
-					?><h2>Included Message:</h2>
-					<div class="MessageDisplay"><? echo $CurrentProject->Message ?></div><?
+					?>
+					<div class="MessageDisplay">
+						<h2>Included Message:</h2>
+					<? echo $CurrentProject->Message;
+					?></div><?
 				}
 				echo '</td></tr></table>';
 				echo '</div>';

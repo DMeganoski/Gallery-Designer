@@ -51,7 +51,7 @@ div.Tabs li.Navigation {
 	height: 33px;
 }
 div.Tabs ul.Sublist {
-	background: url("/applications/galleries/design/images/grey_out_40.png") repeat-x bottom #FFF;
+	background: url("/themes/TinsDirect/design/images/grey_out_40.png") repeat-x bottom #FFF;
 	position: absolute;
 	top: 24px;
 	left: -7px;
@@ -75,11 +75,11 @@ div.Tabs ul.Sublist li a {
 	max-width: 250px;
 }
 a.Active, div.Tabs li.Active ul.Sublist li a {
-	background: url("/applications/galleries/design/images/grey_in_40.png") repeat-x bottom #FFF;
+	background: url("/themes/TinsDirect/design/images/grey_in_40.png") repeat-x bottom #FFF;
 	color: #6C6C6C;
 }
 a.Active, div.Tabs li.Active ul.Sublist li a:hover {
-	background: url("applications/galleries/design/images/grey_out_40.png") repeat-x top #FFF;
+	background: url("/themes/TinsDirect/design/images/grey_out_40.png") repeat-x top #FFF;
 	color: #0063DC;
 }
 /*----------------- Category Pages ----------------*/

@@ -17,20 +17,21 @@ $(document).ready(function() {
 
 /*--------------------------------- Functions -----------------------------------*/
 /*--------------------------------- QTips ---------------------------------------*/
-	$('.Icon').qtip({ /* For links containing no text */
+	/*$('.Icon').qtip({  For links containing no text
 		content: {
 			text: function(api) {
 				return $(this).attr('title');
 			}
 		},
 		position: {
-		  my: 'top center', /* where to put tooltip in relation to the object */
-		  at: 'bottom center' /* where to put object in relation to the tooltip */
+		  my: 'top center',  where to put tooltip in relation to the object 
+		  at: 'bottom center'  where to put object in relation to the tooltip
 		},
 		style: {
 			classes: 'ui-tooltip-light ui-tooltip-shadow'
 		}
-	});
+	}); */
+
 	$("li.Image").hover(function() {
 		$(this).css({'z-index' : '10'}); /*Add a higher z-index value so this image stays on top*/
 		$(this).find('img').addClass("hover").stop() /* Add class of "hover", then stop animation queue buildup*/

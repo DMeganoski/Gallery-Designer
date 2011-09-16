@@ -1,7 +1,8 @@
 $(window).load(function(){
-$('body.Designer #Content img').each(function(){
-	$(this).width($(this).width() * 0.2);
-});
+	$('body#projects_designer_index #Content img').each(function(){
+		$(this).width($(this).width() * 0.2);
+
+	});
 });
 /*-------------------------------------- Jquery functions --------------------------*/
 $(document).ready(function() {
@@ -89,16 +90,16 @@ $(document).ready(function() {
 			$(this).doProjectPlace( imgID, pos.top, pos.left );
 			$('img.Helper').hide();
 		}
-	})
-	.each(function() {
+	}).each(function() {
 		var imgID = $(this).attr('id');
 		var currentProjectID = $(this).attr('projectid');
 		$.post('/project/getplacement', { projectID: currentProjectID, imgID: imgID },
 			function(data) {
 				console.log(data.top);
 				console.log(data.left);
-				$(this).attr('top', data.top + "px");
-				$(this).attr('left', data.left + "px");
+				console.log(data.imgID);
+				$(this).css('top', data.top + "px");
+				$(this).css('left', data.left + "px");
 			}, "json");
 	});
 	$('.SubmitProjectCheck').live('click', function() {

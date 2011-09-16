@@ -106,3 +106,26 @@ input#SubmitProjectCheck {
 div.MessageDisplay {
 	text-align: center;
 }
+img#Text {
+	display: inline;
+}
+div#Color {
+	border: 1px solid #CCC;
+	width: 10px;
+	height: 10px;
+}
+div.White {
+	background: #FFF;
+}
+div.Black {
+	background: #000;
+}
+/*--------------------------------------- Text Page --------------------------------------*/
+div.Yellow {
+	background: #F0DE7D;
+	height: 50px;
+	width: 100%;
+}
+img.TextImage {
+	position: absolute;
+}

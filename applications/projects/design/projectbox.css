@@ -62,10 +62,7 @@ ul.Project li.Float {
 div.ProjectWrapper {
 	position: relative;
 }
-.ProjectBox table td div#UploadWrapper {
-	float: left;
-	max-width: 108px;
-}
+
 img.FrameSmall {
 	display: block;
 	width: 117px;
@@ -100,7 +97,16 @@ h4.Toggle {
 	margin: 5px 0 10px;
 }
 div.MessageDisplay {
-	border: 1px solid #CCC;
+	width: 100%;
+	clear: both;
+	padding: 5px;
+}
+.ProjectBox table td div#UploadWrapper {
+	float: left;
+	max-width: 108px;
+}
+.ProjectBox h2 {
+	border-top: 1px solid #CCC;
 }
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
