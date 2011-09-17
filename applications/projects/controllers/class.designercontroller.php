@@ -199,10 +199,10 @@ class DesignerController extends ProjectsController {
 			$Type = $Request->Post('imgID');
 			$ProjectID = $Request->Post('ProjectID');
 
-			$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
+			//$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
 
 			$this->_SaveItemPosition($ProjectID, $Type, $Top, $Left);
-			print_r($Return);
+			//print_r($Return);
 		}
 
 		/*
@@ -322,7 +322,7 @@ class DesignerController extends ProjectsController {
 		$y = $FontSize * 1.2;
 		$total_width=0;
 		$counter=0;
-
+		/*
 		for($i=0; $i<strlen($text); $i++)
 		{
 			//$text_to_write=urldecode(substr($text,$i,1)."%0D_");
@@ -344,7 +344,7 @@ class DesignerController extends ProjectsController {
 			imagettftext($im, 20, -($degDelta * $x + $degDelta / 2)+90 , $AX, $AY, $color, 'arial.ttf', $text[$x]);
 
 		}
-
+		*/
 		$dimensions = imagettfbbox($FontSize, $Angle, $FontFile, $text);
 
 

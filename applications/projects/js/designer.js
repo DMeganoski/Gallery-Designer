@@ -47,7 +47,6 @@ $(document).ready(function() {
 			$(this).hide('400');
 			$(this).dequeue();
 		});
-		$
 	});
 	}
 	$.fn.resizeImages = function ( h, w, percent) {

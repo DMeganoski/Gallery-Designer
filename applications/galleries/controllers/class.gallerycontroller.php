@@ -60,6 +60,7 @@ class GalleryController extends GalleriesController {
 		$this->AddJsFile('jquery.ui.packed.js');
 
         //$GalleryHeadModule->GetData();
+		$this->AddModule('ProjectBoxModule');
 		$this->AddModule('GalleryHeadModule');
 		$this->AddModule('GallerySideModule');
 

@@ -12,6 +12,7 @@ $FileInfo = $this->FileData;
 			<h1><?php echo $FileInfo->Name.' ('.$FileInfo->Slug.')'; ?></h1>
 			<h2>You choose a frame if you like, then drag the image to your project box</h2>
 		</div><?php
+			echo "<div class=\"Verify\"></div>";
 			echo '<table><tr>';
 			echo '<td>Description: <td>';
 			echo '<td>'.$FileInfo->Description.'</td>';

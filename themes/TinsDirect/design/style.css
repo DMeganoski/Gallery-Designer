@@ -214,8 +214,9 @@ select {
    }
 a.Button,
 .Button {
+	height: 27px;
    cursor: pointer;
-   margin: 10px;
+   margin: 15px;
    font-size: 11px;
    padding: 4px;
    background: url('images/buttonbg.png') repeat-x center left #f8f8f8;

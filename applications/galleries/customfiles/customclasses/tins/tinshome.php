@@ -29,7 +29,7 @@ $Categories = $this->GetCategories($ActiveClass);
 	    echo '</tr>';
 	    $Items = $this->GalleryItemModel->Get(0,0, array('CategoryKey' => $CategoryKey));
 	    foreach ($Items as $FileInfo) {
-	    echo '<tr><td><a href="/gallery/item/'.$FileInfo->Slug.'">'.$FileInfo->Name.'</a></td></tr>';
+	    echo '<tr><td><a href="/item/'.$FileInfo->Slug.'">'.$FileInfo->Name.'</a></td></tr>';
 	    }
 	    echo '</table>';
 	    echo '</div>';
@@ -37,4 +37,5 @@ $Categories = $this->GetCategories($ActiveClass);
        <div class="PriceLink">
 	  <a href="/gallery/default/pricing" class="BigButton">Price Guide</a>
        </div>
-    </div></div>
+    </div>
+</div>

@@ -58,6 +58,7 @@ ul.Project li.Float {
 }
 .ProjectBox table td {
 	text-align: center;
+	padding: 10px;
 }
 div.ProjectWrapper {
 	position: relative;

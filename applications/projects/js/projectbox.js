@@ -42,9 +42,20 @@ $(document).ready(function() {
 	$.fn.doProjectSubmit = function( type, itemID ) {
 		$.post("/project/projectselect", {UserID: userID, ProjectID: currentProjectID, Type: type, Slug: itemID, Action: 'add'},
 		function(data) {
-			$('.Heading').append("<div class=\"Verify\">Item added to project.</div>" + data).updateProjectBox();
+			var verifyBox = $('.Verify');
+			$(verifyBox).queue(function() {
+				$(this).html("Item Added to Project.<br/>" + data);
+				$(this).show();
+				$(this).updateProjectBox();
+				$(this).fadeTo('200', '1');
+				$(this).delay('1000');
+				$(this).fadeTo('1600', '0.3');
+				$(this).hide('slow');
+				$(this).dequeue();
 	});
 	}
+	)};
+	// for removing items from the project
 	$.fn.doProjectRemove = function(type, itemID, projectID) {
 		$.post("/project/projectselect", {UserID: userID, ProjectID: projectID, Type: type, Slug: itemID, Action: 'remove'},
 		function(data) {

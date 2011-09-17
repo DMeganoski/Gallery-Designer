@@ -121,6 +121,9 @@ class ProjectController extends ProjectsController {
 							echo '<td>';
 							echo '<button type="button" id="TinRemove" class="Button TinRemove" itemtype="tins" itemslug="'.$Tin->Slug.'">Remove Tin</button>';
 							echo '</td>';
+						} else {
+							echo "<tr><th>No Tin Selected</th><tr>";
+							echo '<tr><td><a href="/gallery/tins/" class="Button">Choose Tin</a></td></tr>';
 						}
 						// Start CoverSelection
 						$Background = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['covers']))->FirstRow();
@@ -154,7 +157,12 @@ class ProjectController extends ProjectsController {
 							echo '<button type="button" id="CoverRemove" class="Button CoverRemove" itemtype="covers" itemslug="'.$Background->Slug.'">Remove Background</button>';
 							echo '</td>';
 							echo '</div>';
+						} else {
+							echo "<tr><th>No Background Selected</th><tr>";
+							echo '<tr><td><a href="/gallery/covers/" class="Button">Choose Background</a></td></tr>';
 						}
+			} else {
+				echo '<tr><th>Nothing Selected</th></tr>';
 			}
 			echo '<div class="ClearFix"></div>';
 			echo '</tr>';
@@ -192,6 +200,8 @@ class ProjectController extends ProjectsController {
 						<h2>Included Message:</h2>
 					<? echo $CurrentProject->Message;
 					?></div><a href="/designer/text" class="Button">Edit</a><?
+				} else {
+					echo '<a href="/designer/text" class="Button">Add a Message</a>';
 				}
 				echo '</td></tr></table>';
 				echo '</div>';
@@ -269,7 +279,7 @@ class ProjectController extends ProjectsController {
 		$NewArray = array();
 			if (!empty($CurrentSelection)) {
 				foreach ($CurrentSelection as $CurrentType => $CurrentSlug) {
-					if (!empty($CurrentSlug)) {
+					if (!empty($CurrentSlug) && $CurrentType != $Type) {
 						$NewArray[$CurrentType] = $CurrentSlug;
 					}
 				}
