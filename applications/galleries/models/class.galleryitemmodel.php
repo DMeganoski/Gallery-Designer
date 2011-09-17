@@ -131,7 +131,7 @@ class GalleryItemModel extends Gdn_Model {
 					}
 					if (strlen($FileName) > 11) {
 						if (substr($FileName, 6, 1) == 'L') {
-							$Item['Name'] = trim(substr($FileName, 9), '.jpg');
+							$Item['Name'] = trim(trim(substr($FileName, 10), '.jpg'), '.png');
 							$Item['Large'] = $FileName;
 						}
 					} else {
@@ -168,7 +168,6 @@ class GalleryItemModel extends Gdn_Model {
        $this->DefineSchema();
        $this->SQL->Insert($Table, $Set, $Where, $Limit);
     }
-
 
     public function Replace($Table = '', $Set = NULL, $Where, $CheckExisting = FALSE) {
 	if (!is_array($Set))

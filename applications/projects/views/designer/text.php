@@ -21,24 +21,34 @@ $FontNames = array(
 	'Saved By Zero' => 'Saved By Zero',
 	'Seaside Resort' => 'Seaside Resort'
 );
+$Lengths = array('10' => '10', '12' => '12', '14' => '14', '16' => '16', '18' => '18', '20' => '20', '22' => '22', '24' => '24', '26' => '26', '28' => '28', '30' => '30');
+
 echo $this->Form->Open();
 echo $this->Form->Errors();
+echo '<table class="Font"><tr><td>';
 echo $this->Form->Label('Message', 'Message');
+echo '</td><td>';
 echo $this->Form->TextBox('Message', array('multiline' => TRUE));
-echo '<br/>';
+echo '</td></tr><tr><td>';
 echo $this->Form->Label('Font Color', 'FontColor');
+echo '</td><td>';
 echo $this->Form->Dropdown('FontColor', $Colors);
-echo '<br/>';
+echo '</td></tr><tr><td>';
 echo $this->Form->Label('Font Size', 'FontSize');
+echo '</td><td>';
 echo $this->Form->Dropdown('FontSize', $FontSizes);
-echo '<br/>';
+echo '</td></tr><tr><td>';
 echo $this->Form->Label('Font Style', 'FontName');
+echo '</td><td>';
 echo $this->Form->Dropdown('FontName', $FontNames);
-echo '<br/>';
-echo "Number of characters allowed in one line";
-echo '<br/>';
+echo '</td></tr><tr><td>';
 echo $this->Form->Label('Line Length', 'LineLength');
-echo $this->Form->TextBox('LineLength');
+echo '<br/>';
+echo "(Number of characters allowed in one line)";
+echo '</td><td>';
+echo $this->Form->DropDown('LineLength', $Lengths);
+echo '</td></tr></table>';
 echo $this->Form->Close('Save');
-echo "<div class='Yellow'></div>";
+echo "<div class='Yellow'>";
 echo "<img src='$this->TextImage' class='TextImage'/>";
+echo '</div>';

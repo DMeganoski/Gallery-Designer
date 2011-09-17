@@ -97,9 +97,8 @@ h4.Toggle {
 	margin: 5px 0 10px;
 }
 div.MessageDisplay {
-	width: 100%;
 	clear: both;
-	padding: 5px;
+	padding: 10px;
 }
 .ProjectBox table td div#UploadWrapper {
 	float: left;

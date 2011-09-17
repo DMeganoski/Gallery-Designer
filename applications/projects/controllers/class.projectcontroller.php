@@ -99,12 +99,14 @@ class ProjectController extends ProjectsController {
 				echo '<tr class="Heading">';
 				echo '<th><h2>My Current Project:  '.$this->CurrentProject->ProjectName.'<h2></th>';
 				echo '</tr>';
+				// Start Selected Items
 				$Selection = $this->MyExplode($this->CurrentProject->Selected);
 				if (!empty($Selection)) {
+					// Start Tin Selection
 					$Tin = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['tins']))->FirstRow();
 						if (!empty($Tin)) {
 							echo '<tr>';
-							echo '<th>Selected Background:</th>';
+							echo '<th>Selected Tin:</th>';
 							echo '</tr><tr>';
 							if (!empty($Tin->Name)) {
 								echo '<th><a href="/item/'.$Tin->Slug.'">'.$Tin->Name.'</a></th>';
@@ -113,14 +115,14 @@ class ProjectController extends ProjectsController {
 							}
 						echo '</tr><tr>';
 							echo '<td align="Center" class="Background">';
-							echo '<img src="/uploads/item/tins/'.$Tin->Slug.'M.jpg"></img>';
+							echo '<img src="/uploads/item/tins/'.$Tin->Slug.'S.jpg"></img>';
 							echo '</td>';
 							echo '</tr><tr>';
 							echo '<td>';
 							echo '<button type="button" id="TinRemove" class="Button TinRemove" itemtype="tins" itemslug="'.$Tin->Slug.'">Remove Tin</button>';
 							echo '</td>';
 						}
-
+						// Start CoverSelection
 						$Background = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['covers']))->FirstRow();
 						if (!empty($Background)) {
 						echo '<tr>';
@@ -156,6 +158,7 @@ class ProjectController extends ProjectsController {
 			}
 			echo '<div class="ClearFix"></div>';
 			echo '</tr>';
+			// Start Uploaded Images
 			$IncludedUploads = $this->MyExplode($CurrentProject->Included);
 			if (is_array($IncludedUploads)) {
 				echo '<tr>';
@@ -182,12 +185,13 @@ class ProjectController extends ProjectsController {
 							</div>
 					<? }
 				}
+				// Start Message Display
 				if (!empty($CurrentProject->Message)) {
 					?>
 					<div class="MessageDisplay">
 						<h2>Included Message:</h2>
 					<? echo $CurrentProject->Message;
-					?></div><?
+					?></div><a href="/designer/text" class="Button">Edit</a><?
 				}
 				echo '</td></tr></table>';
 				echo '</div>';
@@ -208,7 +212,7 @@ class ProjectController extends ProjectsController {
 		$UserID = $Request->Post('UserID');
 		$ProjectID = $Request->Post('ProjectID');
 		$Method = $Request->Post('Action');
-		echo $Type;
+		/*echo $Type;
 		echo '<br/>';
 		echo $Identifier;
 		echo '<br/>';
@@ -217,7 +221,7 @@ class ProjectController extends ProjectsController {
 		echo $ProjectID;
 		echo '<br/>';
 		echo $Method;
-		echo '<br/>';
+		echo '<br/>';*/
 		if ($Type != 'uploads') {
 			if ($Method == 'add')
 				$Array = $this->_AddToSelection($ProjectID, $Type, $Identifier);
@@ -229,7 +233,13 @@ class ProjectController extends ProjectsController {
 			elseif ($Method == 'remove')
 				$Array = $this->_RemoveFromIncluded($ProjectID, $Type, $Identifier);
 		}
-		print_r($Array);
+		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
+		$CurrentSelection = $this->MyExplode($CurrentProject->Selected);
+		if ($CurrentSelection[$Type] == $Identifier) {
+			echo "Updated Successfully";
+		} else {
+			echo "Something went wrong";
+		}
 
 	}
 
@@ -389,7 +399,9 @@ class ProjectController extends ProjectsController {
 			$this->ProjectModel->Update('Project', array(
 				'ProjectStage' => $Stage
 			), array('ProjectKey' => $ProjectID));
-
+			echo "Project Waiting for approval";
+		} else {
+			echo "Error, Project already at final stage";
 		}
 	}
 

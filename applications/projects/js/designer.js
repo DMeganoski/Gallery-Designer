@@ -3,12 +3,22 @@ $(window).load(function(){
 		$(this).width($(this).width() * 0.2);
 
 	});
+
 });
 /*-------------------------------------- Jquery functions --------------------------*/
 $(document).ready(function() {
 	/*----------------------------------- prepare page -----------------------------*/
 	$('#NoticeBox').hide();
+	var borderImg = $('.Border').attr('src');
 
+	if (borderImg == '/uploads/item/borders/1S.png') {
+		$('.Border').css('left', '90').css('top', '90');
+	}
+	if (borderImg == '/uploads/item/borders/2C.png') {
+		$('.Border').css('left', '60').css('top', '60');
+	} else if (borderImg == '/uploads/item/borders/3C.png') {
+		$('.Border').css('left', '40');
+	}
 	/*------------------------------- Get Previously Set Positions -----------------*/
 	var ElementID = $(this).attr('id');
 	var frameChoice = 'none';
@@ -101,6 +111,11 @@ $(document).ready(function() {
 				$(this).css('top', data.top + "px");
 				$(this).css('left', data.left + "px");
 			}, "json");
+	});
+	$('.Slider').draggable({
+		"containment": "parent",
+		"axis": 'y',
+		"cursor": "move"
 	});
 	$('.SubmitProjectCheck').live('click', function() {
 		$(this).doProjectCommit();

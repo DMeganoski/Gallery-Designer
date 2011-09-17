@@ -40,6 +40,7 @@ class DesignerController extends ProjectsController {
 			$this->AddModule('GallerySideModule');
 
 			$this->AddJsFile('jquery.event.drag.js');
+			$this->AddJsFile('jquery.jrac.js');
 			$this->AddJsFile('/applications/galleries/js/gallery.js');
 			$this->AddCssFile('/applications/galleries/design/gallery.css');
 
@@ -71,8 +72,8 @@ class DesignerController extends ProjectsController {
 				$Selection = $this->MyExplode($CurrentProject->Selected);
 				$Background = $Selection['covers'];
 				$this->BackgroundFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Background))->FirstRow();
-				$Tin = $this->MyExplode($CurrentProject->tins);
-				$this->TinFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Tins[0]))->FirstRow();
+				$Tin = $Selection['tins'];
+				$this->TinFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Tin))->FirstRow();
 
 				$Frames = $this->MyExplode($CurrentProject->frame);
 				$this->Frame = $Frames[0];
@@ -122,6 +123,9 @@ class DesignerController extends ProjectsController {
 			$this->Render();
 		}
 
+		/*
+		 * Function for diplaying the page where text is added or updated
+		 */
 	public function Text() {
 			// css and modules
 			$this->PrepareController();
@@ -158,12 +162,11 @@ class DesignerController extends ProjectsController {
 						'Message' => $FormValues['Message'],
 						'MessageStyle' => $SerializedStyle
 					), array('ProjectKey' => $ProjectData->ProjectKey));
-
 					$Angle = 0;
-					$x = 10;
+					$x = 50;
 					$y = 20;
 					if (!empty($ProjectData->Message)) {
-						$this->TextImage = $this->_GenerateText($ProjectData->ProjectKey, $FontSize, $FontColor, $Angle, $x, $y, $FontName, $ProjectData->Message );
+						$this->TextImage = $this->_GenerateText($ProjectData->ProjectKey, $FontSize, $FontColor, $LineLength, $Angle, $x, $y, $FontName, $ProjectData->Message );
 					}
 				}
 			} else {
@@ -196,10 +199,10 @@ class DesignerController extends ProjectsController {
 			$Type = $Request->Post('imgID');
 			$ProjectID = $Request->Post('ProjectID');
 
-			//$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
+			$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
 
 			$this->_SaveItemPosition($ProjectID, $Type, $Top, $Left);
-			//print_r($Return);
+			print_r($Return);
 		}
 
 		/*
@@ -207,9 +210,9 @@ class DesignerController extends ProjectsController {
 		 */
 	private function _UpdateProjectOrder($ProjectID, $Type) {
 			$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
-			$Order = explode('-', $CurrentProject->Order);
-			if (count($Order) > 1) {
-				$Found = array_search($Type, $Order);
+			$Order = $this->MyExplode('-', $CurrentProject->Order);
+			$Count = count($Order);
+			$Found = array_search($Type, $Order);
 				$Empty = array_search('', $Order);
 				if ($Found) {
 					unset($Order[$Found]);
@@ -218,14 +221,20 @@ class DesignerController extends ProjectsController {
 					unset($Order[$Empty]);
 				}
 
-				array_push($Order, $Type);
-				$Return = implode('-', $Order);
+			if ($Count > 1) {
+				for($i=0; $i < $Count; $i++) {
+					 $Return[$i] = $Order[$i];
+				}
+
+
+				$Order[] = $Type;
+				$Return = $this->MyImplode('-', $Order);
 			} else {
 				$Order = $Type;
 				$Return = $Order;
 			}
 				$this->ProjectModel->Update('Project', array(
-					'Order' => $Type
+					'Order' => $Return
 				), array('ProjectKey' => $ProjectID));
 			return $Order;
 
@@ -254,19 +263,19 @@ class DesignerController extends ProjectsController {
 		/*
 		 * Function for generating an image of text
 		 */
-	private function _GenerateText($ProjectID, $FontSize, $Color, $Angle, $x, $y, $FontName, $Message) {
+	private function _GenerateText($ProjectID, $FontSize, $Color, $LineLength, $Angle, $x, $y, $FontName, $Message) {
 
 		  // Determine the size of the image to generate
 		  // Get the length of the string to insert
-			$NewText = wordwrap($Message, 30, "\n");
+			$NewText = wordwrap($Message, $LineLength, "\n");
 			$Lines = explode("\n", $NewText);
 			$LineCount = count($Lines);
 
-		  if ($LineCount > 1) {
+		  if ($LineCount < 2) {
 			  $MessageLength = strlen($Message);
-			  $Width = ($MessageLength * ($FontSize * 0.5));
+			  $Width = ($MessageLength * $FontSize * 0.7);
 		  } else {
-			  $Width = ($FontSize * 30);
+			  $Width = ($FontSize * $LineLength);
 		  }
 		  $Height = ($LineCount * ($FontSize * 1.5));
 			// Create the image
@@ -307,10 +316,10 @@ class DesignerController extends ProjectsController {
 		$text = $NewText;
 
 		// Replace path by your own font path
-		$FontFile = PATH_APPLICATIONS.'/projects/design/fonts/'.$FontName.'.TTF'; // Place this file in your code directory or if font is in font directory set its path with font name as $font=$path.'arial.ttf';
+		$FontFile = PATH_APPLICATIONS.'/projects/design/fonts/'.$FontName.'.TTF';
 
 		// Add the text
-		$y = $FontSize;
+		$y = $FontSize * 1.2;
 		$total_width=0;
 		$counter=0;
 
@@ -321,6 +330,21 @@ class DesignerController extends ProjectsController {
 			$total_width += ($dimensions[2]);
 
 		}
+
+		$cx = 200;
+		$cy = 100;
+		$cr = 80;
+		$degDelta = 360 / $LineLength;
+
+		for ($x = 0; $x < $LineLength; $x++) {
+			// Circular Text
+			$AX = $cx - cos(deg2rad($degDelta * $x)) * $cr;
+			$AY = $cy - sin(deg2rad($degDelta * $x)) * $cr;
+
+			imagettftext($im, 20, -($degDelta * $x + $degDelta / 2)+90 , $AX, $AY, $color, 'arial.ttf', $text[$x]);
+
+		}
+
 		$dimensions = imagettfbbox($FontSize, $Angle, $FontFile, $text);
 
 
@@ -328,10 +352,70 @@ class DesignerController extends ProjectsController {
 
 		imagettftext($im, $FontSize, $Angle, $x+1, $y+1, $Shadow, $FontFile, $text);
 		imagettftext($im, $FontSize, $Angle, $x, $y, $FontColor, $FontFile, $text);
-
+		$this->ImageTrim($im, $clear);
 		// Using imagepng() results in clearer text compared with imagejpeg()
 		$NewImage = imagepng($im, PATH_UPLOADS.DS."project/text/$ProjectID.png");
 		imagedestroy($im);
 		return "/uploads/project/text/$ProjectID.png";
 	  }
+
+	  public function ImageTrim(&$im, $bg, $pad=null){
+
+		// Calculate padding for each side.
+		if (isset($pad)){
+			$pp = explode(' ', $pad);
+			if (isset($pp[3])){
+				$p = array((int) $pp[0], (int) $pp[1], (int) $pp[2], (int) $pp[3]);
+			}else if (isset($pp[2])){
+				$p = array((int) $pp[0], (int) $pp[1], (int) $pp[2], (int) $pp[1]);
+			}else if (isset($pp[1])){
+				$p = array((int) $pp[0], (int) $pp[1], (int) $pp[0], (int) $pp[1]);
+			}else{
+				$p = array_fill(0, 4, (int) $pp[0]);
+			}
+		}else{
+			$p = array_fill(0, 4, 0);
+		}
+
+		// Get the image width and height.
+		$imw = imagesx($im);
+		$imh = imagesy($im);
+
+		// Set the X variables.
+		$xmin = $imw;
+		$xmax = 0;
+
+		// Start scanning for the edges.
+		for ($iy=0; $iy<$imh; $iy++){
+			$first = true;
+			for ($ix=0; $ix<$imw; $ix++){
+				$ndx = imagecolorat($im, $ix, $iy);
+				if ($ndx != $bg){
+					if ($xmin > $ix){ $xmin = $ix; }
+					if ($xmax < $ix){ $xmax = $ix; }
+					if (!isset($ymin)){ $ymin = $iy; }
+					$ymax = $iy;
+					if ($first){ $ix = $xmax; $first = false; }
+				}
+			}
+		}
+
+		// The new width and height of the image. (not including padding)
+		$imw = 1+$xmax-$xmin; // Image width in pixels
+		$imh = 1+$ymax-$ymin; // Image height in pixels
+
+		// Make another image to place the trimmed version in.
+		$im2 = imagecreatetruecolor($imw+$p[1]+$p[3], $imh+$p[0]+$p[2]);
+
+		// Make the background of the new image the same as the background of the old one.
+		$bg2 = imagecolorallocate($im2, ($bg >> 16) & 0xFF, ($bg >> 8) & 0xFF, $bg & 0xFF);
+		imagefill($im2, 0, 0, $bg2);
+		imagecolortransparent($im2, $bg2);
+
+		// Copy it over to the new image.
+		imagecopy($im2, $im, $p[3], $p[0], $xmin, $ymin, $imw, $imh);
+
+		// To finish up, we replace the old image which is referenced.
+		$im = $im2;
 	}
+}
