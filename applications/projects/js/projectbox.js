@@ -5,14 +5,21 @@ $(document).ready(function() {
 	$('.ProjectBox').hide();
 	$('.UploadBox').hide();
 	/*-------------------------------------------- define some variables for data ---------------------------------*/
+	// Selected frame for background
 	var frameChoice = 'none';
+	// variable for determining whether or not to expand the project box on hover
 	var dragging = false;
-	// Scan page to aquire php variables
+	// Username, taken from account box on every page
 	var userID = $('.Account').attr("userid");
+	// transient key, taken from account box on every page
 	var transientKey = $('.Account').attr("transientkey");
+	// currently open project, taken from account box on every page
 	var currentProjectID = $('.Account').attr("projectid");
+	// image location for helper, on the design page
 	var imageLocation = $('img.Single').attr("src");
+	// gallery browse page item id
 	var browseID = $('.Gallery').attr("itemid");
+	// gallery browse page item id
 	var browsetype = $('.Gallery').attr("type");
 	// action variable for adding or removing items from the project.
 	// not currently implemented
@@ -106,23 +113,8 @@ $(document).ready(function() {
 				});
 	}
 	/*------------------------------------------- Define Events ----------------------------------------------------*/
-	$('#ToggleUploads').live('click', function() {
-		if ( $('.UploadBox').css("display") == 'none' ){
-			$(this).updateUploadBox();
-			$('.UploadBox').slideDown('fast');
-		} else {
-			$('.UploadBox').slideUp('fast');
-		}
+	/*------------------------------------------- Used in Project Box --------------------------------------------------*/
 
-	});
-	// hover function for dragging onto closed box
-	$('#ToggleProject').hover(function() {
-		if(dragging) {
-			$(this).updateProjectBox();
-			$('.ProjectBox').slideDown('fast');
-
-		}
-	});
 	// click function for toggling display of the project box
 	$('#ToggleProject').click(function() {
 		if ( $('.ProjectBox').css("display") == 'none' ){
@@ -133,6 +125,16 @@ $(document).ready(function() {
 			$('.ProjectBox').slideUp('fast');
 		}
 	});
+	// hover function for dragging onto closed box
+	$('#ToggleProject').hover(function() {
+		if(dragging) {
+			$(this).updateProjectBox();
+			$('.ProjectBox').slideDown('fast');
+
+		}
+	});
+/*----------------------------------- Remove Functions for Project Box ----------------------------------------------*/
+	// button to remove tin from project
 	$('.TinRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
 		var itemID = $(this).attr('itemslug');
@@ -140,6 +142,7 @@ $(document).ready(function() {
 		var projectID = currentProjectID;
 		$(this).doProjectRemove(type, itemID, projectID );
 	});
+	// button to remove cover from project
 	$('.CoverRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
 		var itemID = $(this).attr('itemslug');
@@ -151,26 +154,36 @@ $(document).ready(function() {
 		var projectID = currentProjectID;
 		$(this).doProjectRemove('uploads', itemID, projectID);
 	});
-	$('.UploadDelete').live('click', function() {
-		var itemID = $(this).attr('uploadid');
-		$(this).doUploadDelete(itemID);
-	});
+
 	$('.FrameRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
 		var itemID = $(this).attr('itemslug');
 		var projectID = currentProjectID;
 		$(this).doProjectRemove(type, itemID, projectID );
 	});
+/*------------------------------------- All Projects Page -----------------------------------------------------------*/
 	$('.ProjectCurrent').click(function() {
 		$(this).doCurrentSubmit();
 	});
 	$('.ProjectDelete').click(function() {
 		var projectID = $(this).attr('projectid');
 		$(this).doProjectDelete(projectID);
-	})
+	});
 	$('.Selection').click(function() {
 		$(this).doProjectSubmit(itemSlug);
 	});
+/*---------------------------------------- Used in Upload Box -------------------------------------------------------*/
+	// Button for toggling upload box display
+	$('#ToggleUploads').live('click', function() {
+		if ( $('.UploadBox').css("display") == 'none' ){
+			$(this).updateUploadBox();
+			$('.UploadBox').slideDown('fast');
+		} else {
+			$('.UploadBox').slideUp('fast');
+		}
+
+	});
+	// Submit button in upload box to add upload to project
 	$('.UploadSubmit').live('click', function() {
 		var uploadID = $(this).attr("uploadid");
 		$(this).doProjectSubmit("uploads", uploadID);
@@ -178,6 +191,13 @@ $(document).ready(function() {
 			window.location = "/designer";
 		}
 	});
+	// Button for deleting uploaded items
+	$('.UploadDelete').live('click', function() {
+		var itemID = $(this).attr('uploadid');
+		$(this).doUploadDelete(itemID);
+	});
+/*------------------------------------------- Used in ItemController ------------------------------------------------*/
+	// Frame choice helper for individual item page
 	$('li#Click').click(function() {
 		$('#FrameWrapper').hide('300');
 		$('#FrameWrapper').removeClass();

@@ -13,36 +13,37 @@ class GalleryController extends GalleriesController {
 
     public $Categories;
 
-   public function Initialize() {
-      parent::Initialize();
+	public function Initialize() {
+		parent::Initialize();
 
-      $Controller = $this->ControllerName;
-      //$Sender->Form = new Gdn_Form();
+		$Controller = $this->ControllerName;
+		//$Sender->Form = new Gdn_Form();
 
-      if ($this->Head) {
-		$this->AddJsFile('jquery.js');
-		$this->AddJsFile('css_browser_selector.js');
-         $this->AddJsFile('jquery.livequery.js');
-         $this->AddJsFile('jquery.form.js');
-         $this->AddJsFile('jquery.popup.js');
-         $this->AddJsFile('jquery.gardenhandleajaxform.js');
-         $this->AddJsFile('global.js');
+		if ($this->Head) {
+			$this->AddJsFile('jquery.js');
+			$this->AddJsFile('css_browser_selector.js');
+			$this->AddJsFile('jquery.livequery.js');
+			$this->AddJsFile('jquery.form.js');
+			$this->AddJsFile('jquery.popup.js');
+			$this->AddJsFile('jquery.gardenhandleajaxform.js');
+			$this->AddJsFile('global.js');
 
 
-		 if (C('Galleries.ShowFireEvents'))
-			$this->DisplayFireEvent('WhileHeadInit');
+			if (C('Galleries.ShowFireEvents'))
+				$this->DisplayFireEvent('WhileHeadInit');
 
-		$this->FireEvent('WhileHeadInit');
-		$this->AddJsFile('/applications/projects/js/projectbox.js');
-		$this->AddCssFile('/applications/projects/design/projectbox.css');
-      }
+			$this->FireEvent('WhileHeadInit');
+			$this->AddJsFile('/applications/projects/js/projectbox.js');
+			$this->AddCssFile('/applications/projects/design/projectbox.css');
+		}
 
-      $this->MasterView = 'default';
+		$this->MasterView = 'default';
    }
+
    /**
     * PrepareController function.
     *
-    * Adds CSS and JS includes to the header of the discussion or post.
+    * Adds CSS and JS includes to the header of the page.
     *
     * @access protected
     * @param mixed $Controller The hooked controller
@@ -73,7 +74,13 @@ class GalleryController extends GalleriesController {
 		$this->FireEvent('AfterGalleryPrepare');
    }
 
-   public function Index($Args) {
+   /**
+    * Displays various custom pages based on the arguments passed
+    *
+    * @acess public
+    * @param mixed $this->RequestArgs
+    */
+	public function Index($Args) {
 	   if (C('Galleries.ShowFireEvents'))
 		$this->DisplayFireEvent('BeforeBrowseRender');
 	   $this->FireEvent('BeforeBrowseRender');
@@ -162,64 +169,6 @@ class GalleryController extends GalleriesController {
         $this->Render();
     }
 
-	public function AddSideMenu($CurrentUrl = '') {
-
-         $SideMenu = new SideMenuModule($this);
-         $SideMenu->HtmlId = 'UserOptions';
-			$SideMenu->AutoLinkGroups = FALSE;
-         $Session = Gdn::Session();
-         $ViewingUserID = $Session->UserID;
-         $SideMenu->AddItem('Options', '');
-
-         // Check that we have the necessary tools to allow image uploading
-         $AllowImages = Gdn_UploadImage::CanUploadImages();
-
-         if ($this->User->UserID != $ViewingUserID) {
-            // Include user js files for people with edit users permissions
-            if ($Session->CheckPermission('Garden.Users.Edit')) {
-              $this->AddJsFile('jquery.gardenmorepager.js');
-              $this->AddJsFile('user.js');
-            }
-
-            // Add profile options for everyone
-            $SideMenu->AddLink('Options', T('Change Picture'), '/profile/picture/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name), 'Garden.Users.Edit', array('class' => 'PictureLink'));
-            if ($this->User->Photo != '' && $AllowImages) {
-               $SideMenu->AddLink('Options', T('Edit Thumbnail'), '/profile/thumbnail/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name), 'Garden.Users.Edit', array('class' => 'ThumbnailLink'));
-               $SideMenu->AddLink('Options', T('Remove Picture'), '/profile/removepicture/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name).'/'.$Session->TransientKey(), 'Garden.Users.Edit', array('class' => 'RemovePictureLink'));
-            }
-
-            $SideMenu->AddLink('Options', T('Edit Account'), '/user/edit/'.$this->User->UserID, 'Garden.Users.Edit', array('class' => 'Popup EditAccountLink'));
-            $SideMenu->AddLink('Options', T('Delete Account'), '/user/delete/'.$this->User->UserID, 'Garden.Users.Delete', array('class' => 'Popup DeleteAccountLink'));
-            if ($this->User->Photo != '' && $AllowImages)
-               $SideMenu->AddLink('Options', T('Remove Picture'), '/profile/removepicture/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name).'/'.$Session->TransientKey(), 'Garden.Users.Edit', array('class' => 'RemovePictureLink'));
-
-            $SideMenu->AddLink('Options', T('Edit Preferences'), '/profile/preferences/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name), 'Garden.Users.Edit', array('class' => 'Popup PreferencesLink'));
-         } else {
-            // Add profile options for the profile owner
-            if ($AllowImages)
-               $SideMenu->AddLink('Options', T('Change My Picture'), '/profile/picture', FALSE, array('class' => 'PictureLink'));
-
-            if ($this->User->Photo != '' && $AllowImages) {
-               $SideMenu->AddLink('Options', T('Edit My Thumbnail'), '/profile/thumbnail', FALSE, array('class' => 'ThumbnailLink'));
-               $SideMenu->AddLink('Options', T('Remove My Picture'), '/profile/removepicture/'.$Session->UserID.'/'.Gdn_Format::Url($Session->User->Name).'/'.$Session->TransientKey(), FALSE, array('class' => 'RemovePictureLink'));
-            }
-            // Don't allow account editing if it has been turned off.
-            if (Gdn::Config('Garden.UserAccount.AllowEdit')) {
-               $SideMenu->AddLink('Options', T('Edit My Account'), '/profile/edit', FALSE, array('class' => 'Popup EditAccountLink'));
-               $SideMenu->AddLink('Options', T('Change My Password'), '/profile/password', FALSE, array('class' => 'Popup PasswordLink'));
-            }
-            if (Gdn::Config('Garden.Registration.Method') == 'Invitation')
-               $SideMenu->AddLink('Options', T('My Invitations'), '/profile/invitations', FALSE, array('class' => 'Popup InvitationsLink'));
-
-            $SideMenu->AddLink('Options', T('My Preferences'), '/profile/preferences/'.$this->User->UserID.'/'.Gdn_Format::Url($this->User->Name), FALSE, array('class' => 'Popup PreferencesLink'));
-         }
-
-         $this->EventArguments['SideMenu'] = &$SideMenu;
-         $this->FireEvent('AfterAddSideMenu');
-         $this->AddModule($SideMenu, 'Panel');
-
-   }
-
 	public function NotFound() {
       $this->View = 'notfound';
       $this->Render();
@@ -231,9 +180,12 @@ class GalleryController extends GalleriesController {
 	   echo '<div class="FireEvent">FireEvent: '.$Controller.':'.$EventName.'</div>';
    }
 
-	/*
-	 * Unused Functions from other applications and plugins
-	 */
+   /**
+    * Render Function
+    * Deletes
+    *
+    * @param type $ItemKey
+    */
 	public function Delete($ItemKey = '') {
       $this->Permission('Gallery.Items.Manage');
       $Session = Gdn::Session();

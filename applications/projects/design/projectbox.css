@@ -32,21 +32,6 @@ root {
 #ProjectItems img {
 	margin: 5px;
 }
-ul.Project {
-	margin: 10px;
-}
-ul.Project img {
-	height: 100px;
-	width: 100px;
-	margin: 0 auto;
-}
-ul.Active {
-	background: #e6e6e6;
-}
-ul.Project li.Float {
-	min-width: 330px;
-	float: left;
-}
 .ProjectBox table {
 	border: 1px solid #CCC;
 }
@@ -65,15 +50,15 @@ div.ProjectWrapper {
 }
 
 img.FrameSmall {
+	position: absolute;
 	display: block;
 	width: 117px;
 	height: 117px;
 	top: -9px;
-	left: 45px;
+	left: 38px;
 }
 body.Gallery img.FrameSmall {
-	top: 180px;
-	left: -6px;
+	left: 32px;
 }
 /*---------------------------- All Projects Page -----------------------*/
 div#ProjectPage table {

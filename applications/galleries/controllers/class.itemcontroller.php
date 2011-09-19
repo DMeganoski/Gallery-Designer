@@ -427,6 +427,7 @@ class ItemController extends GalleriesController {
 			$BaseName = $FileParts['filename'];
 			$HTML .= '<li class="UploadData" uploadid="'.$File->UploadKey.'">';
 			$HTML .= '<img src="/uploads/'.$BaseName.'-Thumb.jpg" class="Thumb"></img>';
+			$HTML .= '<br/>';
 			$HTML .= '<strong>'.$FileLabel.'</strong>';
 			$HTML .= '</br>';
 			$HTML .= $File->Description;

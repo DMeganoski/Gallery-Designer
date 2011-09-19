@@ -41,20 +41,20 @@ $FileInfo = $this->FileData;
 	$this->FireEvent('AfterItemDetails');
 $FileInfo = $this->FileData;
 if (ItemController::$SelectedClass == 'covers') { ?>
-<div class="Heading">
-      <h1>Preview Frame Options</h1>
-</div>
-<div>
-	  <ul id="Frames">
-		  <li id="Click" class="Button None Active" type="None">No Frame</li>
-		  <li id="Click" class="Button Pewter" type="Pewter">Pewter Frame</li>
-		  <li id="Click" class="Button GoldEmblem" type="GoldEmblem">Gold Emblem Frame</li>
-		  <li id="Click" class="Button Traditional" type="Traditional">Traditional Frame</li>
-		  <li id="Click" class="Button Modern" Type="Modern">Modern Frame</li>
-		  <li id="Click" class="Button Wood" type="Wood">Wood Frame</li>
-		  <li id="Click" class="Button GoldLeaf" type="GoldLeaf">Gold Leaf Frame</li>
-	  </ul>
-      <?php
+	<div class="Heading">
+		<h1>Preview Frame Options</h1>
+	</div>
+	<div>
+		<ul id="Frames">
+			<li id="Click" class="Button None Active" type="None">No Frame</li>
+			<li id="Click" class="Button Pewter" type="Pewter">Pewter Frame</li>
+			<li id="Click" class="Button GoldEmblem" type="GoldEmblem">Gold Emblem Frame</li>
+			<li id="Click" class="Button Traditional" type="Traditional">Traditional Frame</li>
+			<li id="Click" class="Button Modern" Type="Modern">Modern Frame</li>
+			<li id="Click" class="Button Wood" type="Wood">Wood Frame</li>
+			<li id="Click" class="Button GoldLeaf" type="GoldLeaf">Gold Leaf Frame</li>
+		</ul>
+		<?php
 		echo '</div>';
 } else {
 	echo $FileInfo->ClassLabel;
