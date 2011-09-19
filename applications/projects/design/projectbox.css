@@ -14,51 +14,11 @@
 root {
     display: block;
 }
-#Project {
-	width: auto;
-	background: none;
-	z-index: 100;
-	padding: 5px 2px;
-}
-.ProjectBox,
-.UploadBox {
-	position: relative;
-	margin: 10px 5px 0;
-	left: 0px;
-	z-index: 30;
-	min-height: 100px;
-}
-#UploadItems img,
-#ProjectItems img {
-	margin: 5px;
-}
-.ProjectBox table {
-	border: 1px solid #CCC;
-}
-.ProjectBox table th {
-	border-top: 1px solid #CCC;
-	font-size: 110%;
-	padding: 4px;
-	text-align: center;
-}
-.ProjectBox table td {
-	text-align: center;
-	padding: 10px;
-}
-div.ProjectWrapper {
-	position: relative;
-}
-
-img.FrameSmall {
-	position: absolute;
-	display: block;
-	width: 117px;
-	height: 117px;
-	top: -9px;
-	left: 38px;
-}
-body.Gallery img.FrameSmall {
-	left: 32px;
+.ProjectBox div,
+.ButtonBox div {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
 }
 /*---------------------------- All Projects Page -----------------------*/
 div#ProjectPage table {
@@ -73,13 +33,85 @@ div.Active {
 	background: #e6e6e6;
 }
 /*----------------------------- Side Panel -----------------------------*/
+Project {
+	width: auto;
+	background: none;
+	z-index: 100;
+	padding: 5px 2px;
+}
+.ProjectBox,
+.UploadBox {
+	position: relative;
+	margin: 10px 5px 0;
+	left: 0px;
+	z-index: 30;
+}
+#UploadItems img,
+#ProjectItems img {
+	margin: 5px;
+}
+.ProjectBox table {
+	margin-bottom: 10px;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+.ProjectBox table th {
+	border-bottom: 1px solid #CCC;
+	font-size: 110%;
+	padding: 4px;
+	text-align: center;
+	cursor: pointer;
+}
+.ProjectBox table th.Grey {
+	color: #6C6C6C;
+}
+.ProjectBox table td {
+	text-align: center;
+	padding: 10px;
+}
+div.ProjectWrapper {
+	position: relative;
+}
+img.FrameSmall {
+	position: absolute;
+	display: block;
+	width: 117px;
+	height: 117px;
+	top: -9px;
+	left: 38px;
+}
+body.Gallery img.FrameSmall {
+	left: 32px;
+}
+div.TabWrapper {
+	margin: 0px auto;
+	padding: 5px;
+	padding-left: 13px;
+}
+div.TabBox {
+	width: 62px;
+	height: 60px;
+	margin: 3px;
+	border: 1px solid #ff7c25;
+	float: left;
+	cursor: pointer;
+	font-size: 80%;
+	vertical-align: bottom;
+}
+div#Text {
+	padding-left: 2px;
+	width: 200px;
+	height: 40px;
+}
 h4.Toggle {
 	font-weight: bold;
 	background: url('/applications/galleries/design/images/icons/32/communication.png') no-repeat right center;
 	cursor: pointer;
 	padding: 5px;
 	color: #0063dc;
-	line-height: 2.0;
+	line-height: 1.6;
 	margin: 5px 0 10px;
 }
 div.MessageDisplay {
@@ -88,11 +120,14 @@ div.MessageDisplay {
 }
 .ProjectBox table td div#UploadWrapper {
 	float: left;
-	max-width: 108px;
+	max-width: 100px;
 }
 .ProjectBox h2 {
-	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+	line-height: 1;
+	padding: 15px 5px 5px;
 }
+
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
 	float: right;

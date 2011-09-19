@@ -85,11 +85,42 @@ class ProjectController extends ProjectsController {
 		$this->UserID = $Request->Post('UserID');
 		$this->TransientKey = $Request->Post('TransientKey');
 		$this->CurrentProject = $this->ProjectModel->GetCurrent($this->UserID);
+		$Type = $Request->Post('Type');
 		$UserModel = new UserModel();
 		$this->User = $UserModel->GetSession($this->UserID);
 		if ($this->User->Attributes['TransientKey'] == $this->TransientKey) {
-			include_once(PATH_APPLICATIONS.DS.'/projects/views/project/box.php');
-
+			$Path = PATH_APPLICATIONS.DS.'projects/views/project/';
+			include_once($Path.'boxtop.php');
+			switch ($Type) {
+				case 'None':
+					break;
+				case 'Tin':
+					include_once($Path.'base.php');
+					break;
+				case 'tins':
+					include_once($Path.'base.php');
+					break;
+				case 'Background':
+					include_once($Path.'background.php');
+					break;
+				case 'covers':
+					include_once($Path.'background.php');
+					break;
+				case 'Uploads':
+					include_once($Path.'uploads.php');
+					break;
+				case 'uploads':
+					include_once($Path.'uploads.php');
+					break;
+				case 'Text':
+					include_once($Path.'text.php');
+					break;
+				case 'message':
+					include_once($Path.'text.php');
+					break;
+				default:
+					break;
+			}
 		} else {
 				echo "Must Be Signed in to start a project";
 		}

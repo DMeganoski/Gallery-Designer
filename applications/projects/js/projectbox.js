@@ -4,11 +4,13 @@ $(document).ready(function() {
 	//start by hiding the box
 	$('.ProjectBox').hide();
 	$('.UploadBox').hide();
+	$('.ButtonBox').hide();
 	/*-------------------------------------------- define some variables for data ---------------------------------*/
 	// Selected frame for background
 	var frameChoice = 'none';
 	// variable for determining whether or not to expand the project box on hover
 	var dragging = false;
+	var accountBox = $('.Account');
 	// Username, taken from account box on every page
 	var userID = $('.Account').attr("userid");
 	// transient key, taken from account box on every page
@@ -53,7 +55,7 @@ $(document).ready(function() {
 			$(verifyBox).queue(function() {
 				$(this).html("Item Added to Project.<br/>" + data);
 				$(this).show();
-				$(this).updateProjectBox();
+				$(this).updateProjectBox( type );
 				$(this).fadeTo('200', '1');
 				$(this).delay('1000');
 				$(this).fadeTo('1600', '0.3');
@@ -66,7 +68,7 @@ $(document).ready(function() {
 	$.fn.doProjectRemove = function(type, itemID, projectID) {
 		$.post("/project/projectselect", {UserID: userID, ProjectID: projectID, Type: type, Slug: itemID, Action: 'remove'},
 		function(data) {
-			$(this).updateProjectBox();
+			$(this).updateProjectBox( type );
 		});
 	}
 	// for deleting uploaded images
@@ -100,10 +102,14 @@ $(document).ready(function() {
 		});
 	}
 	// for refreshing the project box
-	$.fn.updateProjectBox = function() {
-		$.post("/project/getproject", {UserID: userID, TransientKey: transientKey, ProjectID: currentProjectID},
-				function(data) {
-			$('.ProjectBox').html(data);
+	$.fn.updateProjectBox = function(type) {
+		$.post("/project/getproject", {UserID: userID, TransientKey: transientKey, ProjectID: currentProjectID, Type: type },
+			function(data) {
+				var projectBox = $('.ProjectBox');
+				$(projectBox).slideUp().queue(function(n) {
+					$(this).html(data).slideDown();
+					n();
+				});
 		});
 	}
 	$.fn.updateUploadBox = function() {
@@ -116,22 +122,23 @@ $(document).ready(function() {
 	/*------------------------------------------- Used in Project Box --------------------------------------------------*/
 
 	// click function for toggling display of the project box
-	$('#ToggleProject').click(function() {
-		if ( $('.ProjectBox').css("display") == 'none' ){
-			$(this).updateProjectBox();
-			$('.ProjectBox').slideDown('fast');
-
+	$('#ToggleProject').live('click', function() {
+		if ( $('.ButtonBox').css("display") == 'none' ){
+			$('.ButtonBox').slideDown();
 		} else {
-			$('.ProjectBox').slideUp('fast');
+			$('.ButtonBox').slideUp();
 		}
 	});
 	// hover function for dragging onto closed box
 	$('#ToggleProject').hover(function() {
 		if(dragging) {
+			$('.ButtonBox').slideDown();
 			$(this).updateProjectBox();
-			$('.ProjectBox').slideDown('fast');
-
 		}
+	});
+	$('.TabBox').live('click', function() {
+		var type = $(this).attr('id');
+		$(this).updateProjectBox(type);
 	});
 /*----------------------------------- Remove Functions for Project Box ----------------------------------------------*/
 	// button to remove tin from project
@@ -207,7 +214,7 @@ $(document).ready(function() {
 		$('#FrameWrapper').addClass(frameChoice + "Frame");
 	});
 	/*----------------------------------------- Define Objects ------------------------------------------------------*/
-	$(".ProjectBox").droppable({
+	$(".Project").droppable({
 			"over": function( event, ui ) {
 				$( this )
 					.addClass( "ui-state-highlight" );
@@ -217,7 +224,7 @@ $(document).ready(function() {
 						var itemType = $('.DetailsWrapper').attr("itemtype");
 						var itemSlug = $('.DetailsWrapper').attr("itemslug");
 						$(this).doProjectSubmit( itemType, itemSlug );
-							$(this).doFrameSubmit();
+						$(this).doFrameSubmit();
 						$(this).removeClass( "ui-state-highlight" );
 					},
 					"out": function() {
