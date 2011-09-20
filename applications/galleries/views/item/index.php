@@ -40,7 +40,7 @@ $FileInfo = $this->FileData;
 
 	$this->FireEvent('AfterItemDetails');
 $FileInfo = $this->FileData;
-if (ItemController::$SelectedClass == 'covers') { ?>
+if (ItemController::$SelectedClass == 'backgrounds') { ?>
 	<div class="Heading">
 		<h1>Preview Frame Options</h1>
 	</div>

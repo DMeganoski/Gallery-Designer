@@ -132,7 +132,10 @@ div.MessageDisplay {
 	line-height: 1;
 	padding: 15px 5px 5px;
 }
-
+img.TextBox {
+	max-width: 200px;
+	
+}
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {
 	float: right;

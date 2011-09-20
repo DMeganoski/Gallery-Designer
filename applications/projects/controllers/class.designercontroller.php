@@ -70,10 +70,10 @@ class DesignerController extends ProjectsController {
 				$CurrentProject = $this->CurrentProject;
 				// Background / cover data
 				$Selection = $this->MyExplode($CurrentProject->Selected);
-				$Background = $Selection['covers'];
+				$Background = $Selection['backgrounds'];
 				$this->BackgroundFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Background))->FirstRow();
-				$Tin = $Selection['tins'];
-				$this->TinFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Tin))->FirstRow();
+				$Base = $Selection['bases'];
+				$this->BaseFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Base))->FirstRow();
 
 				$Frames = $this->MyExplode($CurrentProject->frame);
 				$this->Frame = $Frames[0];
@@ -199,10 +199,11 @@ class DesignerController extends ProjectsController {
 			$Type = $Request->Post('imgID');
 			$ProjectID = $Request->Post('ProjectID');
 
-			//$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
+			$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
 
 			$this->_SaveItemPosition($ProjectID, $Type, $Top, $Left);
-			//print_r($Return);
+			echo '<br>';
+			print_r($Return);
 		}
 
 		/*
@@ -216,6 +217,7 @@ class DesignerController extends ProjectsController {
 				$Empty = array_search('', $Order);
 				if ($Found) {
 					unset($Order[$Found]);
+					$Order[] = $Type;
 				}
 				if ($Empty) {
 					unset($Order[$Empty]);
@@ -225,16 +227,13 @@ class DesignerController extends ProjectsController {
 				for($i=0; $i < $Count; $i++) {
 					 $Return[$i] = $Order[$i];
 				}
-
-
-				$Order[] = $Type;
-				$Return = $this->MyImplode('-', $Order);
+				$Serialized = $this->MyImplode('-', $Return);
 			} else {
-				$Order = $Type;
-				$Return = $Order;
+				$Order[] = $Type;
+				$Serialized = $this->MyImplode('-', $Order);
 			}
 				$this->ProjectModel->Update('Project', array(
-					'Order' => $Return
+					'Order' => $Serialized
 				), array('ProjectKey' => $ProjectID));
 			return $Order;
 

@@ -9,13 +9,15 @@ $Definition['pricing'] = 'Pricing';
 $Definition['contactus'] = 'Contact Us';
 
 //tins (Tins) Class (2) definitons
-$Definition['tins'] = 'Tin Choices';
+$Definition['bases'] = 'Tin Choices';
+$Definition['base'] = 'Tin';
 $Definition['platinum'] = 'Platinum';
 $Definition['black'] = 'Black';
 $Definition['gold'] = 'Gold';
 
 //covers (Covers) Class (3) definitons
-$Definition['covers'] = 'Stock Art Catalog';
+$Definition['backgrounds'] = 'Stock Art Catalog';
+$Definition['background'] = 'cover';
 $Definition['abstract'] = 'Abstract';
 $Definition['artnouveau'] = 'Art Nouveau';
 $Definition['cityscapes'] = 'Cityscapes';

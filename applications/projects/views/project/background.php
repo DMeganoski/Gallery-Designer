@@ -24,6 +24,7 @@
 								echo '<img src="/uploads/item/frames/'.strtolower($Frame).'.png" class="FrameSmall">';
 							}
 							echo '<img src="/uploads/item/backgrounds/'.$Background->Slug.'S.jpg"></img>';
+							echo '</td></tr><tr><td>';
 							echo '<button type="button" id="BackgroundRemove" class="Button BackgroundRemove" itemtype="backgrounds" itemslug="'.$Background->Slug.'">Remove Background</button>';
 							echo '</td>';
 

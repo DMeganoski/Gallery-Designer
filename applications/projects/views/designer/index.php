@@ -6,22 +6,22 @@ if (!empty($this->Frame)) {
 	$FrameClass = 'None';
 }
 $CurrentSeleciton = $this->MyExplode($this->CurrentProject->Selection);
-$TinSize = $this->TinFile->Name;
+$BaseSize = $this->BaseFile->Name;
 ?>
 
 
 <div id="Custom">
 
 	<div class="Heading">
-		<h1>Welcome to the Interactive Tin Designer</h1>
-		<p>You can use items you have selected or uploaded to design your tin.</p>
+		<h1>Welcome to the Interactive <? echo T('base') ?> Designer</h1>
+		<p>You can use items you have selected or uploaded to design your <? echo T('base') ?>.</p>
 		<p>Note: the backgrounds are approximately 3000 x 3000 px images, your images will
 		appear smaller to retain definition</p>
 	</div>
 	<div class="Zoom"><div class="Slider"></div></div>
 	<div id="DesignBox"><?
-			if (!empty($this->BackgroundFile) && !empty($this->TinFile)) {
-				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border"></img><?
+			if (!empty($this->BackgroundFile) && !empty($this->BaseFile)) {
+				?><img src="/uploads/item/borders/<? echo $BaseSize ?>.png" class="Border"></img><?
 			}
 			?><div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>
 			<img src="/uploads/item/backgrounds/<? echo $this->BackgroundFile->FileName ?>" class="Background Large" id="Background"></img>

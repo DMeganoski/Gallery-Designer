@@ -7,14 +7,15 @@
 */
 
 /*
-   TODO customize this sample style
-   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+   All the styles related to the project box
 */
 
 root {
     display: block;
 }
-
+.Draggable {
+	cursor: move;
+}
 /*------------------- Frame Choices --------------------*/
 div#ImageWrapper {
 	z-index: 200;
