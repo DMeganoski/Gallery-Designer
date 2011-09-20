@@ -27,7 +27,7 @@
 					<div id="Tin" class="TabBox">Tin</div>
 					<div id="Background" class="TabBox">Background</div>
 					<div id="Uploads" class="TabBox">Uploads</div>
-					<div id="Text" class="TabBox">Text</div>
+					<div id="Text" class="TabBox">Message</div>
 					<div class="ClearFix"></div>
 				</div>
 				<a href="/designer" id="ViewDesigner" class="BigButton View">Go To Designer</a>

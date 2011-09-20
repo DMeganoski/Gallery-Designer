@@ -3,7 +3,7 @@
 
 
 $Selection = $this->MyExplode($this->CurrentProject->Selected);
-$Tin = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['tins']))->FirstRow();
+$Tin = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['bases']))->FirstRow();
 	if (!empty($Tin)) {
 		?><table><tr>
 			<th class="Selected">Selected Tin:</th>
@@ -15,14 +15,14 @@ $Tin = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['tins']))->F
 		}
 		?></tr><tr><?
 		echo '<td align="Center" class="Background">';
-		echo '<img src="/uploads/item/tins/'.$Tin->Slug.'S.jpg"></img>';
+		echo '<img src="/uploads/item/bases/'.$Tin->Slug.'S.jpg"></img>';
 		echo '</td>';
 		echo '</tr><tr>';
 		echo '<td>';
-		echo '<button type="button" id="TinRemove" class="Button TinRemove" itemtype="tins" itemslug="'.$Tin->Slug.'">Remove Tin</button>';
+		echo '<button type="button" id="TinRemove" class="Button TinRemove" itemtype="bases" itemslug="'.$Tin->Slug.'">Remove Tin</button>';
 		echo '</td>';
 	} else {
 		?><tr><th>No Tin Selected</th><tr>
-		<tr><td><a href="/gallery/tins/" class="Button">Choose Tin</a></td></tr>
+		<tr><td><a href="/gallery/bases/" class="Button">Choose Tin</a></td></tr>
 		</table><?
 	}

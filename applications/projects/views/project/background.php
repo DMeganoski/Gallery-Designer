@@ -5,8 +5,8 @@
 				$Selection = $this->MyExplode($this->CurrentProject->Selected);
 				if (!empty($Selection)) {
 
-		/*------------------------ Start Cover Selection -------------------------------*/
-						$Background = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['covers']))->FirstRow();
+		/*------------------------ Start Background Selection -------------------------------*/
+						$Background = $this->GalleryItemModel->GetWhere(array('Slug' => $Selection['backgrounds']))->FirstRow();
 						if (!empty($Background)) {
 						?><table><tr>
 						<th colspan="2" class="Selected">Selected Background:</th>
@@ -23,8 +23,8 @@
 							if (!empty($Frame)) {
 								echo '<img src="/uploads/item/frames/'.strtolower($Frame).'.png" class="FrameSmall">';
 							}
-							echo '<img src="/uploads/item/covers/'.$Background->Slug.'S.jpg"></img>';
-							echo '<button type="button" id="CoverRemove" class="Button CoverRemove" itemtype="covers" itemslug="'.$Background->Slug.'">Remove Background</button>';
+							echo '<img src="/uploads/item/backgrounds/'.$Background->Slug.'S.jpg"></img>';
+							echo '<button type="button" id="BackgroundRemove" class="Button BackgroundRemove" itemtype="backgrounds" itemslug="'.$Background->Slug.'">Remove Background</button>';
 							echo '</td>';
 
 							if (!empty($Frame)) {
@@ -43,7 +43,7 @@
 						} else {
 							echo '<table>';
 							echo "<tr><th>No Background Selected</th><tr>";
-							echo '<tr><td><a href="/gallery/covers/" class="Button">Choose Background</a></td></tr>';
+							echo '<tr><td><a href="/gallery/backgrounds/" class="Button">Choose Background</a></td></tr>';
 							echo '</table>';
 						}
 			} else {

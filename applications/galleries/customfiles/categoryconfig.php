@@ -4,10 +4,10 @@
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'default', 'Visible' => '1'),
         array('ClassKey' => 1), TRUE);
 
-$SQL->Replace('GalleryClass', array('ClassLabel' => 'tins', 'Visible' => '1'),
+$SQL->Replace('GalleryClass', array('ClassLabel' => 'bases', 'Visible' => '1'),
         array('ClassKey' => 2), TRUE);
 
-$SQL->Replace('GalleryClass', array('ClassLabel' => 'covers', 'Visible' => '1'),
+$SQL->Replace('GalleryClass', array('ClassLabel' => 'backgrounds', 'Visible' => '1'),
         array('ClassKey' => 3), TRUE);
 
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'designer', 'Visible' => '1'),

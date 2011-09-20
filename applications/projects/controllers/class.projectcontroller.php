@@ -78,6 +78,7 @@ class ProjectController extends ProjectsController {
 
 	/*
 	 * Ajax function for retrieving project data
+	 * loads pages located in /views/project/
 	 */
 	public function GetProject() {
 		$this->PrepareController();
@@ -89,40 +90,45 @@ class ProjectController extends ProjectsController {
 		$UserModel = new UserModel();
 		$this->User = $UserModel->GetSession($this->UserID);
 		if ($this->User->Attributes['TransientKey'] == $this->TransientKey) {
-			$Path = PATH_APPLICATIONS.DS.'projects/views/project/';
-			include_once($Path.'boxtop.php');
-			switch ($Type) {
-				case 'None':
-					break;
-				case 'Tin':
-					include_once($Path.'base.php');
-					break;
-				case 'tins':
-					include_once($Path.'base.php');
-					break;
-				case 'Background':
-					include_once($Path.'background.php');
-					break;
-				case 'covers':
-					include_once($Path.'background.php');
-					break;
-				case 'Uploads':
-					include_once($Path.'uploads.php');
-					break;
-				case 'uploads':
-					include_once($Path.'uploads.php');
-					break;
-				case 'Text':
-					include_once($Path.'text.php');
-					break;
-				case 'message':
-					include_once($Path.'text.php');
-					break;
-				default:
-					break;
+			$CurrentProject = $this->CurrentProject;
+			if ($this->CurrentProject === FALSE) {
+				echo 'No Project Currently Selected. Would you like to start a new one or select an existing one?';
+			} else {
+				$Path = PATH_APPLICATIONS.DS.'projects/views/project/';
+				switch ($Type) {
+					case 'None':
+						break;
+					case 'Tin':
+						include_once($Path.'base.php');
+						break;
+					case 'bases':
+						include_once($Path.'base.php');
+						break;
+					case 'Background':
+						include_once($Path.'background.php');
+						break;
+					case 'backgrounds':
+						include_once($Path.'background.php');
+						break;
+					case 'Uploads':
+						include_once($Path.'uploads.php');
+						break;
+					case 'uploads':
+						include_once($Path.'uploads.php');
+						break;
+					case 'Text':
+						include_once($Path.'text.php');
+						break;
+					case 'message':
+						include_once($Path.'text.php');
+						break;
+					default:
+						break;
+				}
 			}
 		} else {
 				echo "Must Be Signed in to start a project";
+
 		}
 	}
 
@@ -180,7 +186,7 @@ class ProjectController extends ProjectsController {
 		if ($FrameChoice != 'none')
 			$this->_AddToSelection($ProjectID, 'frame', $FrameChoice);
 		else
-			$this->_RemoveFromSelection($ProjectID, 'frame');
+			$this->_RemoveFromSelection($ProjectID, 'frame', $FrameChoice);
 	}
 /*------------------------------- Private selection functions --------------------------*/
 
@@ -273,11 +279,12 @@ class ProjectController extends ProjectsController {
 	 */
 	private function _RemoveFromIncluded($ProjectID, $Upload) {
 		$Project = $this->ProjectModel->GetSingle($ProjectID);
-		$Selection = $this->MyExplode($CurrentProject->Included);
-		$Found = array_search($Upload, $Selection);
-		unset($Selection[$Found]);
+		$Included = $this->MyExplode($Project->Included);
+		$Found = array_search($Upload, $Included);
+		unset($Included[$Found]);
+		$Serialized = $this->MySerialize($Included);
 		$this->ProjectModel->Update('Project', array(
-			'Included' => $Selection
+			'Included' => $Serialized
 		), array('ProjectKey' => $ProjectID));
 	}
 

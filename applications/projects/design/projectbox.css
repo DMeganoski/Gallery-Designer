@@ -63,6 +63,7 @@ Project {
 	padding: 4px;
 	text-align: center;
 	cursor: pointer;
+	color: #696952;
 }
 .ProjectBox table th.Grey {
 	color: #6C6C6C;
@@ -88,7 +89,7 @@ body.Gallery img.FrameSmall {
 div.TabWrapper {
 	margin: 0px auto;
 	padding: 5px;
-	padding-left: 13px;
+	padding-left: 11px;
 }
 div.TabBox {
 	width: 62px;
@@ -99,6 +100,10 @@ div.TabBox {
 	cursor: pointer;
 	font-size: 80%;
 	vertical-align: bottom;
+}
+div.TabBox:hover {
+	border: 2px solid #D95252;
+	margin: 2px;
 }
 div#Text {
 	padding-left: 2px;

@@ -24,7 +24,7 @@ $TinSize = $this->TinFile->Name;
 				?><img src="/uploads/item/borders/<? echo $TinSize ?>.png" class="Border"></img><?
 			}
 			?><div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>
-			<img src="/uploads/item/covers/<? echo $this->BackgroundFile->FileName ?>" class="Background Large" id="Background"></img>
+			<img src="/uploads/item/backgrounds/<? echo $this->BackgroundFile->FileName ?>" class="Background Large" id="Background"></img>
 			<div class="ClearFix"></div>
 
 					<? $Count = 0;

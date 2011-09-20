@@ -30,6 +30,7 @@ $(document).ready(function() {
 	$('img.Upload').hover(function() {
 		$(this).append('<div class="Close">X</div>');
 	});
+	// function for getting the url of the page. Designer page gets special treatment
 	var url = location.href;
 	var onDesigner = false;
 	$('#DesignBox').append(onDesigner);
@@ -127,6 +128,9 @@ $(document).ready(function() {
 			$('.ButtonBox').slideDown();
 		} else {
 			$('.ButtonBox').slideUp();
+			if ( $('.ProjectBox').css("display") == 'block' ){
+				$('.ProjectBox').slideUp();
+			}
 		}
 	});
 	// hover function for dragging onto closed box
@@ -149,8 +153,8 @@ $(document).ready(function() {
 		var projectID = currentProjectID;
 		$(this).doProjectRemove(type, itemID, projectID );
 	});
-	// button to remove cover from project
-	$('.CoverRemove').live('click', function() {
+	// button to remove background from project
+	$('.BackgroundRemove').live('click', function() {
 		var type = $(this).attr('itemtype');
 		var itemID = $(this).attr('itemslug');
 		var projectID = currentProjectID;

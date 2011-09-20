@@ -3,17 +3,17 @@
 
 /*--------------------------- Start Uploaded Images ----------------------------*/
 $IncludedUploads = $this->MyExplode($CurrentProject->Included);
-if (is_array($IncludedUploads)) {
-	?><table><tr>
-		<th>Included Uploaded Images</th>
-	</tr><tr><?
-	$Count = count($IncludedUploads);
+$Count = count($IncludedUploads);
 	if ($Count > 1) {
 		$Plural = 's';
 	} else {
 		$Plural = '';
 	}
-		?><th class="Grey"><? echo count($IncludedUploads); ?> Image<? echo $Plural ?> Included</th>
+if ($IncludedUploads[0] != '') {
+	?><table><tr>
+		<th>Included Uploaded Images</th>
+	</tr><tr>
+		<th class="Grey"><? echo $Count; ?> Image<? echo $Plural ?> Included</th>
 	</tr><tr>
 		<td><?
 		foreach ($IncludedUploads as $Upload) {
@@ -37,4 +37,6 @@ if (is_array($IncludedUploads)) {
 			<? }
 		}
 	?></table><?
+} else {
+	echo "<h2>No Uploads Used</h2>";
 }
