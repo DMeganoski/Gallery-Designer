@@ -2,9 +2,11 @@
 	exit();
 echo '<div id="Color"></div>';
 $Colors = array(
-	'white' => 'white<div id="Color" class="White"></div>',
-	'black' => 'black<div id="Color" class="Black"></div>',
-	'red' => T('red'));
+	'white' => T('white'),
+	'black' => T('black'),
+	'red' => T('red'),
+	'blue' => T('blue'),
+	'green' => T('green'));
 $FontSizes = array('80' => '80','100' => '100', '120' => '120', '140' => '140', '160' => '160');
 $FontNames = array(
 	'Big Lou' => 'Big Lou',

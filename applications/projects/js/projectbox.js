@@ -8,7 +8,7 @@ $(document).ready(function() {
 	$('ul.TextList').hide();
 	/*-------------------------------------------- define some variables for data ---------------------------------*/
 	// Selected frame for background
-	var frameChoice = 'none';
+	var frameChoice = "None";
 	// variable for determining whether or not to expand the project box on hover
 	var dragging = false;
 	var accountBox = $('.Account');
@@ -231,8 +231,9 @@ $(document).ready(function() {
 					"drop": function() {
 						var itemType = $('.DetailsWrapper').attr("itemtype");
 						var itemSlug = $('.DetailsWrapper').attr("itemslug");
-						$(this).doProjectSubmit( itemType, itemSlug );
 						$(this).doFrameSubmit();
+						$(this).doProjectSubmit( itemType, itemSlug );
+						//$(this).doFrameSubmit();
 						$(this).removeClass( "ui-state-highlight" );
 					},
 					"out": function() {

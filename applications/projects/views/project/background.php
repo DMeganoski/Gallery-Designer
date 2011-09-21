@@ -20,7 +20,7 @@
 						?></tr><tr>
 							<td align="Center" class="Background">
 							<div class=ProjectWrapper><?
-							if (!empty($Frame)) {
+							if (!empty($Frame) && $Frame != 'None') {
 								echo '<img src="/uploads/item/frames/'.strtolower($Frame).'.png" class="FrameSmall">';
 							}
 							echo '<img src="/uploads/item/backgrounds/'.$Background->Slug.'S.jpg"></img>';
@@ -28,7 +28,7 @@
 							echo '<button type="button" id="BackgroundRemove" class="Button BackgroundRemove" itemtype="backgrounds" itemslug="'.$Background->Slug.'">Remove Background</button>';
 							echo '</td>';
 
-							if (!empty($Frame)) {
+							if (!empty($Frame) && $Frame != 'None') {
 								echo '</tr>';
 								echo '<th>Selected Frame:</th>';
 								echo '</tr><tr>';
@@ -36,7 +36,7 @@
 							}
 							echo '</tr><tr>';
 							echo '<td>';
-							if (!empty($Frame))
+							if (!empty($Frame) && $Frame != 'None')
 							echo '<button type="button" id="FrameRemove" class="Button FrameRemove" itemtype="frame" itemslug="'.$Frame.'">Remove Frame</button>';
 
 							echo '</td>';

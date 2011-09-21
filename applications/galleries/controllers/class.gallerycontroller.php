@@ -96,7 +96,7 @@ class GalleryController extends GalleriesController {
 		self::$Page = $Page;
 		$Limit = C('Gallery.Items.PerPage', 16);
 		self::$Limit = $Limit;
-		$Path = PATH_APPLICATIONS . DS . 'galleries' . DS . 'customfiles'.DS.'customclasses';
+		$Path = PATH_APPLICATIONS.DS.'galleries'.DS.'customfiles'.DS.'customclasses';
 
 		$GalleryItemModel = $this->GalleryItemModel;
 
@@ -163,11 +163,27 @@ class GalleryController extends GalleriesController {
         $this->Render();
     }
 
+	/**
+	 * Start of function for html pages
+	 */
+	public function Info() {
+
+	}
+
+	/**
+	 * Render function for displaying a not found page
+	 */
 	public function NotFound() {
-      $this->View = 'notfound';
-      $this->Render();
+		$this->PrepareController();
+		$this->View = 'notfound';
+		$this->Render();
    }
 
+   /**
+    * Function for displaying the fire event as a div
+    *
+    * @param type $EventName
+    */
 	public function DisplayFireEvent($EventName) {
 	   $Controller = $this->ControllerName;
 	   echo '<img src="/applications/galleries/design/images/burn.png" class="FireEvent" content="'.$EventName.'"></img>';

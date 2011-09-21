@@ -19,26 +19,25 @@ class DesignerController extends ProjectsController {
 	 */
 	public function Initialize() {
 		  parent::Initialize();
+$Controller = $this->ControllerName;
+      //$Sender->Form = new Gdn_Form();
 
-		  $Controller = $this->ControllerName;
-		  //$Sender->Form = new Gdn_Form();
+      if ($this->Head) {
+		$this->AddJsFile('jquery.js');
+		$this->AddJsFile('css_browser_selector.js');
+         $this->AddJsFile('jquery.livequery.js');
+         $this->AddJsFile('jquery.form.js');
+         $this->AddJsFile('jquery.popup.js');
+         $this->AddJsFile('jquery.gardenhandleajaxform.js');
+         $this->AddJsFile('global.js');
+		 if (C('Galleries.ShowFireEvents'))
+			$this->DisplayFireEvent('WhileHeadInit');
 
-		  if ($this->Head) {
-			$this->AddJsFile('jquery.js');
-			$this->AddJsFile('css_browser_selector.js');
-			 $this->AddJsFile('jquery.livequery.js');
-			 $this->AddJsFile('jquery.form.js');
-			 $this->AddJsFile('jquery.popup.js');
-			 $this->AddJsFile('jquery.gardenhandleajaxform.js');
-			 $this->AddJsFile('global.js');
-			 if (C('Galleries.ShowFireEvents'))
-				$this->DisplayFireEvent('WhileHeadInit');
+		$this->FireEvent('WhileHeadInit');
 
-			$this->FireEvent('WhileHeadInit');
-
-		  }
-		  $this->MasterView = 'default';
-		  parent::Initialize();
+      }
+      $this->MasterView = 'default';
+	  parent::Initialize();
 	   }
 
 	/**
@@ -52,8 +51,9 @@ class DesignerController extends ProjectsController {
 
 			$this->AddJsFile('jquery.event.drag.js');
 			$this->AddJsFile('jquery.jrac.js');
-			$this->AddJsFile('/applications/galleries/js/gallery.js');
-			$this->AddCssFile('/applications/galleries/design/gallery.css');
+			//$this->AddJsFile('/applications/galleries/js/gallery.js');
+			//$this->AddCssFile('/applications/galleries/design/gallery.css');
+			//$this->AddCssFile('/applications/galleries/design/gallerycustom.css');
 
 		}
 
@@ -200,11 +200,11 @@ class DesignerController extends ProjectsController {
 			$Type = $Request->Post('imgID');
 			$ProjectID = $Request->Post('ProjectID');
 
-			$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
+			//$Return = $this->_UpdateProjectOrder($ProjectID, $Type);
 
 			$this->_SaveItemPosition($ProjectID, $Type, $Top, $Left);
 			echo '<br>';
-			print_r($Return);
+			//print_r($Return);
 		}
 
 	/**
@@ -294,11 +294,11 @@ class DesignerController extends ProjectsController {
 
 		  if ($LineCount < 2) {
 			  $MessageLength = strlen($Message);
-			  $Width = ($MessageLength * $FontSize * 0.7);
+			  $Width = ($MessageLength * $FontSize * 4.7);
 		  } else {
-			  $Width = ($FontSize * $LineLength);
+			  $Width = ($FontSize * $LineLength * 4);
 		  }
-		  $Height = ($LineCount * ($FontSize * 1.5));
+		  $Height = ($LineCount * ($FontSize * 5));
 			// Create the image
 			// Create the image
 		$im = imagecreatetruecolor($Width, $Height);
@@ -308,6 +308,8 @@ class DesignerController extends ProjectsController {
 		$grey = imagecolorallocate($im, 128, 128, 128);
 		$black = imagecolorallocate($im, 0, 0, 0);
 		$red = imagecolorallocate($im, 255, 0, 0);
+		$green = imagecolorallocate($im, 0, 255, 0);
+		$blue = imagecolorallocate($im, 0, 0, 255);
 		switch ($Color) {
 			case 'white':
 				$FontColor = $white;
@@ -321,6 +323,16 @@ class DesignerController extends ProjectsController {
 				break;
 			case 'red':
 				$FontColor = $red;
+				$Shadow = $grey;
+				$clear = $white;
+				break;
+			case 'blue':
+				$FontColor = $blue;
+				$Shadow = $grey;
+				$clear = $white;
+				break;
+			case 'green':
+				$FontColor = $green;
 				$Shadow = $grey;
 				$clear = $white;
 				break;
@@ -340,45 +352,121 @@ class DesignerController extends ProjectsController {
 		$FontFile = PATH_APPLICATIONS.'/projects/design/fonts/'.$FontName.'.TTF';
 
 		// Add the text
-		$y = $FontSize * 1.2;
+		$y = $FontSize * 2.2;
 		$total_width=0;
 		$counter=0;
-		/*
-		for($i=0; $i<strlen($text); $i++)
-		{
+
+		/*for($i=0; $i<strlen($text); $i++) {
+
 			//$text_to_write=urldecode(substr($text,$i,1)."%0D_");
 			$dimensions = imagettfbbox($FontSize, $Angle, $FontFile, substr($text,$i,1));
 			$total_width += ($dimensions[2]);
 
 		}
-
-		$cx = 200;
-		$cy = 100;
-		$cr = 80;
-		$degDelta = 360 / $LineLength;
-
-		for ($x = 0; $x < $LineLength; $x++) {
-			// Circular Text
-			$AX = $cx - cos(deg2rad($degDelta * $x)) * $cr;
-			$AY = $cy - sin(deg2rad($degDelta * $x)) * $cr;
-
-			imagettftext($im, 20, -($degDelta * $x + $degDelta / 2)+90 , $AX, $AY, $color, 'arial.ttf', $text[$x]);
-
-		}
-		*/
 		$dimensions = imagettfbbox($FontSize, $Angle, $FontFile, $text);
 
 
 		$difference = $dimensions[2] - $total_width;
 
-		imagettftext($im, $FontSize, $Angle, $x+1, $y+1, $Shadow, $FontFile, $text);
-		imagettftext($im, $FontSize, $Angle, $x, $y, $FontColor, $FontFile, $text);
+		 */
+		// define starting locations
+		$StringLength = strlen($text);
+		$cx = $FontSize * $StringLength;
+		$cy = $FontSize * 3;
+		$cr = $FontSize;
+		$degDelta = 90 / $StringLength;
+
+		for ($x = 0; $x < $StringLength; $x++) {
+			// Circular Text
+			//$AX = ($cx - cos(deg2rad($degDelta * $x)) * $cr) + ($FontSize * $x);
+			$AX = $FontSize * $x;
+			$AY = ($cy - sin(deg2rad($degDelta * $x)) * $cr);
+			$Middle = $StringLength / 2;
+			if ($x < ($Middle)) {
+				$y = ($Middle - $x);
+				$AY = $AY - (($FontSize / 4) * -$y);
+			} else {
+				$y = ($x - $Middle);
+				$AY = $AY - (($FontSize / 4) * -$y);
+			}
+
+			imagettftext($im, $FontSize, -($degDelta * $x + $degDelta / 2)+45 , $AX, $AY, $FontColor, $FontFile , substr($text, $x, 1));
+
+		}
+
+
+
+		//imagettftext($im, $FontSize, $Angle, $x+1, $y+1, $Shadow, $FontFile, $text);
+		//imagettftext($im, $FontSize, $Angle, $x, $y, $FontColor, $FontFile, $text);
 		$this->ImageTrim($im, $clear);
+		//imageantialias($im, true);
 		// Using imagepng() results in clearer text compared with imagejpeg()
 		$NewImage = imagepng($im, PATH_UPLOADS.DS."project/text/$ProjectID.png");
 		imagedestroy($im);
 		return "/uploads/project/text/$ProjectID.png";
 	  }
+
+
+
+	public function GenerateCurve($ProjectID, $FontSize, $Color, $LineLength, $Angle, $x, $y, $FontName, $Message) {
+		// image dimensions
+		$imageWidth = 150;
+		$imageHeight = 100;
+
+		// font file
+		$FontName = "Saved By Zero";
+		$FontFile = PATH_APPLICATIONS.'/projects/design/fonts/'.$FontName.'.TTF';
+		$fontSize = 10;
+
+		// maximum number
+		$max = 20;
+		// current number
+		$current = 10;
+		// how many numbers to be displayed
+		$divisions  = 6;
+
+		// speedometer semicircle center
+		$arcCenterX = 70;
+		$arcCenterY = 90;
+
+		// create image
+		$image = imagecreate($imageWidth, $imageHeight);
+		// make line appear smoother
+		//imageantialias($image, true);
+		// allocate colors
+		$black = imagecolorallocate($image, 0, 0, 0);
+		$white = imagecolorallocate($image, 255, 255, 255);
+		imagefill($image, 0, 0, $white);
+
+		imagearc($image, $arcCenterX, $arcCenterY, 100, 100, 180, 360, $black);
+
+		$oneDivision = pi() / $max;
+
+		$firstNum = round($max / $divisions);
+
+		for($i = 1; $i < $divisions; $i++) {
+		$num = $firstNum * $i;
+		if ($num != $max) {
+
+			$numAngle = $num * $oneDivision;
+
+			$x = $arcCenterX - cos($numAngle) * 50;
+			$y = $arcCenterY - sin($numAngle) * 50;
+
+			$tangent = (- 2 * $x + 140) / (2 * $y - 180);
+			$angle = 0 - rad2deg(atan($tangent));
+
+			imagettftext($image, $fontSize, $angle, $x, $y, $black, $FontFile, $num);
+
+			}
+		}
+		//$this->ImageTrim($image, $clear);
+		//imageantialias($image, true);
+		// Using imagepng() results in clearer text compared with imagejpeg()
+		$NewImage = imagepng($image, PATH_UPLOADS.DS."project/text/curvetest.png");
+		imagedestroy($image);
+		echo "<img src='/uploads/project/text/curvetest.png'/>";
+	}
 
 	/**
 	 * Function for trimming the edges off of generated text images.

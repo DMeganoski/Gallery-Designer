@@ -42,7 +42,7 @@ Project {
 .ProjectBox,
 .UploadBox {
 	position: relative;
-	margin: 10px 5px 0;
+	margin: 10px 5px;
 	left: 0px;
 	z-index: 30;
 }
@@ -51,7 +51,6 @@ Project {
 	margin: 5px;
 }
 .ProjectBox table {
-	margin-bottom: 10px;
 	border: 1px solid #CCC;
 	border-radius: 3px;
 	-moz-border-radius: 3px;
@@ -134,7 +133,7 @@ div.MessageDisplay {
 }
 img.TextBox {
 	max-width: 200px;
-	
+
 }
 /*---------------------------------- Tabs -------------------------------*/
 div.Tabs li a.View {

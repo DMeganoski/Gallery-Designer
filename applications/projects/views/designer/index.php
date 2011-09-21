@@ -40,7 +40,7 @@ $BaseSize = $this->BaseFile->Name;
 	<div class="MessageDisplay">
 		<h1>Included Message:</h1><?
 		if (!empty($this->CurrentProject->Message)) {
-		echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" class=""/>';
+			echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" class=""/>';
 		} ?></div>
 
 	<div class="Buttons">

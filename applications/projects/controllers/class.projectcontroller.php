@@ -10,7 +10,7 @@ class ProjectController extends ProjectsController {
 
 	/**
 	 * Array of classes (models) to include.
-	 * 
+	 *
 	 * @var type
 	 */
 	public $Uses = array('GalleryItemModel', 'ProjectModel', 'GalleryUploadModel');
@@ -199,7 +199,7 @@ class ProjectController extends ProjectsController {
 		$Session = Gdn::Session();
 		$ProjectID = $Request->Post('ProjectID');
 		$FrameChoice = $Request->Post('Frame');
-		if ($FrameChoice != 'none')
+		if ($FrameChoice != 'None')
 			$this->_AddToSelection($ProjectID, 'frame', $FrameChoice);
 		else
 			$this->_RemoveFromSelection($ProjectID, 'frame', $FrameChoice);

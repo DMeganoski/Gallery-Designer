@@ -527,7 +527,7 @@ body #Head h1 {
 	-webkit-box-shadow: none;
 }
 #Menu ul {
-	display: none;
+	display: inline;
 }
 #Menu li {
 	background: url('images/grey_in_40.png') repeat-x center;
@@ -822,6 +822,7 @@ div.Menu {
    position: absolute;
    text-align: left;
    vertical-align: bottom;
+   display: inline;
    z-index: 20;
    margin: 0px auto;
    padding: 3px 10px 0;
