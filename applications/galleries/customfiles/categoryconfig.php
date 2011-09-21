@@ -1,15 +1,19 @@
 <?php if (!defined('APPLICATION')) exit();
 
-//Set Classes
+/**
+ * Configuration file for intitial categories.
+ * Later, these will be editable in the dashboard.
+ */
+
+/*-------------------------------- Configure Classes --------------------------------------------*/
+// you should keep the first three classes, as changing them will require changes to the source code.
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'default', 'Visible' => '1'),
         array('ClassKey' => 1), TRUE);
-
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'bases', 'Visible' => '1'),
         array('ClassKey' => 2), TRUE);
-
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'backgrounds', 'Visible' => '1'),
         array('ClassKey' => 3), TRUE);
-
+// The rest of the classes are optional
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'designer', 'Visible' => '1'),
         array('ClassKey' => 4), TRUE);
 
@@ -19,7 +23,8 @@ $SQL->Replace('GalleryClass', array('ClassLabel' => 'templates', 'Visible' => '0
 $SQL->Replace('GalleryClass', array('ClassLabel' => 'completepackages', 'Visible' => '0'),
         array('ClassKey' => 10), TRUE);
 
-// Set Categories
+/*/*-------------------------------- Configure Categories -----------------------------------------*/
+// always keep a home category for each class, as it is the default when an incorrect category is given
 // Class 1 Categories (default)
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'home', 'Visible' => '1', 'ClassKey' => 1),
 	array('CategoryKey' => 101), TRUE);
@@ -29,7 +34,7 @@ $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'pricing', 'Visible' =
 	array('CategoryKey' => 103), TRUE);
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'contactus', 'Visible' => '1', 'ClassKey' => 1),
 	array('CategoryKey' => 104), TRUE);
-// Class 2 Categories (tins)
+// Class 2 Categories (bases)
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'home', 'Visible' => '1', 'ClassKey' => 2),
 	array('CategoryKey' => 201), TRUE);
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'platinum', 'Visible' => '1', 'ClassKey' => 2),
@@ -38,7 +43,7 @@ $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'black', 'Visible' => 
 	array('CategoryKey' => 203), TRUE);
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'gold', 'Visible' => '0', 'ClassKey' => 2),
 	array('CategoryKey' => 204), TRUE);
-// Class 3 Categories (covers)
+// Class 3 Categories (backgrounds)
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'home', 'Visible' => '1', 'ClassKey' => 3),
 	array('CategoryKey' => 301), TRUE);
 $SQL->Replace('GalleryCategory',array ('CategoryLabel' => 'abstract', 'Visible' => '1', 'ClassKey' => 3),

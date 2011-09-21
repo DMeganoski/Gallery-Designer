@@ -1,14 +1,22 @@
-	<?php if (!defined('APPLICATION'))
-		exit();
+<?php if (!defined('APPLICATION'))
+	exit();
 
-	/*
-	 * Designer Controller class, manages and organizes pages that are used to customize
-	 * the current project and prepare it for print.
-	 */
+/**
+ * Designer Controller class, manages and organizes pages that are used to customize
+ * the current project's design and prepare it for print.
+ */
 class DesignerController extends ProjectsController {
 
+	/**
+	 * Array of classes (models) to include.
+	 *
+	 * @var type
+	 */
 	public $Uses = array('Form', 'GalleryItemModel', 'ProjectModel', 'GalleryUploadModel');
 
+	/**
+	 * Standard initialize, includes js files from the library
+	 */
 	public function Initialize() {
 		  parent::Initialize();
 
@@ -33,6 +41,9 @@ class DesignerController extends ProjectsController {
 		  parent::Initialize();
 	   }
 
+	/**
+	 * Function for other functions to use, includes css and js files, as well as modules
+	 */
 	public function PrepareController() {
 
 			$this->AddModule('GalleryHeadModule');
@@ -46,11 +57,11 @@ class DesignerController extends ProjectsController {
 
 		}
 
-		/*----------------------------------------Start of basic view functions --------------*/
-		/*
-		 * Index, default function. Displays all selected items in a drag and drop
-		 * design environment.
-		 */
+	/*----------------------------------------Start of basic view functions --------------*/
+	/**
+	 * Index, default function. Displays all selected items in a drag and drop
+	 * design environment.
+	 */
 	public function Index() {
 			GalleryController::$Class = 'designer';
 			GalleryController::$Category = 'home';
@@ -102,10 +113,10 @@ class DesignerController extends ProjectsController {
 			$this->Render();
 		}
 
-		/*
-		 * Function for displaying a page where an item can be resized and cropped.
-		 * This is most useful for custom uploads
-		 */
+	/**
+	 * Function for displaying a page where an item can be resized and cropped.
+	 * This is most useful for custom uploads
+	 */
 	public function Resize() {
 			$this->PrepareController();
 			$ItemSlug = GetValue(0, $this->RequestArgs, '');
@@ -123,9 +134,9 @@ class DesignerController extends ProjectsController {
 			$this->Render();
 		}
 
-		/*
-		 * Function for diplaying the page where text is added or updated
-		 */
+	/**
+	 * Render function for creating a message in text for the project
+	 */
 	public function Text() {
 			// css and modules
 			$this->PrepareController();
@@ -176,21 +187,11 @@ class DesignerController extends ProjectsController {
 			$this->Render();
 		}
 
-	public function TestSerial() {
-			$Array = array('this' => 'that', 'these' => 'those', 'time' => 'then');
-			print_r($Array);
-			$Mine = $this->MyImplode($Array);
-			echo '<br/>';
-			echo $Mine;
-			$Exploded = explode('-', $Mine);
-			echo '<br/>';
-			print_r($Exploded);
-			$Mine2 = $this->MyExplode($Mine);
-			echo '<br/>';
-			print_r($Mine2);
-		}
+	/* -------------------------------------- Start of Ajax functions -------------------*/
 
-		/* -------------------------------------- Start of Ajax functions -------------------*/
+	/**
+	 * Ajax function for saving the position of the items in the project
+	 */
 	public function Placement() {
 
 			$Request = Gdn::Request();
@@ -206,9 +207,14 @@ class DesignerController extends ProjectsController {
 			print_r($Return);
 		}
 
-		/*
-		 *
-		 */
+	/**
+	 * Private function for updating the 'z-index' of the items in the project
+	 * @todo Not working at the moment
+	 *
+	 * @param type $ProjectID
+	 * @param type $Type
+	 * @return type
+	 */
 	private function _UpdateProjectOrder($ProjectID, $Type) {
 			$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
 			$Order = $this->MyExplode('-', $CurrentProject->Order);
@@ -239,9 +245,13 @@ class DesignerController extends ProjectsController {
 
 		}
 
-		/*
-		 *
-		 */
+	/**
+	 *
+	 * @param type $ProjectID :
+	 * @param type $Type :
+	 * @param type $Top :
+	 * @param type $Left :
+	 */
 	private function _SaveItemPosition($ProjectID = '', $Type = '', $Top= '', $Left = '') {
 			if ($ProjectID != '') {
 				$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
@@ -259,9 +269,21 @@ class DesignerController extends ProjectsController {
 			}
 		}
 
-		/*
-		 * Function for generating an image of text
-		 */
+	/**
+	 * Private function for generating text into an image with the given parameters
+	 *
+	 * @param type $ProjectID : Number: the current project image is being generated for (used for name)
+	 * @param type $FontSize : Number: the size of the generated text
+	 * @param type $Color : String: the color of the generated text
+	 * @param type $LineLength : Number: the limit on the number of characters allowed in one line
+	 * @param type $Angle : Number: the angle at which to generate the text
+	 * @param type $x : Number: the x-coordinate for the text to start
+	 * @param type $y : Number: the y-coordinate for the text to start
+	 * @param type $FontName : String: the name of the font to be generated
+	 * @param type $Message : String: the message to generate in the image
+	 *
+	 * @return type String: the location of the newly generated image
+	 */
 	private function _GenerateText($ProjectID, $FontSize, $Color, $LineLength, $Angle, $x, $y, $FontName, $Message) {
 
 		  // Determine the size of the image to generate
@@ -358,7 +380,14 @@ class DesignerController extends ProjectsController {
 		return "/uploads/project/text/$ProjectID.png";
 	  }
 
-	  public function ImageTrim(&$im, $bg, $pad=null){
+	/**
+	 * Function for trimming the edges off of generated text images.
+	 *
+	 * @param type $im : the generated image
+	 * @param type $bg : the color to trim
+	 * @param type $pad : the amount of padding
+	 */
+	public function ImageTrim(&$im, $bg, $pad=null){
 
 		// Calculate padding for each side.
 		if (isset($pad)){

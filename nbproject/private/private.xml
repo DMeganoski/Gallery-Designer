@@ -6,10 +6,6 @@
             <line>736</line>
         </file>
         <file>
-            <url>themes/TinsDirect/design/style.css</url>
-            <line>2127</line>
-        </file>
-        <file>
             <url>plugins/Galleries/class.galleriesplugin.php</url>
             <line>66</line>
             <line>573</line>
@@ -27,5 +23,34 @@
             <url>library/database/class.sqldriver.php</url>
             <line>807</line>
         </file>
+        <file>
+            <url>themes/TinsDirect/design/style.css</url>
+            <line>2127</line>
+        </file>
     </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/controllers/class.projectcontroller.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/controllers/class.designercontroller.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/js/designer.js</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/js/projectbox.js</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/design/designer.css</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/design/projectbox.css</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/themes/TinsDirect/design/style.css</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/js/gallery.js</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/js/headmodule.js</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/customfiles/categoryconfig.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/designer/index.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/models/class.galleryitemmodel.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/designer/text.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/designer/resize.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/views/item/index.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/customfiles/customclasses/bases/baseshome.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/modules/projectbox.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/project/base.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/project/background.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/project/text.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/views/project/uploads.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/projects/locale/en-CA-custom/definitions.php</file>
+        <file>file:/C:/Users/ZodiacDM/My%20Projects/Tins%20Direct%20Website/applications/galleries/locale/en-CA-custom/definitions.php</file>
+    </open-files>
 </project-private>

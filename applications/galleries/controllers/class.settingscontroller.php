@@ -9,7 +9,7 @@ class SettingsController extends Gdn_Controller {
     * @access public
     * @var array
     */
-   public $Uses = array('Database', 'Form', 'GalleryCategoryModel');
+   public $Uses = array('Database', 'Form', 'GalleryCategoryModel', 'GalleryClassModel');
 
    public function PrepareController() {
 	   $this->AddCssFile('gallery.css');
@@ -406,7 +406,7 @@ class SettingsController extends Gdn_Controller {
 		foreach ($Classes as $Class) {
 			$ClassLabel = $Class->ClassLabel;
 			$ClassKey = $Class->ClassKey;
-			$Categories = $this->GalleryClassModel->GetCategories($ClassLabel);
+			$Categories = $this->GalleryCategoryModel->GetCategories($ClassLabel);
 			$CategoryData[$ClassKey] = array('ClassLabel' => $ClassLabel, 'Visible' => $Class->Visible, 'Categories' => array());
 			foreach ($Categories as $Category) {
 				$CategoryLabel = $Category->CategoryLabel;

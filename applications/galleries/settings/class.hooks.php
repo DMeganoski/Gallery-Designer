@@ -55,7 +55,7 @@ class GalleriesHooks implements Gdn_IPlugin {
 		$Sender->UserName = ArrayValue(1, $Sender->RequestArgs, '');
 		$UploadModel = new GalleryUploadModel();
 		if (Gdn::Session()->UserID == $Sender->UserID)
-		$Sender->Uploads = $UploadModel->GetUploads('0', '', array('InsertUserID' => $Sender->UserID));
+			$Sender->Uploads = $UploadModel->GetUploads('0', '', array('InsertUserID' => $Sender->UserID));
 		$Sender->GetUserInfo($Sender->UserID, $Sender->UserName);
 		$Sender->SetTabView('uploads', PATH_APPLICATIONS.DS.'galleries/views/profile'.DS.'uploads.php/', 'Profile', 'Dashboard');
 

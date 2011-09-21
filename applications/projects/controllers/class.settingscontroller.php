@@ -60,7 +60,6 @@ class SettingsController extends Gdn_Controller {
 			$Project->User = $UserModel->Get($UserID);
 		}
 
-
 		$this->Render();
 	}
 

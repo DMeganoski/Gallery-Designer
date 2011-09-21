@@ -1,3 +1,7 @@
+/*
+ * Variety of fucntions related specifically to the designer page.
+ * Contains most of the ajax and dragging functionality.
+ */
 $(window).load(function(){
 	$('body#projects_designer_index #Content img').each(function(){
 		$(this).width($(this).width() * 0.2);

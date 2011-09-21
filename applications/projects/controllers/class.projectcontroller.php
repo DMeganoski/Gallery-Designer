@@ -1,9 +1,18 @@
 <?php if (!defined('APPLICATION'))
 	exit();
 
-
+/**
+ * Controller for handling anything to do with projects outside of the design part.
+ * This includes adding and removing objects from around the site to the project,
+ * including uploads, though they are otherwise handled in the item controller.
+ */
 class ProjectController extends ProjectsController {
 
+	/**
+	 * Array of classes (models) to include.
+	 * 
+	 * @var type
+	 */
 	public $Uses = array('GalleryItemModel', 'ProjectModel', 'GalleryUploadModel');
 
 	public function Initialize() {
@@ -30,6 +39,9 @@ class ProjectController extends ProjectsController {
 	  parent::Initialize();
    }
 
+   /**
+    * Function for other functions to include css and js files, as well as modules.
+    */
     public function PrepareController() {
 
 		$this->AddModule('GalleryHeadModule');
@@ -42,6 +54,9 @@ class ProjectController extends ProjectsController {
 
 	}
 
+	/**
+	 * Function for rendering all projects belonging to the person viewing the page.
+	 */
 	public function Index() {
 		$this->PrepareController();
 		$this->AddModule('GallerySideModule');
@@ -76,8 +91,8 @@ class ProjectController extends ProjectsController {
 		$this->Render();
 	}
 
-	/*
-	 * Ajax function for retrieving project data
+	/**
+	 * Ajax function for retrieving project data.
 	 * loads pages located in /views/project/
 	 */
 	public function GetProject() {
@@ -133,8 +148,9 @@ class ProjectController extends ProjectsController {
 	}
 
 /*------------------------------------- Main Selections -------------------------------*/
-	/*
-	 *
+	/**
+	 * Ajax function for adding items around the site, as well as uploads,
+	 * to the current project.
 	 */
 	public function ProjectSelect() {
 		$Request = Gdn::Request();
@@ -174,8 +190,8 @@ class ProjectController extends ProjectsController {
 
 	}
 
-	/*
-	 *
+	/**
+	 * Ajax function for selecting a frame for the background.
 	 */
 	public function FrameSelect() {
 		$Request = Gdn::Request();
@@ -190,8 +206,9 @@ class ProjectController extends ProjectsController {
 	}
 /*------------------------------- Private selection functions --------------------------*/
 
-	/*
-	 *
+	/**
+	 * Private function for adding an item to the project.
+	 * Used by ProjectSelect()
 	 */
 	private function _AddToSelection($ProjectID, $Type, $ItemSlug) {
 
@@ -210,16 +227,18 @@ class ProjectController extends ProjectsController {
 			return $Return;
 	}
 
-	/*
-	 *
+	/**
+	 * Private function for adding an upload to the project.
+	 * Used by ProjectSelect()
 	 */
 	private function _AddToIncluded($ProjectID, $Type, $UploadID) {
 
 		$this->_SaveIncluded($ProjectID, $UploadID);
 	}
 
-	/*
-	 *
+	/**
+	 * Private function for saving an item to the project database.
+	 * Used by _AddToIncluded()
 	 */
 	private function _SaveIncluded($ProjectID, $UploadID) {
 		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
@@ -242,8 +261,9 @@ class ProjectController extends ProjectsController {
 
 	}
 
-	/*
-	 *
+	/**
+	 * Private function for saving an upload to the project database.
+	 * Used by _AddtoSelection()
 	 */
 	private function _SaveSelection($ProjectID, $Selection) {
 
@@ -258,8 +278,9 @@ class ProjectController extends ProjectsController {
 
 	}
 
-	/*
-	 *
+	/**
+	 * Private function for removing an item from the project database.
+	 * Used by ProjectSelect()
 	 */
 	private function _RemoveFromSelection($ProjectID, $Type, $ItemSlug = '') {
 
@@ -274,8 +295,9 @@ class ProjectController extends ProjectsController {
 
 	}
 
-	/*
-	 *
+	/**
+	 * Private function for removing an upload from the project database.
+	 * Used by ProjectSelect()
 	 */
 	private function _RemoveFromIncluded($ProjectID, $Upload) {
 		$Project = $this->ProjectModel->GetSingle($ProjectID);
@@ -290,8 +312,8 @@ class ProjectController extends ProjectsController {
 
 /*------------------------------- Function for administering projects ------------------*/
 
-	/*
-	 *
+	/**
+	 * Ajax function for changing the current project for a user.
 	 */
 	public function SetCurrent() {
 		$Request = Gdn::Request();
@@ -303,8 +325,8 @@ class ProjectController extends ProjectsController {
 
 	}
 
-	/*
-	 *
+	/**
+	 * Ajax function for removing a project altoghether.
 	 */
 	public function Delete() {
 		$Request = Gdn::Request();
@@ -318,9 +340,9 @@ class ProjectController extends ProjectsController {
 		}
 	}
 
-	/*
+	/**
 	 * Function for setting stage of completion of projects.
-	 * Allows for users to set the project to be completed by tins direct
+	 * Allows for users to set the project to be produced.
 	 */
 	public function SetStage() {
 		$Request = Gdn::Request();
@@ -339,7 +361,7 @@ class ProjectController extends ProjectsController {
 
 /*------------------- Functions for retrieving previous poisition of elements -----------*/
 
-	/*
+	/**
 	 *
 	 */
 	public function
