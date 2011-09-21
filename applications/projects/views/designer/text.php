@@ -21,7 +21,14 @@ $FontNames = array(
 	'PaintyPaint' => 'PaintyPaint',
 	'Ruritania' => 'Ruritania',
 	'Saved By Zero' => 'Saved By Zero',
-	'Seaside Resort' => 'Seaside Resort'
+	'Seaside Resort' => 'Seaside Resort',
+	'Serif Black' => 'Serif Black',
+	'SF Old Republic' => 'SF Old Republic',
+	'Steelfish' => 'Steelfish',
+	'Tele-Marines' => 'Tele-Marines',
+	'Video Star' => 'Video Star',
+	'Xephyr' => 'Xephyr',
+	'You are the one' => 'You are the one'
 );
 $Lengths = array('10' => '10', '12' => '12', '14' => '14', '16' => '16', '18' => '18', '20' => '20', '22' => '22', '24' => '24', '26' => '26', '28' => '28', '30' => '30');
 

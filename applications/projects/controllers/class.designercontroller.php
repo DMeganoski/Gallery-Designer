@@ -20,7 +20,6 @@ class DesignerController extends ProjectsController {
 	public function Initialize() {
 		  parent::Initialize();
 $Controller = $this->ControllerName;
-      //$Sender->Form = new Gdn_Form();
 
       if ($this->Head) {
 		$this->AddJsFile('jquery.js');
@@ -30,6 +29,7 @@ $Controller = $this->ControllerName;
          $this->AddJsFile('jquery.popup.js');
          $this->AddJsFile('jquery.gardenhandleajaxform.js');
          $this->AddJsFile('global.js');
+		 $this->AddCssFile('/themes/TinsDirect/design/custom.css');
 		 if (C('Galleries.ShowFireEvents'))
 			$this->DisplayFireEvent('WhileHeadInit');
 
@@ -177,6 +177,7 @@ $Controller = $this->ControllerName;
 					$x = 50;
 					$y = 20;
 					if (!empty($ProjectData->Message)) {
+						//$this->DrawTextArc($Message, 135, 300, 200, TRUE);
 						$this->TextImage = $this->_GenerateText($ProjectData->ProjectKey, $FontSize, $FontColor, $LineLength, $Angle, $x, $y, $FontName, $ProjectData->Message );
 					}
 				}
@@ -310,6 +311,7 @@ $Controller = $this->ControllerName;
 		$red = imagecolorallocate($im, 255, 0, 0);
 		$green = imagecolorallocate($im, 0, 255, 0);
 		$blue = imagecolorallocate($im, 0, 0, 255);
+		// determine which colors to use
 		switch ($Color) {
 			case 'white':
 				$FontColor = $white;
@@ -368,7 +370,7 @@ $Controller = $this->ControllerName;
 
 		$difference = $dimensions[2] - $total_width;
 
-		 */
+
 		// define starting locations
 		$StringLength = strlen($text);
 		$cx = $FontSize * $StringLength;
@@ -393,11 +395,11 @@ $Controller = $this->ControllerName;
 			imagettftext($im, $FontSize, -($degDelta * $x + $degDelta / 2)+45 , $AX, $AY, $FontColor, $FontFile , substr($text, $x, 1));
 
 		}
+		*/
 
 
-
-		//imagettftext($im, $FontSize, $Angle, $x+1, $y+1, $Shadow, $FontFile, $text);
-		//imagettftext($im, $FontSize, $Angle, $x, $y, $FontColor, $FontFile, $text);
+		imagettftext($im, $FontSize, $Angle, $x+1, $y+1, $Shadow, $FontFile, $text);
+		imagettftext($im, $FontSize, $Angle, $x, $y, $FontColor, $FontFile, $text);
 		$this->ImageTrim($im, $clear);
 		//imageantialias($im, true);
 		// Using imagepng() results in clearer text compared with imagejpeg()
@@ -467,6 +469,65 @@ $Controller = $this->ControllerName;
 		imagedestroy($image);
 		echo "<img src='/uploads/project/text/curvetest.png'/>";
 	}
+
+	function DrawTextArc($str, $aStart, $aEnd, $iRadius, $bCCW) {
+		$nFont = 5;
+
+		// create image to store each character
+		$xFont = imagefontwidth($nFont);
+		$yFont = imagefontheight($nFont);
+		$imgChar = imagecreatetruecolor($xFont, $yFont);
+		// create overall image
+		$iCentre = $iRadius + max($xFont, $yFont);
+		$img = imagecreatetruecolor(2 * $iCentre, 2 * $iCentre);
+		// sort out colours
+		$colBG = imagecolorallocate($img, 255, 255, 255);
+		$colBGchar = imagecolorallocate($imgChar, 255, 255, 255);
+		$colFGchar = imagecolorallocate($imgChar, 0, 0, 0);
+		imagefilledrectangle($img, 0, 0, 2 * $iCentre, 2 * $iCentre, $colBG);
+
+		// arrange angles depending on direction of rotation
+		if ($bCCW)
+		{
+		while ($aEnd < $aStart)
+		{
+		$aEnd += 360;
+		}
+		}
+		else
+		{
+		while ($aEnd > $aStart)
+		{
+		$aEnd -= 360;
+		}
+		}
+
+		$len = strlen($str);
+
+		// draw each character individually
+		for ($i = 0; $i < $len; $i++)
+		{
+		// calculate angle along arc
+		$a = ($aStart * ($len - 1 - $i) + $aEnd * $i) / ($len - 1);
+
+		// draw individual character
+		imagefilledrectangle($imgChar, 0, 0, $xFont, $yFont, $colBGchar);
+		imagestring($imgChar, $nFont, 0, 0, $str[$i], $colFGchar);
+
+		// rotate character
+		$imgTemp = imagerotate($imgChar, (int)$a + 90 * ($bCCW ? 1 : -1), $colBGchar);
+		$xTemp = imagesx($imgTemp);
+		$yTemp = imagesy($imgTemp);
+
+		// copy to main image
+		imagecopy($img, $imgTemp,
+		$iCentre + $iRadius * cos(deg2rad($a)) - ($xTemp / 2),
+		$iCentre - $iRadius * sin(deg2rad($a)) - ($yTemp / 2),
+		0, 0, $xTemp, $yTemp);
+		}
+		imagejpeg($img, PATH_UPLOADS.DS."project/text/curvetest.png");
+		echo '<img src="/uploads/project/text/curvetest.png"/>';
+		}
 
 	/**
 	 * Function for trimming the edges off of generated text images.

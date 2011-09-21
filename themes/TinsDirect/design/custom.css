@@ -50,9 +50,10 @@ body#dashboard_plugin_page.TabButton {
 }
 /*------ Main Menu --------------*/
 div.Menu {
-   width: auto;
+	width: auto;
    height: 33px;
    position: absolute;
+   display: inline;
    text-align: left;
    vertical-align: bottom;
    z-index: 20;
@@ -65,6 +66,15 @@ div.Menu {
    -webkit-border-bottom-right-radius: 3px;
    border-bottom-left-radius: 3px;
    border-bottom-right-radius: 3px;
+}
+.ie div.Menu {
+	display: inline;
+	width: 500px;
+	left: 10px;
+	padding: 3px;
+}
+.ie #Content {
+	width: 660px;
 }
 div.Account {
 	background: #E6E6E6;
@@ -87,6 +97,7 @@ div.Account {
 }
 .ie div.Account {
 	width: 300px;
+	display: inline;
 }
 div.Logo {
     float: left;
@@ -102,6 +113,9 @@ ul#Menu {
    display: inline-block;
    /*margin-right: 280px;*/
    vertical-align: bottom;
+}
+.ie ul#Menu {
+	display: inline;
 }
 #Menu ul,
 #Menu li.Active {

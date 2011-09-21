@@ -18,12 +18,15 @@ div#Custom p a {
     text-decoration: underline;
 }
 div#Custom {
-    float: left;
+    float: right;
    height: auto;
-   width: 100%;
+   width: auto;
    text-align: left;
    vertical-align: bottom;
    z-index: 0;
+}
+.ie div#Custom {
+	width: 640px;
 }
 div.FireEvent {
 	background: #F1D031;

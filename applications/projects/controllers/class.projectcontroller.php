@@ -16,28 +16,27 @@ class ProjectController extends ProjectsController {
 	public $Uses = array('GalleryItemModel', 'ProjectModel', 'GalleryUploadModel');
 
 	public function Initialize() {
-      parent::Initialize();
+		parent::Initialize();
 
-      $Controller = $this->ControllerName;
-      //$Sender->Form = new Gdn_Form();
+		$Controller = $this->ControllerName;
 
-      if ($this->Head) {
-		$this->AddJsFile('jquery.js');
-		$this->AddJsFile('css_browser_selector.js');
-         $this->AddJsFile('jquery.livequery.js');
-         $this->AddJsFile('jquery.form.js');
-         $this->AddJsFile('jquery.popup.js');
-         $this->AddJsFile('jquery.gardenhandleajaxform.js');
-         $this->AddJsFile('global.js');
-		 if (C('Galleries.ShowFireEvents'))
-			$this->DisplayFireEvent('WhileHeadInit');
+		if ($this->Head) {
+			$this->AddJsFile('jquery.js');
+			$this->AddJsFile('css_browser_selector.js');
+			$this->AddJsFile('jquery.livequery.js');
+			$this->AddJsFile('jquery.form.js');
+			$this->AddJsFile('jquery.popup.js');
+			$this->AddJsFile('jquery.gardenhandleajaxform.js');
+			$this->AddJsFile('global.js');
+			if (C('Galleries.ShowFireEvents'))
+				$this->DisplayFireEvent('WhileHeadInit');
 
-		$this->FireEvent('WhileHeadInit');
+			$this->FireEvent('WhileHeadInit');
 
-      }
-      $this->MasterView = 'default';
-	  parent::Initialize();
-   }
+		}
+		$this->MasterView = 'default';
+		parent::Initialize();
+	}
 
    /**
     * Function for other functions to include css and js files, as well as modules.

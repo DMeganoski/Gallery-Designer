@@ -18,7 +18,6 @@ $BaseSize = $this->BaseFile->Name;
 		<p>Note: the backgrounds are approximately 3000 x 3000 px images, your images will
 		appear smaller to retain definition</p>
 	</div>
-	<div class="Zoom"><div class="Slider"></div></div>
 	<div id="DesignBox"><?
 			if (!empty($this->BackgroundFile) && !empty($this->BaseFile)) {
 				?><img src="/uploads/item/borders/<? echo $BaseSize ?>.png" class="Border"></img><?
