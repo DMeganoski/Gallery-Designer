@@ -81,29 +81,27 @@ class GalleryController extends GalleriesController {
     * @param mixed $this->RequestArgs
     */
 	public function Index($Args) {
-	   if (C('Galleries.ShowFireEvents'))
-		$this->DisplayFireEvent('BeforeBrowseRender');
-	   $this->FireEvent('BeforeBrowseRender');
-	   $this->PrepareController();
-       // Get Request Arguments
-        $View = ArrayValue('0', $this->RequestArgs, 'default');
-        $Category = ArrayValue('1', $this->RequestArgs, 'home');
-        $Page= ArrayValue('2', $this->RequestArgs, '1');
-        // Set the defaults
-        // use the next line for items, maybe?
-        if (!is_numeric($Page) || $Page < 1)
-        $Page = 1;
-        self::$Page = $Page;
-        $Limit = C('Gallery.Items.PerPage', 16);
-        self::$Limit = $Limit;
-	$Path = PATH_APPLICATIONS . DS . 'galleries' . DS . 'customfiles'.DS.'customclasses';
+		if (C('Galleries.ShowFireEvents'))
+			$this->DisplayFireEvent('BeforeBrowseRender');
+		$this->FireEvent('BeforeBrowseRender');
+		// Prepare page
+		$this->PrepareController();
+		// Get Request Arguments
+		$View = ArrayValue('0', $this->RequestArgs, 'default');
+		$Category = ArrayValue('1', $this->RequestArgs, 'home');
+		$Page= ArrayValue('2', $this->RequestArgs, '1');
+		// Set the defaults
+		if (!is_numeric($Page) || $Page < 1)
+		$Page = 1;
+		self::$Page = $Page;
+		$Limit = C('Gallery.Items.PerPage', 16);
+		self::$Limit = $Limit;
+		$Path = PATH_APPLICATIONS . DS . 'galleries' . DS . 'customfiles'.DS.'customclasses';
 
-	$GalleryItemModel = $this->GalleryItemModel;
-        //$CountItems = 100;
-
+		$GalleryItemModel = $this->GalleryItemModel;
 
 		/*
-		 * Ok, now check the requests for validity and set data
+		 * Now check the requests for validity and set data
 		 */
 		$ClassData = $this->GalleryClassModel->GetClasses($View);
         if ($View != 'default') {
@@ -120,43 +118,39 @@ class GalleryController extends GalleriesController {
                         $VerifyCategory = $this->GalleryCategoryModel->VerifyCategory($Category,$View);
                         if ($VerifyCategory) {
 							self::$Category = $Category;
+						} else {
+							$this->NotFound();
 						}
                      } else {
                             self::$Category = 'home';
                      }
-                    } else {
-                        self::$Class = 'default';
-			$this->Title(T(self::$Class));
-                    }
+				} else {
+					$this->NotFound();
+				}
 			}
-                // check other views besides gallery classes
-                } else if ($View == 'default') {
-                    self::$Class = 'default';
-
-                    if ($Category != 'home') {
-                        //$VerifyCategory = $GalleriesModel->VerifyCategory($Category,$Class);
-                        //if ($VerifyCategory) {
-                       self::$Category = $Category;
-			$this->Title(T($Category));
-                     } else {
-                            self::$Category = 'home';
-			    $this->Title(T('home'));
-                     }
-                } else if ($View == 'item') {
-                    self::$Class = 'item';
-		    self::$Category = 'home';
-		    $this->Title(T(''));
+            // check other views besides gallery classes
+		} else if ($View == 'default') {
+			self::$Class = 'default';
+            if ($Category != 'home') {
+				//$VerifyCategory = $GalleriesModel->VerifyCategory($Category,$Class);
+				//if ($VerifyCategory) {
+				self::$Category = $Category;
+				$this->Title(T($Category));
+            } else {
+				self::$Category = 'home';
+				$this->Title(T('home'));
+            }
 		} else {
-                   self::$Class = 'default';
-                   $View = 'default';
-		   self::$Category = 'home';
-		   $this->Title(T('default'));
-                }
-	 $this->Head->Title($this->Head->Title());
-	 if (self::$Category != 'home')
-		$this->View = ($Path.DS.self::$Class.DS.self::$Category.'.php');
-	 else
-		 $this->View = ($Path.DS.self::$Class.DS.self::$Class.'home.php');
+			self::$Class = 'default';
+            $View = 'default';
+			self::$Category = 'home';
+			$this->Title(T('default'));
+        }
+		$this->Head->Title($this->Head->Title());
+		if (self::$Category != 'home')
+			$this->View = ($Path.DS.self::$Class.DS.self::$Category.'.php');
+		else
+			$this->View = ($Path.DS.self::$Class.DS.self::$Class.'home.php');
 
 		$this->Categories = $this->GetCategories(self::$Class);
 		$ShortCat = substr(self::$Category, 0, 3);

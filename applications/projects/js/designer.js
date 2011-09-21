@@ -5,23 +5,22 @@
 $(window).load(function(){
 	$('body#projects_designer_index #Content img').each(function(){
 		$(this).width($(this).width() * 0.2);
-
 	});
-
 });
 /*-------------------------------------- Jquery functions --------------------------*/
 $(document).ready(function() {
 	/*----------------------------------- prepare page -----------------------------*/
 	$('#NoticeBox').hide();
+	// get the size of the template
 	var borderImg = $('.Border').attr('src');
-
+	// adjust position as necessary
 	if (borderImg == '/uploads/item/borders/1S.png') {
 		$('.Border').css('left', '90').css('top', '90');
 	}
 	if (borderImg == '/uploads/item/borders/2C.png') {
 		$('.Border').css('left', '60').css('top', '60');
 	} else if (borderImg == '/uploads/item/borders/3C.png') {
-		$('.Border').css('left', '40');
+		$('.Border').css('left', '40').css('top', '40');
 	}
 	/*------------------------------- Get Previously Set Positions -----------------*/
 	var ElementID = $(this).attr('id');
