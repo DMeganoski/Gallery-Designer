@@ -145,9 +145,6 @@ $(document).ready(function() {
 		var type = $(this).attr('id');
 		$(this).updateProjectBox(type);
 	});
-	$('#TextShape').click(function() {
-		$(this).next('ul').show();
-	})
 /*----------------------------------- Remove Functions for Project Box ----------------------------------------------*/
 	// button to remove tin from project
 	$('.TinRemove').live('click', function() {

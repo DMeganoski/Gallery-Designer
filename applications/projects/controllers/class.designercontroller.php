@@ -86,8 +86,8 @@ $Controller = $this->ControllerName;
 				$Base = $Selection['bases'];
 				$this->BaseFile = $this->GalleryItemModel->GetWhere(array('Slug' => $Base))->FirstRow();
 
-				$Frames = $this->MyExplode($CurrentProject->frame);
-				$this->Frame = $Frames[0];
+				$Frame = $Selection['frame'];
+				$this->Frame = $Frame;
 
 				$this->ProjectStage = $CurrentProject->ProjectStage;
 				$IncludedUploads = $this->MyExplode($CurrentProject->Included);
@@ -145,7 +145,9 @@ $Controller = $this->ControllerName;
 			$UserID = Gdn::Session()->UserID;
 			$ProjectData = $this->ProjectModel->GetCurrent($UserID);
 			$MessageStyles = $this->MyExplode($ProjectData->MessageStyle);
+			$this->Form->AddHidden('FontStyle');
 			// Add objects that don't exist
+			$ProjectData->FontStyle = $MessageStyles['FontStyle'];
 			$ProjectData->FontColor = $MessageStyles['FontColor'];
 			$ProjectData->FontSize = $MessageStyles['FontSize'];
 			$ProjectData->FontName = $MessageStyles['FontName'];
@@ -168,6 +170,8 @@ $Controller = $this->ControllerName;
 					$Style['FontName'] = $FontName;
 					$LineLength = $FormValues['LineLength'];
 					$Style['LineLength'] = $LineLength;
+					$FontStyle = $FormValues['FontStyle'];
+					$Style['FontStyle'] = $FontStyle;
 					$SerializedStyle = $this->MyImplode($Style);
 					$this->ProjectModel->Update('Project', array(
 						'Message' => $FormValues['Message'],

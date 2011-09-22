@@ -1,12 +1,10 @@
 <?php if (!defined('APPLICATION'))
 	exit();
-if (!empty($this->Frame)) {
-	$FrameClass = $this->Frame.'Frame';
-} else {
-	$FrameClass = 'None';
-}
+
 $CurrentSeleciton = $this->MyExplode($this->CurrentProject->Selection);
-$BaseSize = $this->BaseFile->Name;
+// @todo the template can be based on the chosen base size, though the size issue needs resolved.
+//$BaseSize = $this->BaseFile->Name;
+$BaseSize = '5C';
 ?>
 
 
@@ -15,14 +13,16 @@ $BaseSize = $this->BaseFile->Name;
 	<div class="Heading">
 		<h1>Welcome to the Interactive <? echo T('base') ?> Designer</h1>
 		<p>You can use items you have selected or uploaded to design your <? echo T('base') ?>.</p>
-		<p>Note: the backgrounds are approximately 3000 x 3000 px images, your images will
-		appear smaller to retain definition</p>
+		<p>Note: the backgrounds are approximately 3000 x 3000 px images, and have been shrunk to fit the screen.
+			Certain web browsers will display the shrunk images better, though the purpose is preserving print quality.</p>
 	</div>
 	<div id="DesignBox"><?
 			if (!empty($this->BackgroundFile) && !empty($this->BaseFile)) {
 				?><img src="/uploads/item/borders/<? echo $BaseSize ?>.png" class="Border"></img><?
 			}
-			?><div id="FrameWrapper" class="<? echo $FrameClass ?>" itemType="frame"></div><div class="ClearFix"></div>
+			if (!empty($this->Frame)) {
+				?><img src="/uploads/item/frames/<? echo strtolower($this->Frame) ?>L.png"></img><?
+				} ?><div class="ClearFix"></div>
 			<img src="/uploads/item/backgrounds/<? echo $this->BackgroundFile->FileName ?>" class="Background Large" id="Background"></img>
 			<div class="ClearFix"></div>
 

@@ -221,7 +221,7 @@ class GalleryController extends GalleriesController {
    }
 
    /*
-    * Model Functions
+    * Model Functions, not sure why but calling $this inside them refers to the controller
     */
    public function GetFilesInfo($Class, $Category = 'home') {
 	 $Model = $this->GalleryItemModel;

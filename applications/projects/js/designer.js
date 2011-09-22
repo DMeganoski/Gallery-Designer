@@ -9,6 +9,12 @@ $(window).load(function(){
 });
 /*-------------------------------------- Jquery functions --------------------------*/
 $(document).ready(function() {
+	/*------------------------------- Get Previously Set Positions -----------------*/
+	var ElementID = $(this).attr('id');
+	var frameChoice = 'none';
+	var projectBackground = $('#DesignBox').attr("background");
+	var currentProjectID = $('.Account').attr("projectid");
+	var fontStyle = $("#Form_FontStyle").val();
 	/*----------------------------------- prepare page -----------------------------*/
 	$('#NoticeBox').hide();
 	// get the size of the template
@@ -22,15 +28,17 @@ $(document).ready(function() {
 	} else if (borderImg == '/uploads/item/borders/3C.png') {
 		$('.Border').css('left', '40').css('top', '40');
 	}
-	/*------------------------------- Get Previously Set Positions -----------------*/
-	var ElementID = $(this).attr('id');
-	var frameChoice = 'none';
-	var projectBackground = $('#DesignBox').attr("background");
-	var currentProjectID = $('.Account').attr("projectid");
+	$('.ShapeChoice').each(function() {
+		var thisStyle = $(this).attr('id');
+		if (thisStyle == fontStyle) {
+			$(this).addClass('Selected');
+		}
+	});
+
+	/*---------------------------- Define Custom functions -------------------------*/
 	function designHelper( src ) {
 		return "<img src=\"" + src + "\" class=\"Helper\"></img>";
 	}
-	/*---------------------------- Define Custom functions -------------------------*/
 	$.fn.doProjectPlace = function( imgID, top, left ) {
 		$.post("/designer/placement", {
 			//UserID: userID,
@@ -68,6 +76,21 @@ $(document).ready(function() {
 
 				}
 	}
+	$.fn.displaySelected = function( selectedStyle ) {
+		$('img#Selected').attr({ src: '/uploads/item/fonts/' + selectedStyle + '.jpg' });
+	}
+	/*----------------------------- Text Page --------------------------------------*/
+	$('img#Selected').displaySelected( fontStyle );
+	$('#TextShape').click(function() {
+		$(this).parent().next('ul').toggle();
+	});
+	$('.ShapeChoice').click(function() {
+		var selectedStyle = $(this).attr('id');
+		$("#Form_FontStyle").val(selectedStyle);
+		$('.ShapeChoice').removeClass('Selected');
+		$(this).addClass('Selected');
+		$(this).displaySelected(selectedStyle);
+	});
 
 	/*--------------------------- Define Drags and Drops --------------------------*/
 	/*$("#DesignBox").droppable({

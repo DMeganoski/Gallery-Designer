@@ -10,6 +10,9 @@
    TODO customize this sample style
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
+.webkit body {
+-webkit-text-stroke: 1px transparent;
+}
 h1 {
     color: #0063dc;
     margin: 5px 0;
@@ -39,8 +42,16 @@ p {
 root {
    display: block;
 }
+.ie div {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
 #Content {
 	display: inline;
+}
+.ie #Content {
+	width: 660px;
 }
 #Panel {
 	display: inline-block;
@@ -48,11 +59,12 @@ root {
 body#dashboard_plugin_page.TabButton {
     margin: 0 0 0 5px;
 }
-/*------ Main Menu --------------*/
+/*------------------------------------ Main Menu ----------------------------*/
 div.Menu {
 	width: auto;
    height: 33px;
    position: absolute;
+   left: 10px;
    display: inline;
    text-align: left;
    vertical-align: bottom;
@@ -70,11 +82,12 @@ div.Menu {
 .ie div.Menu {
 	display: inline;
 	width: 500px;
-	left: 10px;
 	padding: 3px;
 }
-.ie #Content {
-	width: 660px;
+.ie div#Body {
+	padding: 10px;
+	width: 970px;
+	background-position: top left;
 }
 div.Account {
 	background: #E6E6E6;
@@ -135,7 +148,7 @@ ul#Menu {
 #Menu a:hover, #Menu li.NonTab a:hover {
     color: #0063dc;
 }
-/* Numbers next to menu items */
+/*---------------------------------- Numbers next to menu items ----------------*/
 #Menu a span, #Menu li.Active a span, #Menu li.Highlight a:hover span {
    background: orange;
    color: #FFF;
@@ -311,7 +324,7 @@ div#Animation {
 	min-height: 20px;
 	background: url('images/stuttgart_icons/16/sign-out.png') no-repeat center center;
 }
-/*----------- Footer ------------*/
+/*-------------------------------------------- Footer ----------------------------*/
 #Foot {
 	background: #EEE;
 	color: #6c6c6c;

@@ -57,6 +57,28 @@ echo "(Number of characters allowed in one line)";
 echo '</td><td>';
 echo $this->Form->DropDown('LineLength', $Lengths);
 echo '</td></tr></table>';
+?><div id="StyleChoice">
+	<button type="button" class="Button" id="TextShape">Choose Shape</button>
+	<img id="Selected" src="" />
+</div>
+			<ul class="TextList">
+				<li id="Upwards" class="ShapeChoice">
+					<span>Upwards Arc</span>
+					<img src="/uploads/item/fonts/Upwards.jpg"/>
+				</li>
+				<li id="Downwards" class="ShapeChoice">
+					<span>Downwards Arc</span>
+					<img src="/uploads/item/fonts/Downwards.jpg"/>
+				</li>
+				<li id="Expanded" class="ShapeChoice">
+					<span>Expanded</span>
+					<img src="/uploads/item/fonts/Expanded.jpg"/>
+				</li>
+				<li id="Contracted" class="ShapeChoice">
+					<span>Contracted</span>
+					<img src="/uploads/item/fonts/Contracted.jpg"/>
+				</li>
+			</ul><?
 echo $this->Form->Close('Save');
 echo "<div class='Yellow'>";
 echo "<img src='$this->TextImage' class='TextImage'/>";

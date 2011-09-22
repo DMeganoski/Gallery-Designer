@@ -19,10 +19,6 @@ if (!empty($CurrentProject->Message)) {
 	<tr>
 		<td>
 			<a href="/designer/text" class="Button">Edit</a>
-			<button type="button" class="Button" id="TextShape">Choose Shape</button>
-			<ul class="TextList">
-				<li>Text List Item</li>
-			</ul>
  		</td>
 	</tr>
 </table><?

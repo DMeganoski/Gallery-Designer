@@ -9,7 +9,9 @@
 /*
    All the styles related to the project box
 */
-
+img {
+	image-rendering: -moz-crisp-edges;
+}
 root {
     display: block;
 }
@@ -149,4 +151,26 @@ img.TextImage {
 }
 table.Font td {
 	padding: 5px;
+}
+li.ShapeChoice {
+	display: block;
+	text-align: center;
+	width: 220px;
+	height: 48px;
+	padding: 5px;
+	margin: 3px;
+	border: 1px solid #CCC;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	overflow: hidden;
+}
+li.ShapeChoice span {
+	vertical-align: bottom;
+}
+li.ShapeChoice img {
+	float: right;
+}
+li.Selected {
+	background: #F0DE7D;
 }
