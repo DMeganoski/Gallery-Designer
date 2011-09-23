@@ -70,14 +70,6 @@ echo '</td></tr></table>';
 					<span>Downwards Arc</span>
 					<img src="/uploads/item/fonts/Downwards.jpg"/>
 				</li>
-				<li id="Expanded" class="ShapeChoice">
-					<span>Expanded</span>
-					<img src="/uploads/item/fonts/Expanded.jpg"/>
-				</li>
-				<li id="Contracted" class="ShapeChoice">
-					<span>Contracted</span>
-					<img src="/uploads/item/fonts/Contracted.jpg"/>
-				</li>
 			</ul><?
 echo $this->Form->Close('Save');
 echo "<div class='Yellow'>";
