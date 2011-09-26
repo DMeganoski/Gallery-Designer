@@ -34,7 +34,7 @@ $(document).ready(function() {
 			$(this).addClass('Selected');
 		}
 	});
-
+	$('div#Remove').hide();
 	/*---------------------------- Define Custom functions -------------------------*/
 	function designHelper( src ) {
 		return "<img src=\"" + src + "\" class=\"Helper\"></img>";
@@ -119,22 +119,22 @@ $(document).ready(function() {
 		},
 		"stop": function(event,ui) {
 			$('img.Border').css('z-index', '0');
-			var pos = $(this).position();
-			var imgID = $(this).attr('id');
+			var pos = $(this).next('img').position();
+			var imgID = $(this).next('img').attr('id');
 
 			$(this).doProjectPlace( imgID, pos.top, pos.left );
 			$('img.Helper').hide();
 		}
 	}).each(function() {
-		var imgID = $(this).attr('id');
-		var currentProjectID = $(this).attr('projectid');
+		var imgID = $(this).next('img').attr('id');
+		var currentProjectID = $(this).next('img').attr('projectid');
 		$.post('/project/getplacement', { projectID: currentProjectID, imgID: imgID },
 			function(data) {
 				console.log(data.top);
 				console.log(data.left);
 				console.log(data.imgID);
-				$(this).css('top', data.top + "px");
-				$(this).css('left', data.left + "px");
+				$(this).next('img').css('top', data.top + "px");
+				$(this).next('img').css('left', data.left + "px");
 			}, "json");
 	});
 	$('.Slider').draggable({
@@ -145,6 +145,11 @@ $(document).ready(function() {
 	$('.SubmitProjectCheck').live('click', function() {
 		$(this).doProjectCommit();
 		});
+	$('.Draggable').hover(function() {
+		$(this).next('#Remove').show();
+	}, function() {
+		$(this).next('#Remove').hide();
+	});
 
 });
 

@@ -9,9 +9,9 @@ $BaseSize = '5C';
 
 
 <div id="Custom">
-
-	<div class="Heading">
-		<h1>Welcome to the Interactive <? echo T('base') ?> Designer</h1>
+	<div class="Heading"><?
+	if ($this->SignedIn) {
+		?><h1>Welcome to the Interactive <? echo T('base') ?> Designer</h1>
 		<p>You can use items you have selected or uploaded to design your <? echo T('base') ?>.</p>
 		<p>Note: the backgrounds are approximately 3000 x 3000 px images, and have been shrunk to fit the screen.
 			Certain web browsers will display the shrunk images better, though the purpose is preserving print quality.</p>
@@ -29,8 +29,8 @@ $BaseSize = '5C';
 					<? $Count = 0;
 					foreach ($this->UploadList as $Upload => $Positions) {
 						$Count = $Count + 1; ?>
-						<img src="/uploads/<? echo $Upload ?>" class="Upload Draggable Individual" id="<? echo $Upload ?>"
-							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
+			<div id="UploadWrapper" class="Draggable"><img src="/uploads/<? echo $Upload ?>" class="Upload Individual" id="<? echo $Upload ?>"
+							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img><div id="Remove">X</div></div>
 					<? }
 			if (!empty($this->CurrentProject->Message)) {
 				echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" id="Text" class="Text Draggable Individual" style="top: '.$this->MessagePosition['top'].'; left: '.$this->MessagePosition['left'].'" projectid="'.$this->CurrentProject->ProjectKey.'"/>';
@@ -44,5 +44,8 @@ $BaseSize = '5C';
 
 	<div class="Buttons">
 		<button type="button" id="SubmitProjectCheck" class="SubmitProjectCheck Button" projectstage="<? echo $this->ProjectStage ?>" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Submit project for review and processing</button>
-	</div>
-</div>
+	</div><?
+	} else {
+		?><h1>You must be signed in to start a project</h1></div><?
+	}
+?></div>

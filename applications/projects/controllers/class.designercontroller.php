@@ -14,6 +14,8 @@ class DesignerController extends ProjectsController {
 	 */
 	public $Uses = array('Form', 'GalleryItemModel', 'ProjectModel', 'GalleryUploadModel');
 
+	public $SignedIn;
+
 	/**
 	 * Standard initialize, includes js files from the library
 	 */
@@ -40,6 +42,10 @@ $Controller = $this->ControllerName;
 	  parent::Initialize();
 	   }
 
+	public function CheckSession() {
+		$this->SignedIn = Gdn::Session()->IsValid();
+	}
+
 	/**
 	 * Function for other functions to use, includes css and js files, as well as modules
 	 */
@@ -54,6 +60,7 @@ $Controller = $this->ControllerName;
 			//$this->AddJsFile('/applications/galleries/js/gallery.js');
 			//$this->AddCssFile('/applications/galleries/design/gallery.css');
 			//$this->AddCssFile('/applications/galleries/design/gallerycustom.css');
+			$this->CheckSession();
 
 		}
 

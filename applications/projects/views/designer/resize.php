@@ -10,10 +10,14 @@ if (!empty($this->Frame)) {
 
 <div id="Custom">
 
-	<div class="Heading">
-		<h1>Resize and Crop Your Image Below</h1>
+	<div class="Heading"><?
+	if ($this->SignedIn) {
+		?><h1>Resize and Crop Your Image Below</h1>
 	</div>
 	<div id="ResizeBox">
 		<div id="ImageBase" file="<? echo '/uploads/item/tins'.$this->CurrentItem->FileName ?>" itemType="tin"><img src="/uploads/item/<? echo $this->CurrentItem->ClassLabel.DS.$this->CurrentItem->FileName ?>" class="Tin Static" id="Base"></img></div>
-		</div>
-	</div>
+		</div><?
+	} else {
+		?><h1>You must be signed in to start a project</h1></div><?
+	}
+	?></div>

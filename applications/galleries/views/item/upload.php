@@ -4,7 +4,7 @@
 <script type="text/javascript">
 function doFormSubmit() {
 	// GRAB FIELDS VALUES AND SEND TO uploadify.php, YOU CAN DO WHATEVER YOU WANT WITH THEM IN uploadify.php FILE
-	$('#gallery').uploadifySettings('postData', {'field1':$('#field1').val(),'field2':$('#field2').val(),'field3':$('#field3').val(),'field4':$('#field4').val(),'field5':$('#field5').val()});
+	$('#gallery').uploadifySettings('postData', {'numImgs':$('#numImgs').val(),'submitting':$('#submitting').val(),'UserID':$('#UserID').val(),'TransientKey':$('#TransientKey').val(),'Description':$('#Description').val()});
 
 	// UPLOAD IMAGES
 	$('#gallery').uploadifyUpload();
@@ -43,16 +43,16 @@ $(document).ready(function() {
 			'progressData'    : 'all',
 
 			onUploadSuccess : function(file,data,response) {
-				$("#myForm").append("<input type='hidden' id='img"+img+"' name='img"+img+"' value='"+data+"' />"); // INSERT IMAGE FILENAME IN A HIDDEN FORM FIELD
+				$("#uploadForm").append("<input type='hidden' id='img"+img+"' name='img"+img+"' value='"+data+"' />"); // INSERT IMAGE FILENAME IN A HIDDEN FORM FIELD
 				img++;
 			},
 
 			onQueueComplete: function (stats) {
-				$("#myForm").append("<input type='hidden' id='numImgs' name='numImgs' value='" + img + "' />");// INSERT NUMBER OF IMAGES UPLOADED IN A HIDDEN FORM FIELD
-				$("#myForm").append("<input type='hidden' id='submitting' name='submitting' value='yes' />");
-				$("#myForm").append("<input type='hidden' id='UserID' name='UserID' value='<?php echo $this->UserID; ?>'/>");
-				$("#myForm").append("<input type='hidden' id='TransientKey' name='TransientKey' value='<?php echo $this->TransientKey; ?>'/>");
-				$('#myForm').submit(); // THIS IS AN EXAMPLE, YOU CAN SUBMIT YOUR INFOS WITH AJAX IF YOU WANT
+				$("#uploadForm").append("<input type='hidden' id='numImgs' name='numImgs' value='" + img + "' />");// INSERT NUMBER OF IMAGES UPLOADED IN A HIDDEN FORM FIELD
+				$("#uploadForm").append("<input type='hidden' id='submitting' name='submitting' value='yes' />");
+				$("#uploadForm").append("<input type='hidden' id='UserID' name='UserID' value='<?php echo $this->UserID; ?>'/>");
+				$("#uploadForm").append("<input type='hidden' id='TransientKey' name='TransientKey' value='<?php echo $this->TransientKey; ?>'/>");
+				$('#uploadForm').submit(); // THIS IS AN EXAMPLE, YOU CAN SUBMIT YOUR INFOS WITH AJAX IF YOU WANT
 			}
 		});
 	}
@@ -89,23 +89,37 @@ if ($submitting == 'yes') {
 	echo '<br>';
 }
 ?>
-
 <h1>This is where you can upload your images for use in the tin design</h1>
-<p>These files will not be available to the public, and can be later found under your profile.</p>
-<p>Choose the files you would like to upload, then fill out the information and click submit.</p>
-<p>If you are submitting this file for inspection by our staff, please add a brief description.</p>
-<form name='myForm' id='myForm' method='post' action='/item/uploadifysavepost'>
+<p>This can either be an image to use in your own design here on the site, or a complete template ready to be printed.</p>
+<div class="HelpWrapper">
+	<div class="Help Aside">
+		<h2>File Types</h2>
+		<li class="Info">Accepted file types are:</li>
+		<li class="Info"> .jpg, .png, .psd, .ai, .eps, and .cdr.</li>
+	</div>
+	<div class="Help Aside">
+		<h2>File Size</h2>
+		<li class="Info">The <? echo T('bases') ?> are printed in high resolution. Images to be used in the project should be as high-resolution as possible.</li>
+	</div>
+	<div class="Help Aside">
+		<h2 class="Info">Choose the Files to Upload</h2>
+		<li class="Info">Choose as many files as you would like to upload, and click submit.</li>
+	</div>
+	<div class="Help Aside">
+		<h2 class="Info">Add a Note</h2>
+		<li class="Info">The description will be applied to all the files chosen.</li>
+		<li class="Info">This can be used for personal identification, or as a note for our staff.</li>
+	</div>
+</div>
+<form name='uploadForm' id='uploadForm' method='post' action='/item/uploadifysavepost'>
 <input type='hidden' id='submitting' name='submitting' value='yes' />
 <input type='hidden' id='UserID' name='UserID' value='<?php echo $this->UserID; ?>'/>
 <input type='hidden' id='TransientKey' name='TransientKey' value='<?php echo $this->TransientKey; ?>'/>
-<br></br>
-<table width='600' border='0' rules='none' cellspacing='0' cellpadding='5' align='center'>
-<tr><td align='right'>Description:</td><td align='left'><input type='text' style='width: 500px;' name='Description' id='Description' value=''></td></tr>
+<table width='400' border='0' rules='none' cellspacing='0' cellpadding='5' align='center'>
+<tr><td align='right'>Description:</td><td align='left'><input type='text' style='width: 300px;' name='Description' id='Description' value=''></td></tr>
 </table>
 
-<br>
-
-<table width='600' border='0' cellspacing='0' cellpadding='2' align='center'><tr>
+<table width='400' border='0' cellspacing='0' cellpadding='2' align='center'><tr>
 
 </tr></table>
 <center><div id='gallery'>You've got a problem with your JavaScript</div></center>
@@ -119,7 +133,7 @@ if ($submitting == 'yes') {
 <br>
 
 <center><button type="button" name="btSubmit" id="btSubmit" onclick="doFormSubmit()" class="Button">Upload and Submit</button>
-	<a href='#' onclick="jQuery('#gallery').uploadifyCancel('*'); return false;" class="Button">Clear File Queue</a></center>
+	<button onclick="jQuery('#gallery').uploadifyCancel('*'); return false;" class="Button">Clear File Queue</button></center>
 
 <br>
 </form>

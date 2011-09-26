@@ -1,4 +1,6 @@
-
+/**
+ * @todo add functions for verification before removal
+ */
 $(document).ready(function() {
 /*--------------------------------------------------- Set up the page ---------------------------------------------*/
 	//start by hiding the box

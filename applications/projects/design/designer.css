@@ -94,6 +94,13 @@ div#ResizeBox{
 }
 div#DesignBox img {
 	position: absolute;
+	border-width: 1px;
+	border-style: solid;
+	border-color: transparent;
+}
+div#DesignBox img:hover {
+	border-color: #F0DE7D;
+	margin: 0px;
 }
 div#DesignBox img.Background {
 	z-index: -1;
@@ -105,6 +112,15 @@ div#DesignBox img.Border {
 	left: -14px;
 	top: -14px;
 	z-index: 0;
+}
+div#DesignBox div#Remove {
+	position: relative;
+	color: #CC0000;
+}
+div#DesignBox div.UploadWrapper {
+	position: absolute;
+	overflow: hidden;
+	display: inline;
 }
 input#SubmitProjectCheck {
 	margin: 0px auto;
@@ -139,6 +155,7 @@ div.Slider {
 	height: 60px;
 	background: #CCC;
 }
+
 /*--------------------------------------- Text Page --------------------------------------*/
 div.Yellow {
 	background: #F0DE7D;

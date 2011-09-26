@@ -1,5 +1,8 @@
 <?php if (!defined('APPLICATION'))
 	exit();
+
+if ($this->SignedIn) {
+
 echo '<div id="Color"></div>';
 $Colors = array(
 	'white' => T('white'),
@@ -75,3 +78,11 @@ echo $this->Form->Close('Save');
 echo "<div class='Yellow'>";
 echo "<img src='$this->TextImage' class='TextImage'/>";
 echo '</div>';
+} else {
+	?><div id="Custom">
+
+	<div class="Heading">
+	<h1>You must be signed in to start a project</h1>
+	</div>
+	</div><?
+}

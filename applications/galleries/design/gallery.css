@@ -18,15 +18,15 @@ div#Custom p a {
     text-decoration: underline;
 }
 div#Custom {
-    float: left;
    height: auto;
-   width: auto;
+   width: 660px;
    text-align: left;
    vertical-align: bottom;
    z-index: 0;
 }
 .ie div#Custom {
 	width: 640px;
+	margin-left: 10px;
 }
 div.FireEvent {
 	background: #F1D031;
@@ -320,4 +320,51 @@ ol.Sortable a.Button {
 /*------------------- Uploads Box -----------------*/
 .UploadSubmit {
 	float: right;
+}
+/*--------------------Uploads Page -----------------*/
+
+div.HelpWrapper {
+	overflow: hidden;
+	width: 240px;
+	float: right;
+}
+form#uploadForm {
+	float: left;
+	width: 400px;
+	margin: 20px;
+}
+.ie form#uploadForm {
+	width: 380px;
+}
+.Aside {
+	border: solid 1px #CCC;
+	background: #FBF7AA;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0 3px 3px #CCC;
+	-moz-box-shadow: 0 3px 3px #CCC;
+	-webkit-box-shadow: 0 3px 3px #CCC;
+	width: 200px;
+	float: right;
+	z-index: 200;
+	position: relative;
+	margin: 10px;
+}
+.Help {
+	padding: 8px;
+	line-height: 1;
+}
+.Help h2 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 10px;
+    text-shadow: none;
+	line-height: 1.6;
+}
+li.Info {
+	margin: 10px;
+	width: 190px;
+	text-align: left;
+	line-height: 1.4em;
 }
