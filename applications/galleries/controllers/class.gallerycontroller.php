@@ -118,28 +118,18 @@ class GalleryController extends GalleriesController {
                         $VerifyCategory = $this->GalleryCategoryModel->VerifyCategory($Category,$View);
                         if ($VerifyCategory) {
 							self::$Category = $Category;
+						// verify category return false
 						} else {
 							$this->NotFound();
 						}
                      } else {
                             self::$Category = 'home';
                      }
+				// verify class return false
 				} else {
 					$this->NotFound();
 				}
 			}
-            // check other views besides gallery classes
-		} else if ($View == 'default') {
-			self::$Class = 'default';
-            if ($Category != 'home') {
-				//$VerifyCategory = $GalleriesModel->VerifyCategory($Category,$Class);
-				//if ($VerifyCategory) {
-				self::$Category = $Category;
-				$this->Title(T($Category));
-            } else {
-				self::$Category = 'home';
-				$this->Title(T('home'));
-            }
 		} else {
 			self::$Class = 'default';
             $View = 'default';
@@ -148,7 +138,7 @@ class GalleryController extends GalleriesController {
         }
 		$this->Head->Title($this->Head->Title());
 		if (self::$Category != 'home')
-			$this->View = ($Path.DS.self::$Class.DS.self::$Category.'.php');
+			$this->View = ('browse');
 		else
 			$this->View = ($Path.DS.self::$Class.DS.self::$Class.'home.php');
 

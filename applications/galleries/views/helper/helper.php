@@ -12,6 +12,7 @@ $Offset = (($Page - 1) * $Limit);
 $ShortCat = substr($ActiveCategory, 0, 3);
 $CapsCat = strtoupper($ShortCat);
 
+if ($this->GalleryItemModel)
 $AllFiles = $this->GalleryItemModel->Get($Offset, $Limit, array('CategoryCAPS' => $CapsCat));
 $NextPage = ($Page + 1);
 $PreviousPage = ($Page -1);

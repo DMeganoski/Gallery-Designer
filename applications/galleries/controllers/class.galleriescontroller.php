@@ -1,12 +1,12 @@
 <?php if (!defined('APPLICATION')) exit();
 /**
  * Skeleton Controller for new applications.
- * 
+ *
  * Repace 'Skeleton' with your app's short name wherever you see it.
  *
  * @package Skeleton
  */
- 
+
 /**
  * A brief description of the controller.
  *
@@ -22,12 +22,12 @@ class GalleriesController extends Gdn_Controller {
    public function __construct() {
       parent::__construct();
    }
-   
+
    /**
     * This is a good place to include JS, CSS, and modules used by all methods of this controller.
     *
     * Always called by dispatcher before controller's requested method.
-    * 
+    *
     * @since 1.0
     * @access public
     */
@@ -45,5 +45,14 @@ class GalleriesController extends Gdn_Controller {
       $this->AddCssFile('gallery.css');
       // Call Gdn_Controller's Initialize() as well.
       parent::Initialize();
+   }
+
+   /**
+	 * Render function for displaying a not found page
+	 */
+	public function NotFound() {
+		$this->PrepareController();
+		$this->View = 'notfound';
+		$this->Render();
    }
 }

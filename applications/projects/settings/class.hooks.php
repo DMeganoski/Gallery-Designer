@@ -34,7 +34,10 @@ class ProjectsHooks implements Gdn_IPlugin {
         //$Hide=Gdn::Config('GalleryModule.Hide', TRUE);
 
 		//if($Hide && !$Session->IsValid())	return;
-        if(in_array($Sender->ControllerName, array('itemcontroller', 'projectcontroller', 'designercontroller', 'gallerycontroller','profilecontroller', 'categoriescontroller', 'discussionscontroller'))) {
+        if(in_array($Sender->ControllerName, array(
+			'itemcontroller', 'projectcontroller', 'designercontroller',
+			'gallerycontroller','profilecontroller', 'categoriescontroller',
+			'discussionscontroller', 'infocontroller'))) {
             include_once(PATH_APPLICATIONS.DS.'projects'.DS.'modules'.DS.'class.projectboxmodule.php');
 			$ProjectBoxModule = new ProjectBoxModule($Sender);
 			$Sender->AddModule($ProjectBoxModule);
