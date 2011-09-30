@@ -13,14 +13,14 @@
 			      $Session = Gdn::Session();
 					if ($Session->IsValid()) {
 						$this->FireEvent('BeforeUserOptionsMenu');
-						
+
 						$Name = $Session->User->Name;
 						$CountNotifications = $Session->User->CountNotifications;
 						if (is_numeric($CountNotifications) && $CountNotifications > 0)
 							$Name .= Wrap($CountNotifications);
-							
+
 						echo Anchor($Name, '/profile/'.$Session->User->UserID.'/'.$Session->User->Name, 'Profile');
-						echo Anchor(T('Sign Out'), SignOutUrl(), 'Leave');
+						//echo Anchor(T('Sign Out'), SignOutUrl(), 'Leave');
 					}
 				?>
          </div>

@@ -29,8 +29,8 @@ $BaseSize = '5C';
 					<? $Count = 0;
 					foreach ($this->UploadList as $Upload => $Positions) {
 						$Count = $Count + 1; ?>
-			<div id="UploadWrapper" class="Draggable"><img src="/uploads/<? echo $Upload ?>" class="Upload Individual" id="<? echo $Upload ?>"
-							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img><div id="Remove">X</div></div>
+			<img src="/uploads/<? echo $Upload ?>" class="Upload Draggable Individual" id="<? echo $Upload ?>"
+							 projectid="<? echo $this->CurrentProject->ProjectKey ?>" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img><div id="Remove">X</div>
 					<? }
 			if (!empty($this->CurrentProject->Message)) {
 				echo '<img src="/uploads/project/text/'.$this->CurrentProject->ProjectKey.'.png" id="Text" class="Text Draggable Individual" style="top: '.$this->MessagePosition['top'].'; left: '.$this->MessagePosition['left'].'" projectid="'.$this->CurrentProject->ProjectKey.'"/>';

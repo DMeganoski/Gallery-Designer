@@ -96,7 +96,7 @@ class GalleriesHooks implements Gdn_IPlugin {
    public function Base_Render_Before(&$Sender) {
 
 	if ($Sender->Menu)
-		$Sender->Menu->AddLink('Gallery', T('Gallery'), '/gallery', FALSE, array('class' => 'Gallery', 'Standard' => TRUE));
+		$Sender->Menu->AddLink('Browse', T('Browse'), '/gallery', FALSE, array('class' => 'Browse', 'Standard' => TRUE));
 
 	if ($Sender->Head) {
 		$Sender->AddJsFile('/applications/galleries/js/gallery.js');

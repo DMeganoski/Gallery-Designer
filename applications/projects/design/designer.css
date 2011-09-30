@@ -98,7 +98,7 @@ div#DesignBox img {
 	border-style: solid;
 	border-color: transparent;
 }
-div#DesignBox img:hover {
+div#DesignBox img.Draggable:hover {
 	border-color: #F0DE7D;
 	margin: 0px;
 }
@@ -154,6 +154,11 @@ div.Slider {
 	width: 20px;
 	height: 60px;
 	background: #CCC;
+}
+#Content div#UploadWrapper {
+	position: absolute;
+	display: inline;
+	overflow: hidden;
 }
 
 /*--------------------------------------- Text Page --------------------------------------*/

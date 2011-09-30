@@ -18,7 +18,6 @@
 	if ($this->Menu) {
 	    $HomeLink =  T('Home');
 	    $this->Menu->AddLink('Home', $HomeLink , '/', FALSE, array('class' => 'Home'));
-	    $this->Menu->AddLink('Gallery', T('Gallery') , '/gallery', FALSE, array('class' => 'Gallery'));
     	    //$this->Menu->AddLink('Dashboard', T('Dashboard'), '/dashboard/settings', array('Garden.Settings.Manage'));
 	    // $this->Menu->AddLink('Dashboard', T('Users'), '/user/browse', array('Garden.Users.Add', 'Garden.Users.Edit', 'Garden.Users.Delete'));
 	    $this->Menu->AddLink('ContactUs', T('Contact Us'), '/gallery/default/contactus', FALSE, array('class' => 'Contact'));

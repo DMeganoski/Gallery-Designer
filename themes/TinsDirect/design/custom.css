@@ -192,8 +192,11 @@ div#Animation {
 #Menu li.Discussions a {
 	background: url('images/stuttgart_icons/16/comment.png') no-repeat left center;
 }
-#Menu li.Gallery a {
+#Menu li.Design a {
 	background: url('images/stuttgart_icons/16/brainstorming.png') no-repeat left center;
+}
+#Menu li.Browse a {
+	background: url('images/stuttgart_icons/16/world.png') no-repeat left center;
 }
 #Menu li.Contact a {
 	background: url('images/stuttgart_icons/16/business-contact.png') no-repeat left center;

@@ -70,6 +70,8 @@ Project {
 .ProjectBox table td {
 	text-align: center;
 	padding: 10px;
+	overflow: hidden;
+
 }
 div.ProjectWrapper {
 	position: relative;

@@ -119,8 +119,8 @@ $(document).ready(function() {
 		},
 		"stop": function(event,ui) {
 			$('img.Border').css('z-index', '0');
-			var pos = $(this).next('img').position();
-			var imgID = $(this).next('img').attr('id');
+			var pos = $(this).position();
+			var imgID = $(this).attr('id');
 
 			$(this).doProjectPlace( imgID, pos.top, pos.left );
 			$('img.Helper').hide();
@@ -133,8 +133,8 @@ $(document).ready(function() {
 				console.log(data.top);
 				console.log(data.left);
 				console.log(data.imgID);
-				$(this).next('img').css('top', data.top + "px");
-				$(this).next('img').css('left', data.left + "px");
+				$(this).css('top', data.top + "px");
+				$(this).css('left', data.left + "px");
 			}, "json");
 	});
 	$('.Slider').draggable({

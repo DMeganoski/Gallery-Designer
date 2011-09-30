@@ -19,7 +19,8 @@ class ProjectsHooks implements Gdn_IPlugin {
     public function Base_Render_Before(&$Sender) {
 
 		if ($Sender->Menu)
-			$Sender->Menu->AddLink('Gallery', T('Gallery'), '/gallery', FALSE, array('class' => 'Gallery', 'Standard' => TRUE));
+			$Sender->Menu->AddLink('Design', T('Design'), '/designer', FALSE, array('class' => 'Design', 'Standard' => TRUE));
+
 		if ($Sender->Head) {
 			$Sender->AddJsFile('/applications/projects/js/designer.js');
 			$Sender->AddCssFile('/applications/projects/design/designer.css');

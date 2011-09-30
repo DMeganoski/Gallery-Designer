@@ -1,11 +1,4 @@
 <?php if (!defined('APPLICATION')) exit();
-$ActiveClass = GalleryController::$Class;
-$PublicDir = GalleryController::$PublicDir;
-
-$ActiveCategory = GalleryController::$Category;
-
-
-
 
 //Categories Box
 

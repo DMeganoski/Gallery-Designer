@@ -88,7 +88,7 @@ a.Active, div.Tabs li.Active ul.Sublist li a:hover {
 /*----------------- Category Pages ----------------*/
 div#Custom li {
     margin: 5px;
-	padding: 10px;
+	padding: 0px;
     color: #6C6C6C;
     border-radius: 3px;
     -moz-border-radius: 3px;
@@ -113,7 +113,7 @@ div#Custom ul.ItemInfo input {
 ul.Gallery li.Category {
     margin: 3px;
     height: auto;
-    width: 190px;
+    width: 200px;
     float: left;
     border: 1px solid #CCC;
     -moz-border-radius: 4px;
@@ -201,7 +201,7 @@ div.Image table td.Size {
    border-bottom: 1px solid #CCC;
 }
 li.Category a {
-    margin: 0px 5px;
+    margin: 0px;
     text-align: center;
 }
 /*------------- Single Item Page ----------------------*/

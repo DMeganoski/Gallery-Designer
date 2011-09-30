@@ -70,8 +70,8 @@ $Controller = $this->ControllerName;
 	 * design environment.
 	 */
 	public function Index() {
-			GalleryController::$Class = 'designer';
-			GalleryController::$Category = 'home';
+			//GalleryController::$Class = 'designer';
+			//GalleryController::$Category = 'home';
 			$this->PrepareController();
 			$Session = Gdn::Session();
 			if ($Session->IsValid()) {

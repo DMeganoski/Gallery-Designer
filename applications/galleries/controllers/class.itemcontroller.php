@@ -181,8 +181,8 @@ class ItemController extends GalleriesController {
 	$this->PrepareController();
 	$this->AddModule('GalleryHeadModule');
 	$this->AddModule('GallerySideModule');
-	GalleryController::$Class = 'item';
-	GalleryController::$Category = 'home';
+	//GalleryController::$Class = 'item';
+	//GalleryController::$Category = 'home';
 	$this->Permission('Gallery.Manage');
 
 	$this->Form = new Gdn_Form();
@@ -201,8 +201,8 @@ class ItemController extends GalleriesController {
 				$FileInfo['ClassLabel'] = $Label;
 
 				$Large = self::ImageResize($Path.$Label.DS.$FileInfo['FileName'], $Path.$Label.DS.$FileInfo['Slug'].'L.jpg', 300, 300, 0);
-				$Medium = self::ImageResize($Path.$Label.DS.$FileInfo['FileName'], $Path.$Label.DS.$FileInfo['Slug'].'M.jpg', 150, 150, 0);
-				$Small = self::ImageResize($Path.$Label.DS.$FileInfo['FileName'], $Path.$Label.DS.$FileInfo['Slug'].'S.jpg', 100, 100, 0);
+				$Medium = self::ImageResize($Large, $Path.$Label.DS.$FileInfo['Slug'].'M.jpg', 150, 150, 0);
+				$Small = self::ImageResize($Medium, $Path.$Label.DS.$FileInfo['Slug'].'S.jpg', 100, 100, 0);
 				$this->PutFile($FileInfo);
 				}
 	    }
@@ -450,7 +450,8 @@ class ItemController extends GalleriesController {
 
 	public static function ImageResize($src, $dst, $width, $height, $crop=0){
 
-		set_time_limit(60);
+		set_time_limit(120);
+		ini_set("memory_limit","128M");
 
 	if(!file_exists($src)) $Return = 0;
 	if(!list($w, $h) = getimagesize($src)) $Return = 2;
@@ -507,7 +508,7 @@ class ItemController extends GalleriesController {
 		case 'jpg': imagejpeg($new, $dst); break;
 		case 'png': imagepng($new, $dst); break;
 	}
-	return $Return;
+	return $new;
 	}
 
 	/*

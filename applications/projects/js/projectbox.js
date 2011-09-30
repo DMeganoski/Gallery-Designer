@@ -4,7 +4,6 @@
 $(document).ready(function() {
 /*--------------------------------------------------- Set up the page ---------------------------------------------*/
 	//start by hiding the box
-	$('.ProjectBox').hide();
 	$('.UploadBox').hide();
 	$('.ButtonBox').hide();
 	$('ul.TextList').hide();
