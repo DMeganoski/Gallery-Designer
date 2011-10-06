@@ -22,6 +22,7 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
  * @version @@GARDEN-VERSION@@
  * @namespace Garden.Database
  */
+require_once(dirname(__FILE__).DS.'class.database.php');
 
 abstract class Gdn_SQLDriver {
    
@@ -62,14 +63,6 @@ abstract class Gdn_SQLDriver {
     * @var Gdn_Database The connection and engine information for the database.
     */
    public $Database;
-   
-   /**
-    * The name of the cache key associated with this query.
-    * 
-    * @var string
-    */
-   protected $_CacheKey = NULL;
-   protected $_CacheOperation = NULL;
    
    /**
     * An associative array of information about the database to which the
@@ -363,32 +356,6 @@ abstract class Gdn_SQLDriver {
       
       return $Expr;
    }
-   
-   /**
-    * Set the cache key for this transaction
-    * 
-    * @param string|array $Key The cache key (or array of keys) that this query will save into.
-    * @return Gdn_SQLDriver $this
-    */
-   public function Cache($Key, $Operation = NULL, $Backing = NULL) {
-      if (!$Key) {
-         $this->_CacheKey = NULL;
-         $this->_CacheOperation = NULL;
-         $this->_CacheBacking = NULL;
-
-         return $this;
-      }
-
-      $this->_CacheKey = $Key;
-      
-      if (!is_null($Operation))
-         $this->_CacheOperation = $Operation;
-      
-      if (!is_null($Backing))
-         $this->_CacheBacking = $Backing;
-
-      return $this;
-   }
 
    /**
     * Returns the name of the database currently connected to.
@@ -546,7 +513,6 @@ abstract class Gdn_SQLDriver {
 	 *  - <b>TRUE</b>: The search will be limited to the database prefix.
 	 *  - <b>FALSE</b>: All tables will be fetched. Default.
 	 *  - <b>string</b>: The search will be limited to a like clause. The ':_' will be replaced with the database prefix.
-    * @return array
     */
    public function FetchTables($LimitToPrefix = FALSE) {
       $Sql = $this->FetchTableSql($LimitToPrefix);
@@ -724,7 +690,7 @@ abstract class Gdn_SQLDriver {
       if ($Where !== FALSE)
          $this->Where($Where);
 
-      $this->Select('*', 'count', 'RowCount'); // count * slow on innodb
+      $this->Select('*', 'count', 'RowCount');
       $Sql = $this->GetSelect();
       $Result = $this->Query($Sql);
 
@@ -1144,34 +1110,22 @@ abstract class Gdn_SQLDriver {
       // Check to see if there is a row in the table like this.
       if ($CheckExisting) {
          $Row = $this->GetWhere($Table, $Where)->FirstRow(DATASET_TYPE_ARRAY);
-
+         
          $Update = FALSE;
          if ($Row) {
-            $Update = TRUE;
             foreach ($Set as $Key => $Value) {
-               unset($Set[$Key]);
                $Key = trim($Key, '`');
-               
-               if (!$this->CaptureModifications && !isset($Row[$Key]))
-                  continue;
 
                if (in_array($Key, array('DateInserted', 'InsertUserID', 'DateUpdated', 'UpdateUserID')))
                   continue;
 
-
-               // We are assuming here that if the existing record doesn't contain the column then it's just been added.
-               if (preg_match('/^`(.+)`$/', $Value, $Matches)) {
-                  if (!isset($Row[$Key]) || $Row[$Key] != $Row[$Matches[1]])
-                     $this->Set('`'.$Key.'`', $Value, FALSE);
-               } elseif (!isset($Row[$Key]) || $Row[$Key] != $Value) {
-                  $this->Set('`'.$Key.'`', $Value);
+               if ($Row[$Key] != $Value) {
+                  $Update = TRUE;
+                  break;
                }
-               
             }
-            if (count($this->_Sets) == 0) {
-               $this->Reset();
+            if (!$Update)
                return;
-            }
          }
       } else {
          $Count = $this->GetCount($Table, $Where);
@@ -1354,14 +1308,6 @@ abstract class Gdn_SQLDriver {
       }
          
       return $NiceName;
-   }
-
-   public function &NamedParameters($NewValue = NULL) {
-      if ($NewValue !== NULL) {
-         $this->_NamedParameters = $NewValue;
-      }
-      $Result =& $this->_NamedParameters;
-      return $Result;
    }
    
    /**
@@ -1621,19 +1567,9 @@ abstract class Gdn_SQLDriver {
    public function Query($Sql, $Type = 'select') {
       switch ($Type) {
          case 'insert': $ReturnType = 'ID'; break;
-         case 'update': $ReturnType = NULL; break;
          default: $ReturnType = 'DataSet'; break;
       }
 
-      $QueryOptions = array('ReturnType' => $ReturnType);
-      if (!is_null($this->_CacheKey)) {
-         $Foo = 'bar';
-         $QueryOptions['Cache'] = $this->_CacheKey;
-      }
-      
-      if (!is_null($this->_CacheKey))
-         $QueryOptions['CacheOperation'] = $this->_CacheOperation;
-      
       try {
          if ($this->CaptureModifications && strtolower($Type) != 'select') {
             if(!property_exists($this->Database, 'CapturedSql'))
@@ -1645,7 +1581,7 @@ abstract class Gdn_SQLDriver {
             return TRUE;
          }
 
-         $Result = $this->Database->Query($Sql, $this->_NamedParameters, $QueryOptions);
+         $Result = $this->Database->Query($Sql, $this->_NamedParameters, array('ReturnType' => $ReturnType));
       } catch (Exception $Ex) {
          $this->Reset();
          throw $Ex;
@@ -1686,8 +1622,6 @@ abstract class Gdn_SQLDriver {
       $this->_OrderBys        = array();
       $this->_AliasMap        = array();
       
-      $this->_CacheKey        = NULL;
-      $this->_CacheOperation  = NULL;
       $this->_Distinct        = FALSE;
       $this->_Limit           = FALSE;
       $this->_Offset          = FALSE;
@@ -1695,7 +1629,7 @@ abstract class Gdn_SQLDriver {
       
       $this->_Sets            = array();
       $this->_NamedParameters = array();
-      $this->_Options         = array();
+      $this->_Options = array();
    }
 
    /**
@@ -1947,14 +1881,10 @@ abstract class Gdn_SQLDriver {
          $Field = array($Field => $Value);
 
       foreach ($Field as $SubField => $SubValue) {
-         if(is_array($SubValue) && isset($SubValue[0])) {
-            $this->WhereIn($SubField, $SubValue);
-      	} else {
-            $WhereExpr = $this->ConditionExpr($SubField, $SubValue, $EscapeFieldSql, $EscapeValueSql);
-            if(strlen($WhereExpr) > 0) {
-              $this->_Where($WhereExpr);
-            }
-        }
+         $WhereExpr = $this->ConditionExpr($SubField, $SubValue, $EscapeFieldSql, $EscapeValueSql);
+         if(strlen($WhereExpr) > 0) {
+            $this->_Where($WhereExpr);
+         }
       }
       return $this;
    }
@@ -1979,11 +1909,7 @@ abstract class Gdn_SQLDriver {
       // Build up the in clause.
       $In = array();
       foreach ($Values as $Value) {
-         if ($Escape)
-            $ValueExpr = $this->Database->Connection()->quote($Value);
-         else
-            $ValueExpr = (string)$Value;
-
+         $ValueExpr = $this->_ParseExpr($Value, $Field, $Escape);
          if(strlen($ValueExpr) > 0)
             $In[] = $ValueExpr;
       }

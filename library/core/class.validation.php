@@ -122,7 +122,6 @@ class Gdn_Validation {
       $this->AddRule('WebAddress', 'function:ValidateWebAddress');
       $this->AddRule('Username', 'function:ValidateUsername');
       $this->AddRule('UrlString', 'function:ValidateUrlString');
-      $this->AddRule('UrlStringRelaxed', 'function:ValidateUrlStringRelaxed');
       $this->AddRule('Date', 'function:ValidateDate');
       $this->AddRule('Integer', 'function:ValidateInteger');
       $this->AddRule('Boolean', 'function:ValidateBoolean');
@@ -453,7 +452,7 @@ class Gdn_Validation {
             $Args = substr($Rule, 6);
          } elseif (StringBeginsWith($Rule, 'function:', TRUE)) {
             $RuleName = substr($Rule, 9);
-         } else {
+         } elseif (function_exists($Rule)) {
             $RuleName = $Rule;
          }
       } elseif (is_array($Rule)) {
@@ -554,12 +553,11 @@ class Gdn_Validation {
       return count($this->_ValidationResults) == 0 ? TRUE : FALSE;
    }
 
+
    /**
-    * Add a validation result (error) to the validation.
-    *
-    * @param string $FieldName The name of the form field that has the error.
-    * @param string $ErrorCode The translation code of the error.
-    *    Codes thst begin with an '@' symbol are treated as literals and not translated.
+    * @param unknown_type $FieldName
+    * @param unknown_type $ErrorCode
+    * @todo add doc
     */
    public function AddValidationResult($FieldName, $ErrorCode = '') {
       if (!is_array($this->_ValidationResults))
@@ -575,6 +573,7 @@ class Gdn_Validation {
          $this->_ValidationResults[$FieldName][] = $ErrorCode;
       }
    }
+
 
    /**
     * Returns the $this->_ValidationResults array. You must use this method

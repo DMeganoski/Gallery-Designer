@@ -61,31 +61,12 @@ class Gdn_UploadImage extends Gdn_Upload {
     * @param string The full path to where the image should be saved, including image name.
     * @param int An integer value indicating the maximum allowed height of the image (in pixels).
     * @param int An integer value indicating the maximum allowed width of the image (in pixels).
-    * @param array Options additional options for saving the image.
-    *  - <b>Crop</b>: Image proportions will always remain constrained. The Crop parameter is a boolean value indicating if the image should be cropped when one dimension (height or width) goes beyond the constrained proportions.
-    *  - <b>OutputType</b>: The format in which the output image should be saved. Options are: jpg, png, and gif. Default is jpg.
-    *  - <b>ImageQuality</b>: An integer value representing the qualityof the saved image. Ranging from 0 (worst quality, smaller file) to 100 (best quality, biggest file).
-    *  - <b>SourceX, SourceY</b>: If you want to create a thumbnail that is a crop of the image these are the coordinates of the thumbnail.
-    *  - <b>SourceHeight. SourceWidth</b>: If you want to create a thumbnail that is a crop of the image these are it's dimensions.
+    * @param bool Image proportions will always remain constrained. The Crop parameter is a boolean value indicating if the image should be cropped when one dimension (height or width) goes beyond the constrained proportions.
+    * @param string The format in which the output image should be saved. Options are: jpg, png, and gif. Default is jpg.
+    * @param int An integer value representing the qualityof the saved image. Ranging from 0 (worst quality, smaller file) to 100 (best quality, biggest file).
     */
-   public static function SaveImageAs($Source, $Target, $Height = '', $Width = '', $Options = array()) {
-      $Crop = FALSE; $OutputType = ''; $ImageQuality = C('Garden.UploadImage.Quality', 75);
-      
-      // Make function work like it used to.
-      $Args = func_get_args();
-      if (count($Args) > 5) {
-         $Crop = GetValue(4, $Args, $Crop);
-         $OutputType = GetValue(5, $Args, $OutputType);
-         $ImageQuality = GetValue(6, $Args, $ImageQuality);
-      } elseif (is_bool($Options)) {
-         $Crop = $Options;
-      } else {
-         $Crop = GetValue('Crop', $Options, $Crop);
-         $OutputType = GetValue('OutputType', $Options, $OutputType);
-         $ImageQuality = GetValue('ImageQuality', $Options, $ImageQuality);
-      }
-
-      // Make sure type, height & width are properly defined.
+   public static function SaveImageAs($Source, $Target, $Height = '', $Width = '', $Crop = FALSE, $OutputType = 'jpg', $ImageQuality = 75) {
+      // Make sure type, height & width are properly defined
       
       if (!function_exists('gd_info'))
          throw new Exception(T('The uploaded file could not be processed because GD is not installed.'));
@@ -93,9 +74,6 @@ class Gdn_UploadImage extends Gdn_Upload {
       $GdInfo = gd_info();      
       $Size = getimagesize($Source);
       list($WidthSource, $HeightSource, $Type) = $Size;
-      $WidthSource = GetValue('SourceWidth', $Options, $WidthSource);
-      $HeightSource = GetValue('SourceHeight', $Options, $HeightSource);
-      
       if ($Height == '' || !is_numeric($Height))
          $Height = $HeightSource;
          
@@ -107,16 +85,13 @@ class Gdn_UploadImage extends Gdn_Upload {
          $OutputType = GetValue($Type, $OutputTypes, 'jpg');
       }
 
-      // Figure out the target path.
-      $TargetParsed = Gdn_Upload::Parse($Target);
-      $TargetPath = PATH_LOCAL_UPLOADS.'/'.ltrim($TargetParsed['Name'], '/');
-
-      if (!file_exists(dirname($TargetPath)))
-         mkdir(dirname($TargetPath), 0777, TRUE);
+      if (!file_exists(dirname($Target))) {
+         mkdir(dirname($Target), 0777, TRUE);
+      }
       
       // Don't resize if the source dimensions are smaller than the target dimensions
-      $XCoord = GetValue('SourceX', $Options, 0);
-      $YCoord = GetValue('SourceY', $Options, 0);
+      $XCoord = 0;
+      $YCoord = 0;
       if ($HeightSource > $Height || $WidthSource > $Width) {
          $AspectRatio = (float) $WidthSource / $HeightSource;
          if ($Crop === FALSE) {
@@ -132,17 +107,15 @@ class Gdn_UploadImage extends Gdn_Upload {
                // Crop the original width down
                $NewWidthSource = round(($Width * $HeightSource) / $Height);
                
-               // And set the original x position to the cropped start point.
-               if (!isset($Options['SourceX']))
-                  $XCoord = round(($WidthSource - $NewWidthSource) / 2);
+               // And set the original x position to the cropped start point
+               $XCoord = round(($WidthSource - $NewWidthSource) / 2);
                $WidthSource = $NewWidthSource;
             } else {
                // Crop the original height down
                $NewHeightSource = round(($Height * $WidthSource) / $Width);
                
-               // And set the original y position to the cropped start point.
-               if (!isset($Options['SourceY']))
-                  $YCoord = round(($HeightSource - $NewHeightSource) / 2);
+               // And set the original y position to the cropped start point
+               $YCoord = round(($HeightSource - $NewHeightSource) / 2);
                $HeightSource = $NewHeightSource;
             }
          }
@@ -190,21 +163,11 @@ class Gdn_UploadImage extends Gdn_Upload {
       
       // No need to check these, if we get here then whichever function we need will be available
       if ($OutputType == 'gif')
-         imagegif($TargetImage, $TargetPath);
+         imagegif($TargetImage, $Target);
       else if ($OutputType == 'png') {
-         imagepng($TargetImage, $TargetPath, (int)($ImageQuality/10));
+         imagepng($TargetImage, $Target, (int)($ImageQuality/10));
       } else
-         imagejpeg($TargetImage, $TargetPath, $ImageQuality);
-
-      // Allow a plugin to move the file to a differnt location.
-      $Sender = new stdClass();
-      $Sender->EventArguments = array();
-      $Sender->EventArguments['Path'] = $TargetPath;
-      $Parsed = self::Parse($TargetPath);
-      $Sender->EventArguments['Parsed'] =& $Parsed;
-      $Sender->Returns = array();
-      Gdn::PluginManager()->CallEventHandlers($Sender, 'Gdn_UploadImage', 'SaveImageAs');
-      return $Sender->EventArguments['Parsed'];
+         imagejpeg($TargetImage, $Target, $ImageQuality);
    }
    
    public function GenerateTargetName($TargetFolder, $Extension = 'jpg') {

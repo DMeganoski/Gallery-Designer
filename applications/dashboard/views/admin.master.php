@@ -11,6 +11,7 @@
          <div class="User">
             <?php
 			      $Session = Gdn::Session();
+					$Authenticator = Gdn::Authenticator();
 					if ($Session->IsValid()) {
 						$this->FireEvent('BeforeUserOptionsMenu');
 						
@@ -20,7 +21,7 @@
 							$Name .= Wrap($CountNotifications);
 							
 						echo Anchor($Name, '/profile/'.$Session->User->UserID.'/'.$Session->User->Name, 'Profile');
-						echo Anchor(T('Sign Out'), SignOutUrl(), 'Leave');
+						echo Anchor(T('Sign Out'), str_replace('{Session_TransientKey}', $Session->TransientKey(), $Authenticator->SignOutUrl()), 'Leave');
 					}
 				?>
          </div>

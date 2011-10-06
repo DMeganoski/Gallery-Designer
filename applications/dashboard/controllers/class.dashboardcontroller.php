@@ -49,6 +49,7 @@ class DashboardController extends Gdn_Controller {
       $this->AddJsFile('global.js');
       
       if (in_array($this->ControllerName, array('profilecontroller', 'activitycontroller'))) {
+         // $this->AddJsFile('jquery.menu.js');
          $this->AddCssFile('style.css');
       } else {
          $this->AddCssFile('admin.css');

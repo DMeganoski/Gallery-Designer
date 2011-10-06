@@ -15,7 +15,7 @@
  *
  */
  
-jQuery(document).ready(function(jQuery) {
+(function(jQuery) {
         
    var self = null;
  
@@ -118,7 +118,7 @@ jQuery(document).ready(function(jQuery) {
          var html = this.textarea.val().replace(/(<|>)/g, '');
          
          // IE is different, as per usual
-         if (jQuery.browser.msie)
+         if ($.browser.msie)
          {
             html = html.replace(/\n/g, '<BR>new');
          }
@@ -150,4 +150,4 @@ jQuery(document).ready(function(jQuery) {
       }
                    
     });
-});
+})(jQuery);

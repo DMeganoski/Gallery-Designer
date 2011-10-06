@@ -387,7 +387,7 @@ class TwitterPlugin extends Gdn_Plugin {
              'Plugins.Twitter.Secret' => $Sender->Form->GetFormValue('Secret'));
 
          SaveToConfig($Settings);
-         $Sender->InformMessage(T("Your settings have been saved."));
+         $Sender->StatusMessage = T("Your settings have been saved.");
 
       } else {
          $Sender->Form->SetFormValue('ConsumerKey', C('Plugins.Twitter.ConsumerKey'));

@@ -43,7 +43,7 @@ class DebuggerPlugin extends Gdn_Plugin {
 
    public function Base_AfterBody_Handler($Sender) {
       $Session = Gdn::Session();
-      if(!Debug() && !$Session->CheckPermission('Plugins.Debugger.View')) {
+      if(!defined('DEBUG') && !$Session->CheckPermission('Plugins.Debugger.View')) {
          return;
       }
       
@@ -55,9 +55,7 @@ class DebuggerPlugin extends Gdn_Plugin {
 
       //$Session = Gdn::Session();
       //if ($Session->CheckPermission('Plugins.Debugger.View')) {
-      $String = '<div id="Sql" class="DebugInfo">';
-
-      $String .= '<h2>'.T('Debug Information').'</h2>';
+      $String = '<div id="Sql">';
 
       // Add the canonical Url.
       if (method_exists($Sender, 'CanonicalUrl')) {
@@ -82,7 +80,6 @@ class DebuggerPlugin extends Gdn_Plugin {
             }
             $String .= $QueryInfo['Method']
                .'<small>'.@number_format($QueryTimes[$Key], 6).'s</small>'
-               .(isset($QueryInfo['Cache']) ? '<div><b>Cache:</b> '.var_export($QueryInfo['Cache'], TRUE).'</div>' : '')
                .'<pre>'.htmlspecialchars($Query).';</pre>';
          }
       }

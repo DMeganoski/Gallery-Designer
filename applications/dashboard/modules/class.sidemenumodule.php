@@ -52,7 +52,7 @@ if (!class_exists('SideMenuModule', FALSE)) {
        */
       private $_HighlightRoute;
    
-      public function __construct($Sender = '') {
+      public function __construct(&$Sender = '') {
          $this->HtmlId = 'SideMenu';
          $this->AutoLinkGroups = TRUE;
          $this->ClearGroups();
@@ -171,19 +171,12 @@ if (!class_exists('SideMenuModule', FALSE)) {
       }
       
       public function RemoveLink($Group, $Text) {
-         if (array_key_exists($Group, $this->Items) && isset($this->Items[$Group]['Links'])) {
-            $Links =& $this->Items[$Group]['Links'];
-
-            if (isset($Links[$Text])) {
-               unset($this->Items[$Group]['Links'][$Text]);
-               return;
-            }
-
-
-            foreach ($Links as $Index => $Link) {
-               if (GetValue('Text', $Link) == $Text) {
-                  unset($this->Items[$Group]['Links'][$Index]);
-                  return;
+         if (array_key_exists($Group, $this->Items) && is_array($this->Items[$Group])) {
+            foreach ($this->Items[$Group] as $Index => $GroupArray) {
+               if ($this->Items[$Group][$Index]['Text'] == $Text) {
+                  unset($this->Items[$Group][$Index]);
+                  array_merge($this->Items[$Group]);
+                  break;
                }
             }
          }
@@ -253,6 +246,7 @@ if (!class_exists('SideMenuModule', FALSE)) {
             }
          }
 
+         $this->_Sender->SetData('_SideMenuModule', array('Items' => $this->Items));
          return parent::ToString();
       }
    }

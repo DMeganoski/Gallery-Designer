@@ -21,8 +21,10 @@ class GuestModule extends Gdn_Module {
    }
    
    public function ToString() {
-      if (!Gdn::Session()->IsValid() && C('Garden.Modules.ShowGuestModule'))
+      $Session = Gdn::Session();
+      if (!$Session->IsValid()) {
          return parent::ToString();
+      }
 
       return '';
    }   

@@ -1,38 +1,15 @@
 <?php if (!defined('APPLICATION')) exit();
-include dirname(__FILE__).'/helper_functions.php';
-
 $CatList = '';
 $DoHeadings = C('Vanilla.Categories.DoHeadings');
 $MaxDisplayDepth = C('Vanilla.Categories.MaxDisplayDepth');
 $ChildCategories = '';
-$this->EventArguments['NumRows'] = $this->CategoryData->NumRows();
 ?>
+<div class="Tabs Headings CategoryHeadings">
+   <div class="ItemHeading"><?php echo T('All Categories'); ?></div>
+</div>
 <?php
-
-if (C('Vanilla.Categories.ShowTabs')) {
-   $ViewLocation = Gdn::Controller()->FetchViewLocation('helper_functions', 'Discussions', 'vanilla');
-   include_once $ViewLocation;
-   WriteFilterTabs($this);
-} else {
-   ?>
-   <div class="Tabs Headings CategoryHeadings">
-      <div class="ItemHeading"><?php echo T('All Categories'); ?></div>
-   </div>
-   <?php
-}
 echo '<ul class="DataList CategoryList'.($DoHeadings ? ' CategoryListWithHeadings' : '').'">';
    foreach ($this->CategoryData->Result() as $Category) {
-      $this->EventArguments['CatList'] = &$CatList;
-      $this->EventArguments['ChildCategories'] = &$ChildCategories;
-      $this->EventArguments['Category'] = &$Category;
-      $this->FireEvent('BeforeCategoryItem');
-      $CssClasses = array(GetValue('Read', $Category) ? 'Read' : 'Unread');
-      if (GetValue('Archive', $Category))
-         $CssClasses[] = 'Archive';
-      if (GetValue('Unfollow', $Category))
-         $CssClasses[] = 'Unfollow';
-      $CssClasses = implode(' ', $CssClasses);
-
       if ($Category->CategoryID > 0) {
          // If we are below the max depth, and there are some child categories
          // in the $ChildCategories variable, do the replacement.
@@ -46,16 +23,14 @@ echo '<ul class="DataList CategoryList'.($DoHeadings ? ' CategoryListWithHeading
                $ChildCategories .= ', ';
             $ChildCategories .= Anchor(Gdn_Format::Text($Category->Name), '/categories/'.$Category->UrlCode);
          } else if ($DoHeadings && $Category->Depth == 1) {
-            $CatList .= '<li class="Item CategoryHeading Depth1 Category-'.$Category->UrlCode.'">
-               <div class="ItemContent Category '.$CssClasses.'">'.Gdn_Format::Text($Category->Name).'</div>'
-               .GetOptions($Category, $this).'
+            $CatList .= '<li class="Item CategoryHeading Depth'.$Category->Depth.'">
+               <div class="ItemContent Category">'.Gdn_Format::Text($Category->Name).'</div>
             </li>';
          } else {
             $LastComment = UserBuilder($Category, 'LastComment');
-            $CatList .= '<li class="Item Depth'.$Category->Depth.' Category-'.$Category->UrlCode.'">
-               <div class="ItemContent Category '.$CssClasses.'">'
+            $CatList .= '<li class="Item Depth'.$Category->Depth.'">
+               <div class="ItemContent Category">'
                   .Anchor(Gdn_Format::Text($Category->Name), '/categories/'.$Category->UrlCode, 'Title')
-                  .GetOptions($Category, $this)
                   .Wrap($Category->Description, 'div', array('class' => 'CategoryDescription'))
                   .'<div class="Meta">
                      <span class="RSS">'.Anchor(Img('applications/dashboard/design/images/rss.gif'), '/categories/'.$Category->UrlCode.'/feed.rss').'</span>

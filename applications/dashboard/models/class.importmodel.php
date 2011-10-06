@@ -46,30 +46,18 @@ class ImportModel extends Gdn_Model {
 	);
 
 	protected $_OverwriteSteps = array(
-      0 => 'Initialize',
-   	1 => 'ProcessImportFile',
-   	2 => 'DefineTables',
-   	3 => 'LoadUserTable',
-   	4 => 'AuthenticateAdminUser',
-   	5 => 'InsertUserTable',
-   	6 => 'LoadTables',
-   	7 => 'DeleteOverwriteTables',
-   	8 => 'InsertTables',
-   	9 => 'UpdateCounts',
-      10 => 'CustomFinalization',
-      11 => 'AddActivity'
-   );
-
-   protected $_OverwriteStepsDb = array(
-      0 => 'Initialize',
-   	1 => 'ProcessImportDb',
-   	2 => 'DefineTables',
-   	3 => 'InsertUserTable',
-   	4 => 'DeleteOverwriteTables',
-   	5 => 'InsertTables',
-   	6 => 'UpdateCounts',
-      7 => 'CustomFinalization',
-      8 => 'AddActivity'
+      1 => 'Initialize',
+   	2 => 'ProcessImportFile',
+   	3 => 'DefineTables',
+   	4 => 'LoadUserTable',
+   	5 => 'AuthenticateAdminUser',
+   	6 => 'InsertUserTable',
+   	7 => 'LoadTables',
+   	8 => 'DeleteOverwriteTables',
+   	9 => 'InsertTables',
+   	10 => 'UpdateCounts',
+      11 => 'CustomFinalization',
+      12 => 'AddActivity'
    );
 
 	/**
@@ -201,7 +189,7 @@ class ImportModel extends Gdn_Model {
          if (strcasecmp($this->GetPasswordHashMethod(), 'reset') == 0 || $this->Data('UseCurrentPassword')) {
             $Result = TRUE;
          } else {
-            $Result = $PasswordHash->CheckPassword($OverwritePassword, GetValue('Password', $Data), $this->GetPasswordHashMethod(), GetValue('Name',$Data));
+            $Result = $PasswordHash->CheckPassword($OverwritePassword, GetValue('Password', $Data), $this->GetPasswordHashMethod());
          }
 		}
 		if(!$Result) {
@@ -209,7 +197,6 @@ class ImportModel extends Gdn_Model {
          $this->ErrorType = 'Credentials';
 		}
 		return $Result;
-      
 	}
 
    public function CustomFinalization() {
@@ -264,18 +251,16 @@ class ImportModel extends Gdn_Model {
 
                $Name = $Type;
                $StructureType = $DestStructure->ColumnTypeString($DestStructure->Columns($Type));
-            } elseif (!StringBeginsWith($Name, '_')) {
+            } else {
 					$StructureType = $Type;
 
 					if(!$StructureType)
-						$StructureType = 'varchar(255)';
+						$StructureType = 'int';
 
 					// This is a new column so it needs to be added to the destination table too.
 					$DestStructure->Column($Name, $StructureType, NULL);
 					$DestModified = TRUE;
-            } elseif ($Type) {
-               $StructureType = $Type;
-            }
+				}
 
 				$St->Column($Name, $StructureType, NULL);
 			}
@@ -287,11 +272,7 @@ class ImportModel extends Gdn_Model {
 			}
 
          try {
-            if (!$this->IsDbSource())
-               $St->Set(TRUE, TRUE);
-            else
-               $St->Reset();
-            
+            $St->Set(TRUE, TRUE);
             if($DestModified)
                $DestStructure->Set();
          } catch(Exception $Ex) {
@@ -335,9 +316,6 @@ class ImportModel extends Gdn_Model {
 	}
 
 	public function DeleteFiles() {
-      if (StringBeginsWith($this->ImportPath, 'Db:', TRUE))
-         return;
-
       $St = Gdn::Structure();
 		foreach (GetValue('Tables', $this->Data, array()) as $Table => $TableInfo) {
 			$Path = GetValue('Path', $TableInfo, '');
@@ -383,9 +361,10 @@ class ImportModel extends Gdn_Model {
          $this->Data['CurrentStepMessage'] = $Table;
          
 			if($Table == 'Permission')
-            $this->SQL->Delete($Table, array('RoleID <>' => 0));
+				$Sql = "delete from :_$Table where RoleID <> 0";
 			else
-				$this->SQL->Truncate($Table);
+				$Sql = "truncate table :_$Table";
+			$this->Query($Sql);
 			if($this->Timer->ElapsedTime() > $this->MaxStepTime) {
 				// The step's taken too long. Save the state and return.
 				$this->Data['CurrentSubstep'] = $i + 1;
@@ -404,20 +383,14 @@ class ImportModel extends Gdn_Model {
 	}
 
    public function FromPost($Post) {
-      if (isset($Post['Overwrite']))
+      if(isset($Post['Overwrite']))
          $this->Data['Overwrite'] = $Post['Overwrite'];
-      if (isset($Post['Email']))
+      if(isset($Post['Email']))
          $this->Data['OverwriteEmail'] = $Post['Email'];
-      if (isset($Post['Password'])) {
+      if(isset($Post['Password'])) {
          $this->Data['OverwritePassword'] = $Post['Password'];
          $this->Data['UseCurrentPassword'] = GetValue('UseCurrentPassword', $Post);
       }
-      if (isset($Post['GenerateSQL']))
-         $this->Data['GenerateSQL'] = $Post['GenerateSQL'];
-   }
-
-   public function GenerateSQL($Value = NULL) {
-      return $this->Data('GenerateSQL', $Value);
    }
 
    public function GetCountSQL(
@@ -476,7 +449,6 @@ class ImportModel extends Gdn_Model {
       $Post['Email'] = GetValue('OverwriteEmail', $D, '');
       $Post['Password'] = GetValue('OverwritePassword', $D, '');
       $Post['UseCurrentPassword'] = GetValue('UseCurrentPassword', $D, FALSE);
-      $Post['GenerateSQL'] = GetValue('GenerateSQL', $D, FALSE);
    }
 
    public static function FGetCSV2($fp, $Delim = ',', $Quote = '"', $Escape = "\\") {
@@ -602,17 +574,7 @@ class ImportModel extends Gdn_Model {
    }
 
    public function Initialize() {
-      if ($this->GenerateSQL()) {
-         $this->SQL->CaptureModifications = TRUE;
-         Gdn::Structure()->CaptureOnly = TRUE;
-         $this->Database->CapturedSql = array();
-
-         $SQLPath = $this->Data('SQLPath');
-         if (!$SQLPath) {
-            $SQLPath = 'import/import_'.date('Y-m-d_His').'.sql';
-            $this->Data('SQLPath', $SQLPath);
-         }
-      }
+      // This is just a dummy step so the ajax can get going right away.
 
       return TRUE;
    }
@@ -629,20 +591,9 @@ class ImportModel extends Gdn_Model {
 				$this->Data['CurrentStepMessage'] = sprintf(T('%s of %s'), $InsertedCount, count($Tables));
 
             if(strcasecmp($this->Overwrite(), 'Overwrite') == 0) {
-               switch ($TableName) {
-                  case 'Permission':
-                     $this->InsertPermissionTable();
-                     break;
-                  default:
-                     $RowCount = $this->_InsertTable($TableName);
-                     break;
-               }
-               
+               $RowCount = $this->_InsertTable($TableName);
             } else {
                switch($TableName) {
-                  case 'Permission':
-                     $this->InsertPermissionTable();
-                     break;
                   case 'UserDiscussion':
                      $Sql = "insert ignore :_UserDiscussion ( UserID, DiscussionID, DateLastViewed, Bookmarked )
                         select zUserID._NewID, zDiscussionID._NewID, max(i.DateLastViewed) as DateLastViewed, max(i.Bookmarked) as Bookmarked
@@ -711,9 +662,6 @@ class ImportModel extends Gdn_Model {
 		if(!array_key_exists($TableName, $this->Tables()))
 			return;
 
-      if (!Gdn::Structure()->TableExists($TableName))
-         return 0;
-
 		$TableInfo =& $this->Tables($TableName);
 		$Columns = $TableInfo['Columns'];
 
@@ -752,20 +700,20 @@ class ImportModel extends Gdn_Model {
 			}
 		}
 		// Add the original table to prevent duplicates.
-//		$PK = $TableName.'ID';
-//		if(array_key_exists($PK, $Columns)) {
-//		if(strcasecmp($this->Overwrite(), 'Overwrite') == 0)
-//				$PK2 = $PK;
-//			else
-//				$PK2 = '_NewID';
-//
-//			$From .= "\nleft join :_$TableName o0\n  on o0.$PK = i.$PK2";
-//			if($Where)
-//				$Where .=  "\n  and ";
-//			else
-//				$Where = "\nwhere ";
-//			$Where .= "o0.$PK is null";
-//		}
+		$PK = $TableName.'ID';
+		if(array_key_exists($PK, $Columns)) {
+		if(strcasecmp($this->Overwrite(), 'Overwrite') == 0)
+				$PK2 = $PK;
+			else
+				$PK2 = '_NewID';
+
+			$From .= "\nleft join :_$TableName o0\n  on o0.$PK = i.$PK2";
+			if($Where)
+				$Where .=  "\n  and ";
+			else
+				$Where = "\nwhere ";
+			$Where .= "o0.$PK is null";
+		}
 		//}
 
 		// Add the sets to the select list.
@@ -782,90 +730,31 @@ class ImportModel extends Gdn_Model {
 		//$this->Query($Sql);
 
 		$RowCount = $this->Query($Sql);
-      if($RowCount > 0) {
+      if(is_numeric($RowCount) && $RowCount > 0) {
          return (int)$RowCount;
       } else {
          return FALSE;
       }
 	}
 
-   public function InsertPermissionTable() {
-      if ($this->ImportExists('Permission', 'JunctionTable')) {
-         $this->_InsertTable('Permission');
-         return TRUE;
-      }
-
-      // Clear the permission table in case the step was only half done before.
-      $this->SQL->Delete('Permission', array('RoleID <>' => 0));
-
-      // Grab all of the permission columns.
-      $PM = new PermissionModel();
-      $GlobalColumns = array_filter($PM->PermissionColumns());
-      unset($GlobalColumns['PermissionID']);
-      $JunctionColumns = array_filter($PM->PermissionColumns('Category', 'PermissionCategoryID'));
-      unset($JunctionColumns['PermissionID']);
-      $JunctionColumns = array_merge(array('JunctionTable' => 'Category', 'JunctionColumn' => 'PermissionCategoryID', 'JunctionID' => -1), $JunctionColumns);
-      $ColumnSets = array($GlobalColumns, $JunctionColumns);
-
-
-
-      $Data = $this->SQL->Get('zPermission')->ResultArray();
-      foreach ($Data as $Row) {
-         $Preset = strtolower(GetValue('_Permissions', $Row));
-
-         foreach ($ColumnSets as $ColumnSet) {
-            $Set = array();
-            $Set['RoleID'] = $Row['RoleID'];
-            
-            foreach ($ColumnSet as $ColumnName => $Default) {
-               if (isset($Row[$ColumnName]))
-                  $Value = $Row[$ColumnName];
-               elseif (strpos($ColumnName, '.') === FALSE)
-                  $Value = $Default;
-               elseif ($Preset == 'all')
-                  $Value = 1;
-               elseif ($Preset == 'view')
-                  $Value = StringEndsWith($ColumnName, 'View', TRUE);
-               else
-                  $Value = $Default & 1;
-
-               $Set["`$ColumnName`"] = $Value;
-            }
-            $this->SQL->Insert('Permission', $Set);
-            unset($Set);
-         }
-      }
-
-      return TRUE;
-   }
-
 	public function InsertUserTable() {
-      $UseCurrentPassword = $this->Data('UseCurrentPassword');
-
-      if ($UseCurrentPassword) {
-         $CurrentUser = $this->SQL->GetWhere('User', array('UserID' => Gdn::Session()->UserID))->FirstRow(DATASET_TYPE_ARRAY);
-         $CurrentPassword = $CurrentUser['Password'];
-         $CurrentHashMethod = $CurrentUser['HashMethod'];
-      }
+      $UserCurrentPassword = $this->Data('UseCurrentPassword');
 
 		// Delete the current user table.
-		$this->SQL->Truncate('User');
+		$this->Query('truncate table :_User');
 
 		// Load the new user table.
 		$UserTableInfo =& $this->Data['Tables']['User'];
-      if (!$this->ImportExists('User', 'HashMethod'))
-         $this->_InsertTable('User', array('HashMethod' => $this->GetPasswordHashMethod()));
-      else
-         $this->_InsertTable('User');
+		$this->_InsertTable('User', array('HashMethod' => $this->GetPasswordHashMethod()));
 		$UserTableInfo['Inserted'] = TRUE;
 
       $AdminEmail = GetValue('OverwriteEmail', $this->Data);
       $SqlArgs = array(':Email' => $AdminEmail);
       $SqlSet = '';
 
-      if ($UseCurrentPassword) {
-         $SqlArgs[':Password'] = $CurrentPassword;
-         $SqlArgs[':HashMethod'] = $CurrentHashMethod;
+      if ($UserCurrentPassword) {
+         $SqlArgs[':Password'] = Gdn::Session()->User->Password;
+         $SqlArgs[':HashMethod'] = Gdn::Session()->User->HashMethod;
          $SqlSet = ', Password = :Password, HashMethod = :HashMethod';
       }
 
@@ -880,28 +769,21 @@ class ImportModel extends Gdn_Model {
          }
 
          // Write it out.
+         
          $this->Query("update :_User set Admin = 1{$SqlSet} where Email = :Email", $SqlArgs);
       } else {
          // Set the admin user flag.
          $this->Query("update :_User set Admin = 1{$SqlSet} where Email = :Email", $SqlArgs);
       }
 
-		// Start the new session.
-      $User = Gdn::UserModel()->GetByEmail(GetValue('OverwriteEmail', $this->Data));
-      if (!$User)
-         $User = Gdn::UserModel()->GetByUsername(GetValue('OverwriteEmail', $this->Data));
-
-      $PasswordHash = new Gdn_PasswordHash();
-      if ($PasswordHash->CheckPassword(GetValue('OverwritePassword', $this->Data), GetValue('Password', $User), GetValue('HashMethod', $User))) {
-         Gdn::Session()->Start(GetValue('UserID', $User), TRUE);
-      }
+		// Authenticate the admin user as the current user.
+		$PasswordAuth = Gdn::Authenticator()->AuthenticateWith('password');
+		//$PasswordAuth->FetchData($PasswordAuth, array('Email' => GetValue('OverwriteEmail', $this->Data), 'Password' => GetValue('OverwritePassword', $this->Data)));
+		$PasswordAuth->Authenticate(GetValue('OverwriteEmail', $this->Data), GetValue('OverwritePassword', $this->Data));
+		Gdn::Session()->Start();
 
 		return TRUE;
 	}
-
-   public function IsDbSource() {
-      return StringBeginsWith($this->ImportPath, 'Db:', TRUE);
-   }
 
 	public function LoadUserTable() {
       if (!$this->ImportExists('User'))
@@ -1102,10 +984,10 @@ class ImportModel extends Gdn_Model {
       $St->Table(self::TABLE_PREFIX.'Test')->Column('ID', 'int')->Set(TRUE, TRUE);
 
       // Create a test file to load.
-      if (!file_exists(PATH_LOCAL_UPLOADS.'/import'))
-         mkdir(PATH_LOCAL_UPLOADS.'/import');
+      if (!file_exists(PATH_UPLOADS.'/import'))
+         mkdir(PATH_UPLOADS.'/import');
 
-      $TestPath = PATH_LOCAL_UPLOADS.'/import/test.txt';
+      $TestPath = PATH_UPLOADS.'/import/test.txt';
       $TestValue = 123;
       $TestContents = 'ID'.self::NEWLINE.$TestValue.self::NEWLINE;
       file_put_contents($TestPath, $TestContents, LOCK_EX);
@@ -1182,36 +1064,6 @@ class ImportModel extends Gdn_Model {
 
 		return $Result;
 	}
-
-
-
-   /**
-    * Process the import tables from the database.
-    */
-   public function ProcessImportDb() {
-      // Grab a list of all of the tables.
-      $TableNames = $this->SQL->FetchTables(':_z%');
-      if (count($TableNames) == 0) {
-         throw new Gdn_UserException('Your database does not contain any import tables.');
-      }
-
-      $Tables = array();
-      foreach ($TableNames as $TableName) {
-         $TableName = StringBeginsWith($TableName, $this->Database->DatabasePrefix, TRUE, TRUE);
-         $DestTableName = StringBeginsWith($TableName, 'z', TRUE, TRUE);
-         $TableInfo = array('Table' => $DestTableName);
-
-         $ColumnInfos = $this->SQL->FetchTableSchema($TableName);
-         $Columns = array();
-         foreach ($ColumnInfos as $ColumnInfo) {
-            $Columns[GetValue('Name', $ColumnInfo)] = Gdn::Structure()->ColumnTypeString($ColumnInfo);
-         }
-         $TableInfo['Columns'] = $Columns;
-         $Tables[$DestTableName] = $TableInfo;
-      }
-      $this->Data['Tables'] = $Tables;
-      return TRUE;
-   }
 	
 	public function ProcessImportFile() {
       // This one step can take a while so give it more time.
@@ -1300,8 +1152,7 @@ class ImportModel extends Gdn_Model {
          $this->Stat('Started', microtime(TRUE), 'time');
 
 		$Steps = $this->Steps();
-      $LastStep = end(array_keys($Steps));
-		if(!isset($Steps[$Step]) || $Step > $LastStep) {
+		if($Step > count($Steps)) {
 			return 'COMPLETE';
 		}
 		if(!$this->Timer) {
@@ -1310,17 +1161,8 @@ class ImportModel extends Gdn_Model {
 			$this->Timer->Start('');
 		}
 
-      // Run a standard step every time.
-      if (isset($Steps[0])) {
-         call_user_func(array($this, $Steps[0]));
-      }
-
 		$Method = $Steps[$Step];
 		$Result = call_user_func(array($this, $Method));
-
-      if ($this->GenerateSQL()) {
-         $this->SaveSQL($Method);
-      }
 
       $ElapsedTime = $this->Timer->ElapsedTime();
       $this->Stat('Time Spent on Import', $ElapsedTime, 'add');
@@ -1348,25 +1190,8 @@ class ImportModel extends Gdn_Model {
 		// Replace db prefixes.
 		$Sql = str_replace(array(':_z', ':_'), array($Db->DatabasePrefix.self::TABLE_PREFIX, $Db->DatabasePrefix), $Sql);
 
-      // Figure out the type of the type of the query.
-      if (StringBeginsWith($Sql, 'select'))
-         $Type = 'select';
-      elseif (StringBeginsWith($Sql, 'truncate'))
-         $Type = 'truncate';
-      elseif (StringBeginsWith($Sql, 'insert'))
-         $Type = 'insert';
-      elseif (StringBeginsWith($Sql, 'update'))
-         $Type = 'update';
-      elseif (StringBeginsWith($Sql, 'delete'))
-         $Type = 'delete';
-      else
-         $Type = 'select';
-
 		// Execute the query.
-      if (is_array($Parameters))
-         $this->SQL->NamedParameters($Parameters);
-
-		$Result = $this->SQL->Query($Sql, $Type);
+		$Result = $Db->Query($Sql, $Parameters);
 
 		//$this->Timer->Split('Sql: '. str_replace("\n", "\n     ", $Sql));
 
@@ -1379,19 +1204,6 @@ class ImportModel extends Gdn_Model {
 		'Garden.Import.CurrentStepData' => $this->Data,
 		'Garden.Import.ImportPath' => $this->ImportPath));
 	}
-
-   public function SaveSQL($CurrentStep) {
-      $SQLPath = $this->Data('SQLPath');
-
-      $Queries = $this->Database->CapturedSql;
-      foreach ($Queries as $Index => $Sql) {
-         $Queries[$Index] = rtrim($Sql, ';').';';
-      }
-      $Queries = "\n\n/* $CurrentStep */\n\n".implode("\n\n", $Queries);
-      
-      
-      file_put_contents(PATH_LOCAL_UPLOADS.'/'.$SQLPath, $Queries, FILE_APPEND | LOCK_EX);
-   }
 
    public function Stat($Key, $Value = NULL, $Op = 'set') {
       if(!isset($this->Data['Stats']))
@@ -1418,12 +1230,9 @@ class ImportModel extends Gdn_Model {
    }
 
 	public function Steps() {
-		if(strcasecmp($this->Overwrite(), 'Overwrite') == 0) {
-         if ($this->IsDbSource())
-            return $this->_OverwriteStepsDb;
-         else
-            return $this->_OverwriteSteps;
-		} else
+		if(strcasecmp($this->Overwrite(), 'Overwrite') == 0)
+			return $this->_OverwriteSteps;
+		else
 			return $this->_MergeSteps;
 	}
 
@@ -1513,9 +1322,6 @@ class ImportModel extends Gdn_Model {
          if(!$this->ImportExists('Conversation', 'LastMessageID'))
             $Sqls['Conversation.LastMessageID'] = $this->GetCountSQL('max', 'Conversation', 'ConversationMessage', 'LastMessageID', 'MessageID');
 
-         if (!$this->ImportExists('Conversation', 'DateUpdated'))
-            $Sqls['Converstation.DateUpdated'] = "update :_Conversation c join :_ConversationMessage m on c.LastMessageID = m.MessageID set c.DateUpdated = m.DateInserted";
-
          if($this->ImportExists('UserConversation')) {
             if(!$this->ImportExists('UserConversation', 'LastMessageID')) {
                if($this->ImportExists('UserConversation', 'DateLastViewed')) {
@@ -1565,36 +1371,26 @@ class ImportModel extends Gdn_Model {
                   and ud.UserID = u.UserID
             )";
       }
-//      if (!$this->ImportExists('User', 'CountUnreadConversations')) {
-//         $Sqls['User.CountUnreadConversations'] =
-//            'update :_User u
-//            set u.CountUnreadConversations = (
-//              select count(c.ConversationID)
-//              from :_Conversation c
-//              inner join :_UserConversation uc
-//                on c.ConversationID = uc.ConversationID
-//              where uc.UserID = u.UserID
-//                and uc.CountReadMessages < c.CountMessages
-//            )';
-//      }
+      if (!$this->ImportExists('User', 'CountUnreadConversations')) {
+         $Sqls['User.CountUnreadConversations'] =
+            'update :_User u
+            set u.CountUnreadConversations = (
+              select count(c.ConversationID)
+              from :_Conversation c
+              inner join :_UserConversation uc
+                on c.ConversationID = uc.ConversationID
+              where uc.UserID = u.UserID
+                and uc.CountReadMessages < c.CountMessages
+            )';
+      }
 
       // The updates start here.
 		$CurrentSubstep = GetValue('CurrentSubstep', $this->Data, 0);
 
       if($CurrentSubstep == 0) {
          // Add the FirstCommentID to the discussion table.
-         Gdn::Structure()->Table('Discussion')->Column('FirstCommentID', 'int', NULL, 'index')->Set(FALSE, FALSE);
+         Gdn::Structure()->Table('Discussion')->Column('FirstCommentID', 'int', NULL)->Set(FALSE, FALSE);
       }
-
-//      $Sqls2 = array();
-//      $i = 1;
-//      foreach ($Sqls as $Name => $Sql) {
-//         $Sqls2[] = "/* $i. $Name */\n"
-//            .str_replace(':_', $this->Database->DatabasePrefix, $Sql)
-//            .";\n";
-//         $i++;
-//      }
-//      throw new Exception(implode("\n", $Sqls2));
 
 		// Execute the SQL.
       $Keys = array_keys($Sqls);

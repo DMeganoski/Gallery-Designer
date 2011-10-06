@@ -21,7 +21,7 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
  * @package Garden
  * @todo change formatting of tables in documentation
  */
-class Gdn_Form extends Gdn_Pluggable {
+class Gdn_Form {
    /**
     * @var string Action with which the form should be sent.
     * @access public
@@ -90,7 +90,7 @@ class Gdn_Form extends Gdn_Pluggable {
     *    describe how each field specified failed validation.
     * @access protected
     */
-   protected $_ValidationResults = array();
+   protected $_ValidationResults;
 
    /**
     * @var array $Field => $Value pairs from the form in the $_POST or $_GET collection 
@@ -122,8 +122,6 @@ class Gdn_Form extends Gdn_Pluggable {
       
       // Get custom error class
       $this->ErrorClass = C('Garden.Forms.InlineErrorClass', 'Error');
-      
-      parent::__construct();
    }
    
    
@@ -169,7 +167,7 @@ class Gdn_Form extends Gdn_Pluggable {
       $Return = '<input type="' . $Type . '"';
       $Return .= $this->_IDAttribute($ButtonCode, $Attributes);
       $Return .= $this->_NameAttribute($ButtonCode, $Attributes);
-      $Return .= ' value="' . T($ButtonCode, ArrayValue('value', $Attributes)) . '"';
+      $Return .= ' value="' . T($ButtonCode) . '"';
       $Return .= $this->_AttributesToString($Attributes);
       $Return .= " />\n";
       return $Return;
@@ -238,15 +236,17 @@ class Gdn_Form extends Gdn_Pluggable {
    }
 
    /**
-    * Returns the XHTML for a list of checkboxes.
+    * Returns the xhtml for a list of checkboxes.
     *
-    * @param string $FieldName Name of the field being posted with this input.
+    * @param string $FieldName The name of the field that is being displayed/posted with this input. It
+    * should related directly to a field name in a user junction table.
+    * ie. LUM_UserRole.RoleID
     *
-    * @param mixed $DataSet Data to fill the checkbox list. Either an associative
-    * array or a database dataset. ex: RoleID, Name from GDN_Role.
+    * @param mixed $DataSet The data to fill the options in the select list. Either an associative
+    * array or a database dataset. ie. RoleID, Name from LUM_Role.
     *
-    * @param mixed $ValueDataSet Values to be pre-checked in $DataSet. Either an associative array
-    * or a database dataset. ex: RoleID from GDN_UserRole for a single user.
+    * @param mixed $ValueDataSet The data that should be checked in $DataSet. Either an associative array
+    * or a database dataset. ie. RoleID from LUM_UserRole for a single user.
     *
     * @param array $Attributes  An associative array of attributes for the select. Here is a list of
     * "special" attributes and their default values:
@@ -261,7 +261,7 @@ class Gdn_Form extends Gdn_Pluggable {
     *
     * @return string
     */
-   public function CheckBoxList($FieldName, $DataSet, $ValueDataSet = NULL, $Attributes = FALSE) {
+   public function CheckBoxList($FieldName, $DataSet, $ValueDataSet, $Attributes) {
       // Never display individual inline errors for these CheckBoxes
       $Attributes['InlineErrors'] = FALSE;
       
@@ -299,34 +299,22 @@ class Gdn_Form extends Gdn_Pluggable {
          }
       } elseif (is_array($DataSet)) {
          foreach($DataSet as $Text => $ID) {
-            // Set attributes for this instance
             $Instance = $Attributes;
-            $Instance = RemoveKeyFromArray($Instance, array('TextField', 'ValueField'));
-            
+            $Instance = RemoveKeyFromArray($Instance,
+               array('TextField', 'ValueField'));
             $Instance['id'] = $FieldName . $i;
+            if (is_numeric($Text)) $Text = $ID;
 
-            if (is_array($ID)) {
-               $ValueField = ArrayValueI('ValueField', $Attributes, 'value');
-               $TextField = ArrayValueI('TextField', $Attributes, 'text');
-               $Text = GetValue($TextField, $ID, '');
-               $ID = GetValue($ValueField, $ID, '');
-            } else {
-               
-
-               if (is_numeric($Text))
-                  $Text = $ID;
-            }
             $Instance['value'] = $ID;
-            
             if (is_array($CheckedValues) && in_array($ID, $CheckedValues)) {
                $Instance['checked'] = 'checked';
             }
 
-            $Return .= '<li>' . $this->CheckBox($FieldName . '[]', $Text, $Instance) . "</li>\n";
+            $Return .= '<li>' . $this->CheckBox($FieldName . '[]', $Text,
+               $Instance) . "</li>\n";
             ++$i;
          }
       }
-      
       return '<ul class="'.ConcatSep(' ', 'CheckBoxList', GetValue('listclass', $Attributes)).'">' . $Return . '</ul>';
    }
 
@@ -531,7 +519,7 @@ class Gdn_Form extends Gdn_Pluggable {
       $Return = "</div>\n</form>";
       if ($Xhtml != '') $Return = $Xhtml . $Return;
 
-      if ($ButtonCode != '') $Return = '<div class="Buttons">'.$this->Button($ButtonCode, $Attributes).'</div>'.$Return;
+      if ($ButtonCode != '') $Return = $this->Button($ButtonCode, $Attributes) . $Return;
 
       return $Return;
    }
@@ -576,45 +564,18 @@ class Gdn_Form extends Gdn_Pluggable {
          $Years[$i] = $i;
       }
       
-      // Show inline errors?
-      $ShowErrors = $this->_InlineErrors && array_key_exists($FieldName, $this->_ValidationResults);
-      
-      // Add error class to input element
-      if ($ShowErrors) 
-         $this->AddErrorClass($Attributes);
-      
       // Never display individual inline errors for these DropDowns
       $Attributes['InlineErrors'] = FALSE;
 
       $CssClass = ArrayValueI('class', $Attributes, '');
-      
-      $SubmittedTimestamp = ($this->GetValue($FieldName) > 0) ? strtotime($this->GetValue($FieldName)) : FALSE;
-      
-      // Month
       $Attributes['class'] = trim($CssClass . ' Month');
-      if ($SubmittedTimestamp)
-         $Attributes['Value'] = date('n', $SubmittedTimestamp);
       $Return = $this->DropDown($FieldName . '_Month', $Months, $Attributes);
-      
-      // Day
       $Attributes['class'] = trim($CssClass . ' Day');
-      if ($SubmittedTimestamp)
-         $Attributes['Value'] = date('j', $SubmittedTimestamp);
       $Return .= $this->DropDown($FieldName . '_Day', $Days, $Attributes);
-      
-      // Year
       $Attributes['class'] = trim($CssClass . ' Year');
-      if ($SubmittedTimestamp)
-         $Attributes['Value'] = date('Y', $SubmittedTimestamp);
-      $Return .= $this->DropDown($FieldName . '_Year', $Years, $Attributes);
-      
-      $Return .= '<input type="hidden" name="DateFields[]" value="' . $FieldName . '" />';
-          
-      // Append validation error message
-      if ($ShowErrors)  
-         $Return .= $this->InlineError($FieldName);
-         
-      return $Return;
+
+      return $Return . $this->DropDown($FieldName . '_Year', $Years, $Attributes) . '<input type="hidden" name="DateFields[]" value="' .
+          $FieldName . '" />';
    }
    
    /**
@@ -664,9 +625,6 @@ class Gdn_Form extends Gdn_Pluggable {
          $Value = $this->GetValue($FieldName);
       if (!is_array($Value)) 
          $Value = array($Value);
-         
-      // Prevent default $Value from matching key of zero
-      $HasValue = ($Value !== array(FALSE) && $Value !== array('')) ? TRUE : FALSE;
       
       // Start with null option?
       $IncludeNull = ArrayValueI('IncludeNull', $Attributes);
@@ -682,24 +640,17 @@ class Gdn_Form extends Gdn_Pluggable {
             foreach($DataSet->Result() as $Data) {
                $Return .= '<option value="' . $Data->$ValueField .
                    '"';
-               if (in_array($Data->$ValueField, $Value) && $HasValue) $Return .= ' selected="selected"';
+               if (in_array($Data->$ValueField, $Value)) $Return .= ' selected="selected"';
 
                $Return .= '>' . $Data->$TextField . "</option>\n";
             }
          }
       } elseif (is_array($DataSet)) {
          foreach($DataSet as $ID => $Text) {
-            if (is_array($Text)) {
-               $Attribs = $Text;
-               $Text = GetValue('Text', $Attribs, '');
-               unset($Attribs['Text']);
-            } else {
-               $Attribs = array();
-            }
             $Return .= '<option value="' . $ID . '"';
-            if (in_array($ID, $Value) && $HasValue) $Return .= ' selected="selected"';
+            if (in_array($ID, $Value)) $Return .= ' selected="selected"';
 
-            $Return .= Attribute($Attribs).'>' . $Text . "</option>\n";
+            $Return .= '>' . $Text . "</option>\n";
          }
       }
       $Return .= '</select>';
@@ -873,7 +824,7 @@ class Gdn_Form extends Gdn_Pluggable {
     * @return string
     */
    public function InlineError($FieldName) {
-      $AppendError = '<p class="'.$this->ErrorClass.'">';
+      $AppendError = '<p class="'.$ErrorClass.'">';
       foreach ($this->_ValidationResults[$FieldName] as $ValidationError) {
          $AppendError .= sprintf(T($ValidationError),T($FieldName)).' ';
       }
@@ -1213,7 +1164,7 @@ class Gdn_Form extends Gdn_Pluggable {
          else
             $FileSuffix = "";
 
-         if(Debug()) {
+         if(defined('DEBUG')) {
             $ErrorCode = '@<pre>'.
                $Message."\n".
                '## '.$Error->getFile().'('.$Error->getLine().")".$FileSuffix."\n".
@@ -1429,7 +1380,7 @@ class Gdn_Form extends Gdn_Pluggable {
                   $this->_FormValues[$FieldName] = filter_input(
                      $InputType,
                      $Field,
-                     FILTER_DEFAULT,
+                     FILTER_SANITIZE_STRING,
                      FILTER_REQUIRE_ARRAY
                   );
                } else {
@@ -1753,9 +1704,7 @@ class Gdn_Form extends Gdn_Pluggable {
          'default',
          'textfield',
          'valuefield',
-         'includenull',
-         'yearrange',
-         'inlineerrors');
+         'includenull');
       $Return = '';
       
       // Build string from array

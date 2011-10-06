@@ -32,40 +32,34 @@ class vBulletinImportModel extends Gdn_Model {
     */
    public function ProcessAvatars() {
       $UploadImage = new Gdn_UploadImage();
-      $UserData = $this->SQL->Select('u.Photo')->From('User u')->Get();
-      
-      // Make sure the avatars folder exists.
-      if (!file_exists(PATH_ROOT.'/uploads/userpics'))
-         mkdir(PATH_ROOT.'/uploads/userpics');
-      
-      $ProfileHeight = Gdn::Config('Garden.Profile.MaxHeight', 1000);
-      $ProfileWidth = Gdn::Config('Garden.Profile.MaxWidth', 250);
-      $PreviewHeight = Gdn::Config('Garden.Preview.MaxHeight', 100);
-      $PreviewWidth = Gdn::Config('Garden.Preview.MaxWidth', 75);
-      $ThumbSize = Gdn::Config('Garden.Thumbnail.Size', 50);
-      
+      $UserData = $this->SQL->Select('u.*')->From('User u')->Get();
       foreach ($UserData->Result() as $User) {
          try {
             $Image = PATH_ROOT . DS . 'uploads' . DS . $User->Photo;
-            $ImageBaseName = pathinfo($Image, PATHINFO_BASENAME);            
+            $ImageBaseName = pathinfo($Image, PATHINFO_BASENAME);
+   
+            // Make sure the avatars folder exists.
+            if (!file_exists(PATH_ROOT.'/uploads/userpics'))
+               mkdir(PATH_ROOT.'/uploads/userpics');
             
-            // Save profile size
+            // Save the uploaded image in profile size
             $UploadImage->SaveImageAs(
                $Image,
                PATH_ROOT.'/uploads/userpics/p'.$ImageBaseName,
-               $ProfileHeight,
-               $ProfileWidth
+               Gdn::Config('Garden.Profile.MaxHeight', 1000),
+               Gdn::Config('Garden.Profile.MaxWidth', 250)
             );
             
-            // Save preview size
+            // Save the uploaded image in preview size
             $UploadImage->SaveImageAs(
                $Image,
                PATH_ROOT.'/uploads/userpics/t'.$ImageBaseName,
-               $PreviewHeight,
-               $PreviewWidth
+               Gdn::Config('Garden.Preview.MaxHeight', 100),
+               Gdn::Config('Garden.Preview.MaxWidth', 75)
             );
-            
-            // Save thumbnail size
+   
+            // Save the uploaded image in thumbnail size
+            $ThumbSize = Gdn::Config('Garden.Thumbnail.Size', 50);
             $UploadImage->SaveImageAs(
                $Image,
                PATH_ROOT.'/uploads/userpics/n'.$ImageBaseName,
@@ -73,6 +67,7 @@ class vBulletinImportModel extends Gdn_Model {
                $ThumbSize,
                TRUE
             );
+            
          } catch (Exception $ex) { }
       }
    }

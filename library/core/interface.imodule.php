@@ -27,7 +27,15 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
  * @package Garden
  */
 interface Gdn_IModule {
-//   public function __construct($Sender);
+
+
+   /**
+    * Class constructor, requires the object that is constructing the module.
+    *
+    * @param object $Sender The controller that is building the module.
+    */
+   public function __construct(&$Sender = '');
+
 
    /**
     * Returns the name of the asset where this component should be rendered.

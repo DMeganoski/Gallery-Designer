@@ -8,18 +8,18 @@ You should have received a copy of the GNU General Public License along with Gar
 Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 */
 class ConversationsHooks implements Gdn_IPlugin {
-
+   
    public function UserModel_SessionQuery_Handler($Sender) {
       // Add some extra fields to the session query
       //$Sender->SQL->Select('u.CountUnreadConversations');
    }
-
+   
    // Remove data when deleting a user
    public function UserModel_BeforeDeleteUser_Handler($Sender) {
       $UserID = GetValue('UserID', $Sender->EventArguments);
       $Options = GetValue('Options', $Sender->EventArguments, array());
       $Options = is_array($Options) ? $Options : array();
-
+      
       $DeleteMethod = GetValue('DeleteMethod', $Options, 'delete');
       if ($DeleteMethod == 'delete') {
          $Sender->SQL->Delete('Conversation', array('InsertUserID' => $UserID));
@@ -41,31 +41,23 @@ class ConversationsHooks implements Gdn_IPlugin {
          ->Where('UserID', $UserID)
          ->Put();
    }
-
+   
    public function ProfileController_AfterAddSideMenu_Handler(&$Sender) {
       // Add a "send X a message" link to the side menu on the profile page
       $Session = Gdn::Session();
       if ($Session->IsValid() && $Session->UserID != $Sender->User->UserID) {
          $SideMenu = $Sender->EventArguments['SideMenu'];
          $SideMenu->AddLink('Options', sprintf(T('Send %s a Message'), $Sender->User->Name), '/messages/add/'.$Sender->User->Name, FALSE, array('class' => 'MessageLink'));
-
-
-//         if ($Session->CheckPermission('Conversations.Moderation.Manage')) {
-            $SideMenu->AddLink('Options', T('Inbox'), '/messages/inbox?userid='.$Sender->User->UserID, 'Conversations.Moderation.Manage', array('class' => 'InboxLink'));
-//         }
-
          $Sender->EventArguments['SideMenu'] = $SideMenu;
       }
    }
-
+   
    public function ProfileController_AfterPreferencesDefined_Handler(&$Sender) {
-      $Sender->Preferences['Notifications']['Email.ConversationMessage'] = T('Notify me of private messages.');
-      $Sender->Preferences['Notifications']['Email.AddedToConversation'] = T('Notify me when I am added to private conversations.');
-      $Sender->Preferences['Notifications']['Popup.ConversationMessage'] = T('Notify me of private messages.');
-      $Sender->Preferences['Notifications']['Popup.AddedToConversation'] = T('Notify me when I am added to private conversations.');
+      $Sender->Preferences['Email Notifications']['Email.ConversationMessage'] = T('Notify me of private messages.');
+      $Sender->Preferences['Email Notifications']['Email.AddedToConversation'] = T('Notify me when I am added to private conversations.');
    }
-
-   /*public function Base_Render_Before(&$Sender) {
+   
+   public function Base_Render_Before(&$Sender) {
       // Add the menu options for conversations
       $Session = Gdn::Session();
       if ($Sender->Menu && $Session->IsValid()) {
@@ -73,11 +65,12 @@ class ConversationsHooks implements Gdn_IPlugin {
          $CountUnreadConversations = $Session->User->CountUnreadConversations;
          if (is_numeric($CountUnreadConversations) && $CountUnreadConversations > 0)
             $Inbox .= ' <span>'.$CountUnreadConversations.'</span>';
-
+            
          $Sender->Menu->AddLink('Conversations', $Inbox, '/messages/all', FALSE, array('Standard' => TRUE));
+         // $Sender->Menu->AddLink('Conversations', T('New Conversation'), '/messages/add', FALSE);
       }
-   }*/
-
+   }
+   
    // Load some information into the BuzzData collection
    public function SettingsController_DashboardData_Handler(&$Sender) {
       $ConversationModel = new ConversationModel();
@@ -99,8 +92,8 @@ class ConversationsHooks implements Gdn_IPlugin {
       $Sender->BuzzData[T('New messages in the last day')] = number_format($ConversationMessageModel->GetCountWhere(array('DateInserted >=' => Gdn_Format::ToDateTime(strtotime('-1 day')))));
       // Number of New Messages in the last week
       $Sender->BuzzData[T('New messages in the last week')] = number_format($ConversationMessageModel->GetCountWhere(array('DateInserted >=' => Gdn_Format::ToDateTime(strtotime('-1 week')))));
-   }
-
+   }   
+   
    public function Setup() {
       $Database = Gdn::Database();
       $Config = Gdn::Factory(Gdn::AliasConfig);

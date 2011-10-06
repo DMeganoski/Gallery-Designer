@@ -43,7 +43,3 @@ $Configuration['Vanilla']['Categories']['DoHeadings']          = 0;
 // Should users be automatically pushed to the last comment they read in a discussion?
 $Configuration['Vanilla']['Comments']['AutoOffset']            = TRUE;
 $Configuration['Vanilla']['Comment']['ReplaceNewlines']        = TRUE;
-
-// Module visibility
-$Configuration['Vanilla']['Modules']['ShowBookmarkedModule']    = TRUE;
-

@@ -1,6 +1,5 @@
 <?php if (!defined('APPLICATION')) exit(); ?>
-<div class="SmallPopup">
-<h1><?php echo T('Change My Picture'); ?></h1>
+<h2><?php echo T('Change My Picture'); ?></h2>
 <?php
 echo $this->Form->Open(array('enctype' => 'multipart/form-data'));
 echo $this->Form->Errors();
@@ -12,5 +11,4 @@ echo $this->Form->Errors();
    </li>
 </ul>
 <div class="Warning"><?php echo T('By uploading a file you certify that you have the right to distribute this picture and that it does not violate the Terms of Service.'); ?></div>
-<?php echo $this->Form->Close('Upload'); ?>
-</div>
+<?php echo $this->Form->Close('Upload');

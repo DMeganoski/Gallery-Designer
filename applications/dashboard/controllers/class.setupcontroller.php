@@ -18,8 +18,6 @@ class SetupController extends DashboardController {
    public function Initialize() {
       $this->Head = new HeadModule($this);
       $this->AddCssFile('setup.css');
-      // Make sure all errors are displayed.
-      SaveToConfig('Garden.Errors.MasterView', 'deverror.master.php', array('Save' => FALSE));
    }
    
    /**
@@ -51,11 +49,9 @@ class SetupController extends DashboardController {
          
          // Need to go through all of the setups for each application. Garden,
          if ($this->Configure() && $this->Form->IsPostBack()) {
-            // Get list of applications to enable during install
-            // Override by creating conf/config.php and adding this setting before install begins
-            $AppNames = C('Garden.Install.Applications', array('Conversations', 'Vanilla'));
+            // Step through the available applications, enabling each of them.
+            $AppNames = array('Conversations', 'Vanilla');
             try {
-               // Step through the available applications, enabling each of them.
                foreach ($AppNames as $AppName) {
                   $Validation = new Gdn_Validation();
                   $ApplicationManager->RegisterPermissions($AppName, $Validation);
@@ -68,10 +64,13 @@ class SetupController extends DashboardController {
                // Save a variable so that the application knows it has been installed.
                // Now that the application is installed, select a more user friendly error page.
                $Config = array('Garden.Installed' => TRUE);
+               if(!defined('DEBUG'))
+                  $Config['Garden.Errors.MasterView'] = 'error.master.php';
+
                SaveToConfig($Config);
                
                // Go to the dashboard
-               Redirect('/settings/gettingstarted');
+               Redirect('/settings');
             }
          }
       }
@@ -87,7 +86,7 @@ class SetupController extends DashboardController {
       // Create a model to save configuration settings
       $Validation = new Gdn_Validation();
       $ConfigurationModel = new Gdn_ConfigurationModel($Validation);
-      $ConfigurationModel->SetField(array('Garden.Locale', 'Garden.Title', 'Garden.RewriteUrls', 'Garden.WebRoot', 'Garden.Cookie.Salt', 'Garden.Cookie.Domain', 'Database.Name', 'Database.Host', 'Database.User', 'Database.Password', 'Garden.Registration.ConfirmEmail', 'Garden.Email.SupportName'));
+      $ConfigurationModel->SetField(array('Garden.Locale', 'Garden.Title', 'Garden.RewriteUrls', 'Garden.WebRoot', 'Garden.Cookie.Salt', 'Garden.Cookie.Domain', 'Database.Name', 'Database.Host', 'Database.User', 'Database.Password'));
       
       // Set the models on the forms.
       $this->Form->SetModel($ConfigurationModel);
@@ -152,10 +151,6 @@ class SetupController extends DashboardController {
             $ExistingSalt = C('Garden.Cookie.Salt', FALSE);
             $ConfigurationFormValues['Garden.Cookie.Salt'] = ($ExistingSalt) ? $ExistingSalt : RandomString(10);
             $ConfigurationFormValues['Garden.Cookie.Domain'] = ''; // Don't set this to anything by default. # Tim - 2010-06-23
-            // Additional default setup values.
-            $ConfigurationFormValues['Garden.Registration.ConfirmEmail'] = TRUE;
-            $ConfigurationFormValues['Garden.Email.SupportName'] = $ConfigurationFormValues['Garden.Title'];
-
             $ConfigurationModel->Save($ConfigurationFormValues, TRUE);
                     
             // If changing locale, redefine locale sources:
@@ -165,10 +160,11 @@ class SetupController extends DashboardController {
                $Locale = Gdn::Locale();
                $Locale->Set($NewLocale, $ApplicationManager->EnabledApplicationFolders(), Gdn::PluginManager()->EnabledPluginFolders(), TRUE);
             }
-
+            
+            Gdn::FactoryInstall(Gdn::AliasDatabase, 'Gdn_Database', PATH_LIBRARY.DS.'database'.DS.'class.database.php', Gdn::FactorySingleton, array(Gdn::Config('Database')));
+            
             // Install db structure & basic data.
             $Database = Gdn::Database();
-            $Database->Init();
             $Drop = FALSE; // Gdn::Config('Garden.Version') === FALSE ? TRUE : FALSE;
             $Explicit = FALSE;
             try {
@@ -190,13 +186,14 @@ class SetupController extends DashboardController {
             $UserModel->Validation->ApplyRule('Password', 'Match');
             $UserModel->Validation->ApplyRule('Email', 'Email');
             
-            if (!($AdminUserID = $UserModel->SaveAdminUser($ConfigurationFormValues))) {
+            if (!$UserModel->SaveAdminUser($ConfigurationFormValues)) {
                $this->Form->SetValidationResults($UserModel->ValidationResults());
             } else {
-               // The user has been created successfully, so sign in now.
-               SaveToConfig('Garden.Installed', TRUE, array('Save' => FALSE));
-               Gdn::Session()->Start($AdminUserID, TRUE);
-               SaveToConfig('Garden.Installed', FALSE, array('Save' => FALSE));
+               // The user has been created successfully, so sign in now
+               Gdn::Authenticator()->Identity()->Init();
+               $Authenticator = Gdn::Authenticator()->AuthenticateWith('password');
+               $Authenticator->FetchData($this->Form);
+               $AuthUserID = $Authenticator->Authenticate();
             }
             
             if ($this->Form->ErrorCount() > 0)
@@ -250,14 +247,12 @@ class SetupController extends DashboardController {
 
       // Make sure the appropriate folders are writeable.
       $ProblemDirectories = array();
-      if (!is_readable(PATH_LOCAL_CONF) || !IsWritable(PATH_LOCAL_CONF))
-         $ProblemDirectories[] = PATH_LOCAL_CONF;
-         
-      if (!is_readable(PATH_LOCAL_UPLOADS) || !IsWritable(PATH_LOCAL_UPLOADS))
-         $ProblemDirectories[] = PATH_LOCAL_UPLOADS;
-         
-      if (!is_readable(PATH_LOCAL_CACHE) || !IsWritable(PATH_LOCAL_CACHE))
-         $ProblemDirectories[] = PATH_LOCAL_CACHE;
+      if (!is_readable(PATH_CONF) || !IsWritable(PATH_CONF))
+         $ProblemDirectories[] = CombinePaths(array(PATH_ROOT, 'conf'));
+      if (!is_readable(PATH_UPLOADS) || !IsWritable(PATH_UPLOADS))
+         $ProblemDirectories[] = CombinePaths(array(PATH_ROOT, 'uploads'));
+      if (!is_readable(PATH_CACHE) || !IsWritable(PATH_CACHE))
+         $ProblemDirectories[] = CombinePaths(array(PATH_ROOT, 'cache'));
 
       if (count($ProblemDirectories) > 0) {
          $PermissionProblem = TRUE;
@@ -286,9 +281,9 @@ class SetupController extends DashboardController {
 
       // Make sure the cache folder is writeable
       if (!$PermissionProblem) {
-         if (!file_exists(PATH_LOCAL_CACHE.DS.'Smarty')) mkdir(PATH_LOCAL_CACHE.DS.'Smarty');
-         if (!file_exists(PATH_LOCAL_CACHE.DS.'Smarty'.DS.'cache')) mkdir(PATH_LOCAL_CACHE.DS.'Smarty'.DS.'cache');
-         if (!file_exists(PATH_LOCAL_CACHE.DS.'Smarty'.DS.'compile')) mkdir(PATH_LOCAL_CACHE.DS.'Smarty'.DS.'compile');
+         if (!file_exists(PATH_CACHE.DS.'Smarty')) mkdir(PATH_CACHE.DS.'Smarty');
+         if (!file_exists(PATH_CACHE.DS.'Smarty'.DS.'cache')) mkdir(PATH_CACHE.DS.'Smarty'.DS.'cache');
+         if (!file_exists(PATH_CACHE.DS.'Smarty'.DS.'compile')) mkdir(PATH_CACHE.DS.'Smarty'.DS.'compile');
       }
 			
       return $this->Form->ErrorCount() == 0 ? TRUE : FALSE;

@@ -33,7 +33,7 @@ jQuery(document).ready(function($) {
          dataType: 'json',
          error: function(XMLHttpRequest, textStatus, errorThrown) {
             // Remove any old popups
-            $('div.Popup').remove();
+            $('.Popup').remove();
             // Add new popup with error
             $.popup({}, XMLHttpRequest.responseText);
          },
@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
             
             // Remove any old popups if not saving as a draft
             if (!draft)
-               $('div.Popup').remove();
+               $('.Popup').remove();
             
             // Assign the comment id to the form if it was defined
             if (json.CommentID != null && json.CommentID != '') {
@@ -57,8 +57,8 @@ jQuery(document).ready(function($) {
             $(frm).find('div.Errors').remove();
 
             if (json.FormSaved == false) {
-               $(frm).prepend(json.ErrorMessages);
-               json.ErrorMessages = null;
+               $(frm).prepend(json.StatusMessage);
+               json.StatusMessage = null;
             } else if (preview) {
                // Pop up the new preview.
                $.popup({}, json.Data);
@@ -67,7 +67,7 @@ jQuery(document).ready(function($) {
                // Redirect to the discussion
                document.location = json.DiscussionUrl;
             }
-            gdn.inform(json);
+            gdn.inform(json.StatusMessage);
          },
          complete: function(XMLHttpRequest, textStatus) {
             // Remove any spinners, and re-enable buttons.
@@ -105,7 +105,7 @@ jQuery(document).ready(function($) {
          data: postValues,
          dataType: 'json',
          error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $('div.Popup').remove();
+            $('.Popup').remove();
             $.popup({}, XMLHttpRequest.responseText);
          },
          success: function(json) {
@@ -113,7 +113,7 @@ jQuery(document).ready(function($) {
             
             // Remove any old popups if not saving as a draft
             if (!draft)
-               $('div.Popup').remove();
+               $('.Popup').remove();
 
             // Assign the discussion id to the form if it was defined
             if (json.DiscussionID != null)
@@ -126,21 +126,18 @@ jQuery(document).ready(function($) {
             $(frm).find('div.Errors').remove();
 
             if (json.FormSaved == false) {
-               $(frm).prepend(json.ErrorMessages);
-               json.ErrorMessages = null;
+               $(frm).prepend(json.StatusMessage);
+               json.StatusMessage = null;
             } else if (preview) {
                // Pop up the new preview.
                $.popup({}, json.Data);
+               
             } else if (!draft) {
-               if (json.RedirectUrl) {
-                  $(frm).triggerHandler('complete');
-                  // Redirect to the new discussion
-                  document.location = json.RedirectUrl;
-               } else {
-                  $('#Content').html(json.Data);
-               }
+               $(frm).triggerHandler('complete');
+               // Redirect to the new discussion
+               document.location = json.RedirectUrl;
             }
-            gdn.inform(json);
+            gdn.inform(json.StatusMessage);
          },
          complete: function(XMLHttpRequest, textStatus) {
             // Remove any spinners, and re-enable buttons.

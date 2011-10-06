@@ -60,8 +60,8 @@ class ConversationMessageModel extends Gdn_Model {
          ->Select('iu.Photo', '', 'InsertPhoto')
          ->From('ConversationMessage cm')
          ->Join('Conversation c', 'cm.ConversationID = c.ConversationID')
-         ->Join('UserConversation uc', 'c.ConversationID = uc.ConversationID and uc.UserID = '.$ViewingUserID, 'left')
-         ->Join('User iu', 'cm.InsertUserID = iu.UserID', 'left')
+         ->Join('UserConversation uc', 'c.ConversationID = uc.ConversationID and uc.UserID = '.$ViewingUserID)
+         ->Join('User iu', 'cm.InsertUserID = iu.UserID')
          ->BeginWhereGroup()
          ->Where('uc.DateCleared is null') 
          ->OrWhere('uc.DateCleared <', 'cm.DateInserted', TRUE, FALSE) // Make sure that cleared conversations do not show up unless they have new messages added.
@@ -155,7 +155,7 @@ class ConversationMessageModel extends Gdn_Model {
     * @param array $FormPostValues Values submitted via form.
     * @return int Unique ID of message created or updated.
     */
-   public function Save($FormPostValues, $Conversation = NULL) {
+   public function Save($FormPostValues) {
       $Session = Gdn::Session();
       
       // Define the primary key in this model's table.
@@ -169,14 +169,11 @@ class ConversationMessageModel extends Gdn_Model {
       $MessageID = FALSE;
       if($this->Validate($FormPostValues)) {
          $Fields = $this->Validation->SchemaValidationFields(); // All fields on the form that relate to the schema
-         $Fields['Format'] = C('Garden.InputFormatter', '');
+         $Fields['Format'] = C('Conversations.Message.Format','Ham');
          
          $MessageID = $this->SQL->Insert($this->Name, $Fields);
-         $this->LastMessageID = $MessageID;
          $ConversationID = ArrayValue('ConversationID', $Fields, 0);
-
-         if (!$Conversation)
-            $Conversation = $this->SQL->GetWhere('Conversation', array('ConversationID' => $ConversationID))->FirstRow(DATASET_TYPE_ARRAY);
+         $Px = $this->SQL->Database->DatabasePrefix;
 
          // Get the new message count for the conversation.
          $SQLR = $this->SQL
@@ -229,9 +226,6 @@ class ConversationMessageModel extends Gdn_Model {
 
          $ActivityModel = new ActivityModel();
          foreach ($UnreadData->Result() as $User) {
-            if ($Session->UserID == $User->UserID)
-               continue; // don't notify self.
-
             // Notify the users of the new message.
             $ActivityID = $ActivityModel->Add(
                $Session->UserID,
@@ -242,11 +236,7 @@ class ConversationMessageModel extends Gdn_Model {
                "/messages/$ConversationID#$MessageID",
                FALSE
             );
-            $Story = GetValue('Body', $Fields, '');
-            
-            if (C('Conversations.Subjects.Visible')) {
-               $Story = ConcatSep("\n\n", GetValue('Subject', $Conversation, ''), $Story);
-            }
+            $Story = ArrayValue('Body', $Fields, '');
             $ActivityModel->SendNotification($ActivityID, $Story);
          }
       }

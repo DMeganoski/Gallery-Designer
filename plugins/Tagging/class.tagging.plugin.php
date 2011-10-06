@@ -12,7 +12,7 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 $PluginInfo['Tagging'] = array(
    'Name' => 'Tagging',
    'Description' => 'Allow tagging of discussions.',
-   'Version' => '1.0.3',
+   'Version' => '1.0.1',
    'SettingsUrl' => '/dashboard/settings/tagging',
    'SettingsPermission' => 'Garden.Settings.Manage',
    'Author' => "Mark O'Sullivan",
@@ -235,28 +235,6 @@ class TaggingPlugin extends Gdn_Plugin {
       }
    }
 
-   public function DiscussionModel_DeleteDiscussion_Handler($Sender) {
-      // Get discussionID that is being deleted
-      $DiscussionID = $Sender->EventArguments['DiscussionID'];
-
-      // Get List of tags to reduce count for
-      $TagDataSet = Gdn::SQL()->Select('TagID')
-         ->From('TagDiscussion')
-         ->Where('DiscussionID',$DiscussionID)
-         ->Get()->ResultArray();
-
-      $RemovedTagIDs = ConsolidateArrayValuesByKey($TagDataSet, 'TagID');
-
-      // Check if there are even any tags to delete
-      if (count($RemovedTagIDs) > 0) {
-         // Step 1: Reduce count
-         Gdn::SQL()->Update('Tag')->Set('CountDiscussions', 'CountDiscussions - 1', FALSE)->WhereIn('TagID', $RemovedTagIDs)->Put();
-
-         // Step 2: Delete mapping data between discussion and tag (tagdiscussion table)
-         $Sender->SQL->Where('DiscussionID', $DiscussionID)->Delete('TagDiscussion');
-      }
-   }
-
    /**
     * Search results for tagging autocomplete.
     */
@@ -346,7 +324,7 @@ class TaggingPlugin extends Gdn_Plugin {
          }
          
          if ($Sender->Form->Save())
-            $Sender->InformMessage(T('Your changes have been saved.'));
+            $Sender->StatusMessage = T('Your changes have been saved successfully.');
       }
 
       $Sender->Render('EditTag', '', 'plugins/Tagging');
@@ -372,30 +350,22 @@ class TaggingPlugin extends Gdn_Plugin {
    /**
     * Tag management (let admins rename tags, remove tags, etc).
     * TODO: manage the Plugins.Tagging.Required boolean setting that makes tagging required or not.
-    * @param Gdn_Controller $Sender
     */
-   public function SettingsController_Tagging_Create($Sender, $Args) {
+   public function SettingsController_Tagging_Create($Sender) {
       $Sender->Permission('Garden.Settings.Manage');
       $Sender->Title('Tagging');
       $Sender->AddSideMenu('settings/tagging');
       $Sender->AddCSSFile('plugins/Tagging/design/tagadmin.css');
       $Sender->AddJSFile('plugins/Tagging/admin.js');
       $SQL = Gdn::SQL();
-
-      list($Offset, $Limit) = OffsetLimit($Sender->Request->Get('Page'), 100);
-      $Sender->SetData('_Limit', $Limit);
-
-      $Sender->SetData('Tags', $SQL
+      $Sender->TagData = $SQL
          ->Select('t.*')
          ->From('Tag t')
          ->OrderBy('t.Name', 'asc')
          ->OrderBy('t.CountDiscussions', 'desc')
-         ->Limit($Limit, $Offset)
-         ->Get()->ResultArray());
-
-      $Sender->SetData('RecordCount', $SQL->GetCount('Tag'));
+         ->Get();
          
-      $Sender->Render('Tagging', '', 'plugins/Tagging');
+      $Sender->Render('plugins/Tagging/views/tagging.php');
    }
 
    /**

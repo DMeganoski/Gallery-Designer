@@ -63,12 +63,12 @@ class Gdn_DatabaseDebug extends Gdn_Database {
 		return $this->_Queries;
 	}
 	
-   public function Query($Sql, $InputParameters = NULL, $Options = array()) {
+   public function Query($Sql, $InputParameters = NULL) {
 		$Trace = debug_backtrace();
 		$Method = '';
 		foreach($Trace as $Info) {
 			$Class = GetValue('class', $Info, '');
-			if($Class === '' || StringEndsWith($Class, 'Model', TRUE) || StringEndsWith($Class, 'Plugin', TRUE)) {
+			if($Class === '' || StringEndsWith($Class, 'Model', TRUE)) {
 				$Type = ArrayValue('type', $Info, '');
 				
 				$Method = $Class.$Type.$Info['function'].'('.self::FormatArgs($Info['args']).')';
@@ -78,29 +78,17 @@ class Gdn_DatabaseDebug extends Gdn_Database {
 		
       // Save the query for debugging
       // echo '<br />adding to queries: '.$Sql;
-      $Query = array('Sql' => $Sql, 'Parameters' => $InputParameters, 'Method' => $Method);
-      if (isset($Options['Cache'])) {
-         $CacheKeys = (array)$Options['Cache'];
-         $Cache = array();
-
-         foreach ($CacheKeys as $CacheKey) {
-            $Value = Gdn::Cache()->Get($CacheKey);
-            $Cache[$CacheKey] = $Value !== Gdn_Cache::CACHEOP_FAILURE;
-         }
-         $Query['Cache'] = $Cache;
-      }
+      $this->_Queries[] = array('Sql' => $Sql, 'Parameters' => $InputParameters, 'Method' => $Method);
       
-      $this->_Queries[] = $Query;
-
       // Start the Query Timer
-      $TimeStart = Now();
+      $TimeStart = list($sm, $ss) = explode(' ', microtime());
       
-      $Result = parent::Query($Sql, $InputParameters, $Options);
+      $Result = parent::Query($Sql, $InputParameters);
       
       // Aggregate the query times
-      $TimeEnd = Now();
-      $this->_ExecutionTime += ($TimeEnd - $TimeStart);
-      $this->_QueryTimes[] = ($TimeEnd - $TimeStart);
+      $TimeEnd = list($em, $es) = explode(' ', microtime());
+      $this->_ExecutionTime += ($em + $es) - ($sm + $ss);
+      $this->_QueryTimes[] = ($em + $es) - ($sm + $ss);
       
       return $Result;
    }

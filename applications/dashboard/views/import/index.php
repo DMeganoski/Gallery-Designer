@@ -39,7 +39,7 @@ echo $this->Form->Errors();
 <ul>
 	<li>
       <?php
-      echo Wrap(T('Select the import source'), 'label');
+      echo Wrap(T('Select the file to import'), 'label');
       foreach ($this->Data('ImportPaths') as $Path => $Text) {
          echo '<div>',
             $this->Form->Radio('PathSelect', $Text, array('value' => $Path)),
@@ -57,7 +57,7 @@ echo $this->Form->Errors();
          echo '</div>';
 
          if($OriginalFilename) {
-				echo ' ', T('Current File:').' '.htmlspecialchars($OriginalFilename);
+				echo ' ', T('Current File: '.htmlspecialchars($OriginalFilename));
 			}
 		?>
 	</li>
@@ -86,14 +86,4 @@ echo $this->Form->Errors();
 		?>
 	</li> */?>
 </ul>
-<h3><?php echo T('Advanced Options'); ?></h3>
-<ul>
-   <li>
-      <?php
-      echo $this->Form->CheckBox('GenerateSQL', 'Generate import SQL only');
-      ?>
-   </li>
-</ul>
-<div class="Buttons">
-<?php echo $this->Form->Close('Start'); ?>
-</div>
+<?php echo $this->Form->Close('Upload');

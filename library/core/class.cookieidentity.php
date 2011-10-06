@@ -267,9 +267,8 @@ class Gdn_CookieIdentity {
       $Key = explode('-', $Payload[0]);
       $Expiration = array_pop($Key);
       $UserID = implode('-', $Key);
-      $Payload = array_slice($Payload, 4);
-
-      $Payload = array_merge(array($UserID, $Expiration), $Payload);
+      
+      $Payload = array($UserID, $Expiration);
       
       return $Payload;
    }
@@ -286,12 +285,8 @@ class Gdn_CookieIdentity {
 
       if (is_null($Domain))
          $Domain = Gdn::Config('Garden.Cookie.Domain');
-
-      $CurrentHost = Gdn::Request()->Host();
-      if (!StringEndsWith($CurrentHost, trim($Domain, '.')))
-         $Domain = '';
       
-      $Expiry = time() - 60 * 60;
+      $Expiry = strtotime('one year ago');
       setcookie($CookieName, "", $Expiry, $Path, $Domain);
       $_COOKIE[$CookieName] = NULL;
    }

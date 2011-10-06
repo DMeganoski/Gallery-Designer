@@ -14,10 +14,10 @@ class NewDiscussionModule extends Gdn_Module {
    }
    
    public function ToString() {
-      $HasPermission = Gdn::Session()->CheckPermission('Vanilla.Discussions.Add', TRUE, 'Category', 'any');
-      if ($HasPermission)
+      $Session = Gdn::Session();
+      if ($Session->IsValid())
          return parent::ToString();
 
       return '';
-   }
+   }   
 }

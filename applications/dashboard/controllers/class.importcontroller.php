@@ -37,7 +37,7 @@ class ImportController extends DashboardController {
    }
 
    public function Go() {
-      $this->Permission('Garden.Settings.Manage');
+      $this->Permission('Garden.Import');
 
       $Imp = new ImportModel();
       $Imp->LoadState();
@@ -107,8 +107,6 @@ class ImportController extends DashboardController {
       $ExistingPaths = SafeGlob(PATH_ROOT.'/uploads/export*', array('gz', 'txt'));
       foreach ($ExistingPaths as $Path)
          $ImportPaths[$Path] = basename($Path);
-      // Add the database as a path.
-      $ImportPaths = array_merge(array('db:' => T('This Database')), $ImportPaths);
 
       if($Imp->CurrentStep < 1) {
          // Check to see if there is a file.
@@ -154,11 +152,9 @@ class ImportController extends DashboardController {
 
             // Validate the overwrite.
             if(TRUE || strcasecmp($this->Form->GetFormValue('Overwrite'), 'Overwrite') == 0) {
-               if (!StringBeginsWith($this->Form->GetFormValue('PathSelect'), 'Db:', TRUE)) {
-                  $Validation->ApplyRule('Email', 'Required');
-                  if (!$this->Form->GetFormValue('UseCurrentPassword'))
-                     $Validation->ApplyRule('Password', 'Required');
-               }
+               $Validation->ApplyRule('Email', 'Required');
+               if (!$this->Form->GetFormValue('UseCurrentPassword'))
+                  $Validation->ApplyRule('Password', 'Required');
             }
 
             if($Validation->Validate($this->Form->FormValues())) {
@@ -177,7 +173,7 @@ class ImportController extends DashboardController {
          $this->View = 'Info';
       }
 
-      if(!StringBeginsWith($Imp->ImportPath, 'db:') && !file_exists($Imp->ImportPath))
+      if(!file_exists($Imp->ImportPath))
          $Imp->DeleteState();
 
       try {
@@ -186,7 +182,6 @@ class ImportController extends DashboardController {
          $this->SetData('ImportPaths', $ImportPaths);
          $this->SetData('Header', $Imp->GetImportHeader());
          $this->SetData('Stats', GetValue('Stats', $Imp->Data, array()));
-         $this->SetData('GenerateSQL', GetValue('GenerateSQL', $Imp->Data));
          $this->SetData('ImportPath', $Imp->ImportPath);
          $this->SetData('OriginalFilename', GetValue('OriginalFilename', $Imp->Data));
          $this->SetData('CurrentStep', $Imp->CurrentStep);

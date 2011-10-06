@@ -1,23 +1,24 @@
 <?php if (!defined('APPLICATION')) exit(); ?>
 <?php 
-$Flag = $this->Data['Plugin.Flagging.Data'];
-$Report = $this->Data['Plugin.Flagging.Report'];
-$Reason = $this->Data['Plugin.Flagging.Reason'];
+$Flag = $this->Data['Plugin.Flagging.Data']; // shortcut to original post meta data
+$UserName = GetValue('UserName', $this->Report);
+$UserID = GetValue('UserID', $this->Report);
+$FlaggedContent = GetValue('FlaggedContent', $this->Report);
 
-echo Anchor($Flag['UserName'], '/profile/'.$Flag['UserID'].'/'.$Flag['UserName']) . ' '. T('reported'); 
+echo Anchor($UserName, '/profile/'.$UserID.'/'.$UserName) . ' '. T('reported'); 
 
 if ($Flag['Context'] == 'comment') 
    echo ' ' . T('a comment in');
-?> <strong><?php echo Anchor($Report['DiscussionName'], $Flag['URL']); ?></strong>
+?> <strong><?php echo Anchor(GetValue('DiscussionName', $this->Report), $Flag['URL']); ?></strong>
    
 <?php echo T('Reason'); ?>:
-   <blockquote rel="<?php echo $Flag['UserName']; ?>"><?php echo $Reason; ?></blockquote>
+   <blockquote rel="<?php echo $UserName; ?>"><?php echo GetValue('Reason', $this->Report); ?></blockquote>
 <?php echo T('Flagged Content'); ?>:
    <blockquote rel="<?php echo $Flag['ElementAuthor']; ?>"><?php 
    
-   echo substr($Report['FlaggedContent'], 0 , 500); 
-   if(strlen($Report['FlaggedContent']) > 500)
-      echo '&#8230;';
+   echo substr($FlaggedContent, 0 , 500); 
+   if(strlen($FlaggedContent) > 500)
+      echo '&hellip;';
    
    ?></blockquote>
 <?php echo Anchor(T('ViewFlagged', 'View &raquo;'), $Flag['URL']); ?>

@@ -30,12 +30,6 @@ class UpdateModel extends Gdn_Model {
     * @return array An array of addon information.
     */
    public static function AnalyzeAddon($Path, $ThrowError = TRUE) {
-      if (!file_exists($Path)) {
-         if ($ThrowError)
-            throw new Exception("$Path not found.", 404);
-         return FALSE;
-      }
-      
       $Result = array();
 
       $InfoPaths = array(
@@ -52,7 +46,7 @@ class UpdateModel extends Gdn_Model {
       if (is_dir($Path)) {
          $Entries = self::_GetInfoFiles($Path, $InfoPaths);
       } else {
-         $Entries = self::_GetInfoZip($Path, $InfoPaths, FALSE, $ThrowError);
+         $Entries = self::_GetInfoZip($Path, $InfoPaths);
          $DeleteEntries = TRUE;
       }
 
@@ -157,8 +151,7 @@ class UpdateModel extends Gdn_Model {
          $Addon['Requirements'] = serialize($Requirements);
 
          $Addon['Checked'] = TRUE;
-         $Addon['Path'] = $Path;
-         $UploadsPath = PATH_LOCAL_UPLOADS.'/';
+         $UploadsPath = PATH_ROOT.'/uploads/';
          if (StringBeginsWith($Addon['Path'], $UploadsPath)) {
             $Addon['File'] = substr($Addon['Path'], strlen($UploadsPath));
          }
@@ -496,7 +489,7 @@ class UpdateModel extends Gdn_Model {
       return $Result;
    }
 
-   protected static function _GetInfoZip($Path, $InfoPaths, $TmpPath = FALSE, $ThrowError = TRUE) {
+   protected static function _GetInfoZip($Path, $InfoPaths, $TmpPath = FALSE) {
       // Extract the zip file so we can make sure it has appropriate information.
       $Zip = NULL;
 
@@ -813,8 +806,7 @@ class UpdateModel extends Gdn_Model {
       $PluginManager = Gdn::PluginManager();
       $Plugins = $PluginManager->EnabledPlugins();
       foreach ($Plugins as $Key => $PluginInfo) {
-         $PluginName = GetValue('Index', $PluginInfo);
-         $Plugin = $PluginManager->GetPluginInstance($PluginName, Gdn_PluginManager::ACCESS_PLUGINNAME);
+         $Plugin = $PluginManager->GetPluginInstance($Key, Gdn_PluginManager::ACCESS_PLUGINNAME);
          if (method_exists($Plugin, 'Structure'))
             $Plugin->Structure();
       }

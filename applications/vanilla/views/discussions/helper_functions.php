@@ -1,17 +1,13 @@
 <?php if (!defined('APPLICATION')) exit();
 
-function WriteDiscussion($Discussion, &$Sender, &$Session, $Alt2) {
-   static $Alt = FALSE;
+function WriteDiscussion($Discussion, &$Sender, &$Session, $Alt) {
    $CssClass = 'Item';
    $CssClass .= $Discussion->Bookmarked == '1' ? ' Bookmarked' : '';
-   $CssClass .= $Alt ? ' Alt ' : '';
-   $Alt = !$Alt;
+   $CssClass .= $Alt.' ';
    $CssClass .= $Discussion->Announce == '1' ? ' Announcement' : '';
    $CssClass .= $Discussion->Dismissed == '1' ? ' Dismissed' : '';
    $CssClass .= $Discussion->InsertUserID == $Session->UserID ? ' Mine' : '';
    $CssClass .= ($Discussion->CountUnreadComments > 0 && $Session->IsValid()) ? ' New' : '';
-   $DiscussionUrl = '/discussion/'.$Discussion->DiscussionID.'/'.Gdn_Format::Url($Discussion->Name).($Discussion->CountCommentWatch > 0 && C('Vanilla.Comments.AutoOffset') && $Session->UserID > 0 ? '/#Item_'.$Discussion->CountCommentWatch : '');
-   $Sender->EventArguments['DiscussionUrl'] = &$DiscussionUrl;
    $Sender->EventArguments['Discussion'] = &$Discussion;
    $Sender->EventArguments['CssClass'] = &$CssClass;
    $First = UserBuilder($Discussion, 'First');
@@ -22,8 +18,6 @@ function WriteDiscussion($Discussion, &$Sender, &$Session, $Alt2) {
    $DiscussionName = Gdn_Format::Text($Discussion->Name);
    if ($DiscussionName == '')
       $DiscussionName = T('Blank Discussion Topic');
-      
-   $Sender->EventArguments['DiscussionName'] = &$DiscussionName;
 
    static $FirstDiscussion = TRUE;
    if (!$FirstDiscussion)
@@ -35,12 +29,9 @@ function WriteDiscussion($Discussion, &$Sender, &$Session, $Alt2) {
    <?php
    $Sender->FireEvent('BeforeDiscussionContent');
    WriteOptions($Discussion, $Sender, $Session);
-
-   if (!property_exists($Sender, 'CanEditDiscussions'))
-      $Sender->CanEditDiscussions = GetValue('PermsDiscussionsEdit', CategoryModel::Categories($Discussion->CategoryID)) && C('Vanilla.AdminCheckboxes.Use');;
    ?>
    <div class="ItemContent Discussion">
-      <?php echo Anchor($DiscussionName, $DiscussionUrl, 'Title'); ?>
+      <?php echo Anchor($DiscussionName, '/discussion/'.$Discussion->DiscussionID.'/'.Gdn_Format::Url($Discussion->Name).($Discussion->CountCommentWatch > 0 && C('Vanilla.Comments.AutoOffset') && $Session->UserID > 0 ? '/#Item_'.$Discussion->CountCommentWatch : ''), 'Title'); ?>
       <?php $Sender->FireEvent('AfterDiscussionTitle'); ?>
       <div class="Meta">
          <?php $Sender->FireEvent('BeforeDiscussionMeta'); ?>
@@ -54,8 +45,6 @@ function WriteDiscussion($Discussion, &$Sender, &$Session, $Alt2) {
          <?php
             if ($Session->IsValid() && $Discussion->CountUnreadComments > 0)
                echo '<strong>'.Plural($Discussion->CountUnreadComments, '%s New', '%s New Plural').'</strong>';
-
-            $Sender->FireEvent('AfterCountMeta');
 
             if ($Discussion->LastCommentID != '') {
                echo '<span class="LastCommentBy">'.sprintf(T('Most recent by %1$s'), UserAnchor($Last)).'</span>';
@@ -90,9 +79,7 @@ function WriteFilterTabs(&$Sender) {
       $CountDiscussions = $Session->User->CountDiscussions;
       $CountDrafts = $Session->User->CountDrafts;
    }
-   if ($CountBookmarks === NULL) {
-      $Bookmarked .= '<span class="Popin" rel="'.Url('/discussions/UserBookmarkCount').'">-</span>';
-   } elseif (is_numeric($CountBookmarks) && $CountBookmarks > 0)
+   if (is_numeric($CountBookmarks) && $CountBookmarks > 0)
       $Bookmarked .= '<span>'.$CountBookmarks.'</span>';
 
    if (is_numeric($CountDiscussions) && $CountDiscussions > 0)
@@ -107,17 +94,6 @@ function WriteFilterTabs(&$Sender) {
       <?php $Sender->FireEvent('BeforeDiscussionTabs'); ?>
       <li<?php echo strtolower($Sender->ControllerName) == 'discussionscontroller' && strtolower($Sender->RequestMethod) == 'index' ? ' class="Active"' : ''; ?>><?php echo Anchor(T('All Discussions'), 'discussions'); ?></li>
       <?php $Sender->FireEvent('AfterAllDiscussionsTab'); ?>
-
-      <?php
-      if (C('Vanilla.Categories.ShowTabs')) {
-         $CssClass = '';
-         if (strtolower($Sender->ControllerName) == 'categoriescontroller' && strtolower($Sender->RequestMethod) == 'all') {
-            $CssClass = 'Active';
-         }
-
-         echo "<li class=\"$CssClass\">".Anchor(T('Categories'), '/categories/all').'</li>';
-      }
-      ?>
       <?php if ($CountBookmarks > 0 || $Sender->RequestMethod == 'bookmarked') { ?>
       <li<?php echo $Sender->RequestMethod == 'bookmarked' ? ' class="Active"' : ''; ?>><?php echo Anchor($Bookmarked, '/discussions/bookmarked', 'MyBookmarks'); ?></li>
       <?php
@@ -137,32 +113,21 @@ function WriteFilterTabs(&$Sender) {
       ?>
    </ul>
    <?php
-   $Breadcrumbs = Gdn::Controller()->Data('Breadcrumbs');
-   if ($Breadcrumbs) {
-      echo '<div class="SubTab Breadcrumbs">';
-      $First = TRUE;
-      foreach ($Breadcrumbs as $Breadcrumb) {
-         if ($First) {
-            $Class = 'Breadcrumb FirstCrumb';
-            $First = FALSE;
-         } else {
-            $Class = 'Breadcrumb';
-            echo '<span class="Crumb"> &raquo; </span>';
+   $DescendantData = GetValue('DescendantData', $Sender->Data);
+   $Category = GetValue('Category', $Sender->Data);
+   if ($DescendantData && $Category) {
+      echo '<div class="SubTab"><span class="FirstCrumb">↳ </span>';
+      foreach ($DescendantData->Result() as $Descendant) {
+         // Ignore the root node
+         if ($Descendant->CategoryID > 0) {
+            echo Anchor(Gdn_Format::Text($Descendant->Name), '/categories/'.$Descendant->UrlCode);
+            echo '<span class="BreadCrumb"> &rarr; </span>';
          }
-         
-         echo '<span class="'.$Class.'">', Anchor(Gdn_Format::Text($Breadcrumb['Name']), $Breadcrumb['Url']), '</span>';
       }
+      echo $Category->Name;
       echo '</div>';
    }
-   if (!property_exists($Sender, 'CanEditDiscussions'))
-      $Sender->CanEditDiscussions = $Session->CheckPermission('Vanilla.Discussions.Edit', TRUE, 'Category', 'any') && C('Vanilla.AdminCheckboxes.Use');
-   
-   if ($Sender->CanEditDiscussions) {
    ?>
-   <span class="AdminCheck">
-      <input type="checkbox" name="Toggle" />
-   </span>
-   <?php } ?>
 </div>
    <?php
 }
@@ -173,6 +138,17 @@ function WriteFilterTabs(&$Sender) {
 function WriteOptions($Discussion, &$Sender, &$Session) {
    if ($Session->IsValid() && $Sender->ShowOptions) {
       echo '<div class="Options">';
+      // Bookmark link
+      $Title = T($Discussion->Bookmarked == '1' ? 'Unbookmark' : 'Bookmark');
+      echo Anchor(
+         '<span class="Star">'
+            .Img('applications/dashboard/design/images/pixel.png', array('alt' => $Title))
+         .'</span>',
+         '/vanilla/discussion/bookmark/'.$Discussion->DiscussionID.'/'.$Session->TransientKey().'?Target='.urlencode($Sender->SelfUrl),
+         'Bookmark' . ($Discussion->Bookmarked == '1' ? ' Bookmarked' : ''),
+         array('title' => $Title)
+      );
+      
       $Sender->Options = '';
       
       // Dismiss an announcement
@@ -204,37 +180,16 @@ function WriteOptions($Discussion, &$Sender, &$Session) {
       
       if ($Sender->Options != '') {
       ?>
-         <div class="ToggleFlyout OptionsMenu">
-            <div class="MenuTitle"><?php echo T('Options'); ?></div>
-            <ul class="Flyout MenuItems">
-               <?php echo $Sender->Options; ?>
-            </ul>
-         </div>
+         <ul class="Options">
+            <li>
+               <strong><?php echo T('Options'); ?></strong>
+               <ul>
+                  <?php echo $Sender->Options; ?>
+               </ul>
+            </li>
+         </ul>
       <?php
       }
-      // Admin check.
-      if ($Sender->CanEditDiscussions) {
-         if (!property_exists($Sender, 'CheckedDiscussions')) {
-            $Sender->CheckedDiscussions = (array)$Session->GetAttribute('CheckedDiscussions', array());
-            if (!is_array($Sender->CheckedDiscussions))
-               $Sender->CheckedDiscussions = array();
-         }
-
-         $ItemSelected = in_array($Discussion->DiscussionID, $Sender->CheckedDiscussions);
-         echo '<span class="AdminCheck"><input type="checkbox" name="DiscussionID[]" value="'.$Discussion->DiscussionID.'"'.($ItemSelected?' checked="checked"':'').' /></span>';
-      }
-
-      // Bookmark link
-      $Title = T($Discussion->Bookmarked == '1' ? 'Unbookmark' : 'Bookmark');
-      echo Anchor(
-         '<span class="Star">'
-            .Img('applications/dashboard/design/images/pixel.png', array('alt' => $Title))
-         .'</span>',
-         '/vanilla/discussion/bookmark/'.$Discussion->DiscussionID.'/'.$Session->TransientKey().'?Target='.urlencode($Sender->SelfUrl),
-         'Bookmark' . ($Discussion->Bookmarked == '1' ? ' Bookmarked' : ''),
-         array('title' => $Title)
-      );
-      
       echo '</div>';
    }
 }

@@ -117,35 +117,6 @@ class Gdn_Configuration {
       return $Array;
    }
 
-   public static function Format($Data, $Options = array()) {
-      if (is_string($Options))
-         $Options = array('VariableName' => $Options);
-
-      $Defaults = array('VariableName' => 'Configuration');
-      $Options = array_merge($Defaults, $Options);
-      $VariableName = $Options['VariableName'];
-      
-      $Lines = array("<?php if (!defined('APPLICATION')) exit();".PHP_EOL);
-      
-      if (!is_array($Data))
-         return $Lines[0];
-
-      $LastKey = FALSE;
-      foreach ($Data as $Key => $Value) {
-         if($LastKey != $Key && is_array($Value)) {
-            $Lines[] = '';
-            $Lines[] = '// '.$Key;
-            $LastKey = $Key;
-         }
-
-         $Prefix = '$'.$VariableName."['".addslashes($Key)."']";
-         FormatArrayAssignment($Lines, $Prefix, $Value);
-      }
-
-      $Result = implode(PHP_EOL, $Lines);
-      return $Result;
-   }
-
    /**
     * Gets a setting from the configuration array. Returns $DefaultValue if the value isn't found.
     *
@@ -315,7 +286,7 @@ class Gdn_Configuration {
     */
    public function Load($File, $LoadFor = 'Use', $Name = 'Configuration') {
       // Prevent someone from calling Save and wiping out a config file accidentally.
-      if ($LoadFor == 'Save')
+      if($LoadFor == 'Save')
          $this->_File = $File;
       else
          $this->_File = '';
@@ -332,19 +303,19 @@ class Gdn_Configuration {
       
       // If we're not loading config from cache, check that the file exists
       if (!$LoadedFromCache) {
-         if (!file_exists($File)) {
+         if(!file_exists($File)) {
             return FALSE;
          }
       }
       
-      switch ($LoadFor) {
+      switch($LoadFor) {
          case 'Save':
             $Array = &$this->_SaveData; break;
          case 'Use':
             $Array = &$this->_Data; break;
       }
       
-      if (!is_array($Array))
+      if(!is_array($Array))
          $Array = array();
          
       // Define the variable properly.
@@ -357,17 +328,15 @@ class Gdn_Configuration {
       if (is_null($$Name) || !is_array($$Name)) {
          $LoadedFromCache = FALSE;
          // Include the file.
-         require($File);
+         include($File);
       }
       
       // Make sure the config variable is here and is an array.
       if (is_null($$Name) || !is_array($$Name))
          $$Name = array();
       
-      // We're caching, using the cache, and this data was not loaded from cache.
-      // Write it there now.
       if ($this->Caching() && $UseCache && !$LoadedFromCache) {
-         
+         // Not loaded from cache. Write it there now.
          Gdn::Cache()->Store($FileKey, $$Name);
       }
       
@@ -406,28 +375,13 @@ class Gdn_Configuration {
          return FALSE;
       }
    }
-
-   public static function LoadFile($Path, $Options = array()) {
-      if (is_string($Options))
-         $Options = array('VariableName' => $Options);
-
-      $Defaults = array('VariableName' => 'Configuration');
-      $Options = array_merge($Defaults, $Options);
-      $VariableName = $Options['VariableName'];
-
-      $$VariableName = array();
-      if (file_exists($Path)) {
-         require $Path;
-      }
-      return $$VariableName;
-   }
    
-   protected static function _MergeConfig(&$Data, &$Loaded) {
+   protected function _MergeConfig(&$Data, &$Loaded) {
       foreach($Loaded as $Key => $Value) {
          if(!array_key_exists($Key, $Data)) {
             $Data[$Key] = $Value;
          } elseif(is_array($Data[$Key]) && is_array($Value)) {
-            self::_MergeConfig($Data[$Key], $Value);
+            $this->_MergeConfig($Data[$Key], $Value);
          } else {
             $Data[$Key] = $Value;
          }
@@ -455,33 +409,18 @@ class Gdn_Configuration {
       if (!is_writable($File))
          throw new Exception(sprintf(T("Unable to write to config file '%s' when saving."),$File));
 
-      if ($Group == '')
+      if($Group == '')
          $Group = $this->CurrentGroup;
 
-      if ($Group == '')
+      if($Group == '')
          $Group = 'Configuration';
          
       $Data = &$this->_SaveData;
       $this->_Sort($Data);
       
       // Check for the case when the configuration is the group.
-      if (is_array($Data) && count($Data) == 1 && array_key_exists($Group, $Data)) {
+      if(is_array($Data) && count($Data) == 1 && array_key_exists($Group, $Data)) {
          $Data = $Data[$Group];
-      }
-
-      // Do a sanity check on the config save.
-      if ($File == PATH_LOCAL_CONF.'/config.php') {
-         if (!isset($Data['Database'])) {
-            if ($Pm = Gdn::PluginManager()) {
-               $Pm->EventArguments['Data'] = $Data;
-               $Pm->EventArguments['Backtrace'] = debug_backtrace();
-               $Pm->FireEvent('ConfigError');
-            }
-
-            $this->_SaveData = array();
-            $this->_File = '';
-            return FALSE;
-         }
       }
 
       $NewLines = array();
@@ -517,50 +456,16 @@ class Gdn_Configuration {
       if ($this->Caching() && Gdn::Cache()->Type() == Gdn_Cache::CACHE_TYPE_MEMORY && Gdn::Cache()->ActiveEnabled())
          $CachedConfigData = Gdn::Cache()->Store($FileKey, $Data);
 
-      // Infrastructure deployment. Use old method.
-      if (PATH_LOCAL_CONF != PATH_CONF) {
-         $Result = Gdn_FileSystem::SaveFile($File, $FileContents, LOCK_EX);
-      } else {
-         $TmpFile = tempnam(PATH_CONF, 'config');
-         $Result = FALSE;
-         if (file_put_contents($TmpFile, $FileContents) !== FALSE) {
-            chmod($TmpFile, 0775);
-            $Result = rename($TmpFile, $File);
-         }
-      }
-
-      if ($Result && function_exists('apc_delete_file')) {
-         // This fixes a bug with some configurations of apc.
-         @apc_delete_file($File);
-      }
+      // echo 'saving '.$File;
+      Gdn_FileSystem::SaveFile($File, $FileContents, LOCK_EX);
+      
+      // Call the built in method to remove the dependancy to an external object.
+      //file_put_contents($File, $FileContents);
 
       // Clear out the save data array
       $this->_SaveData = array();
       $this->_File = '';
-      return $Result;
-   }
-
-   public static function SaveFile($Path, $Data, $Options = array()) {
-      if (is_string($Options))
-         $Options = array('VariableName' => $Options);
-
-      // Load the current data.
-      $Loaded = self::LoadFile($Path, $Options);
-
-      // Merge the save data in.
-      self::_MergeConfig($Data, $Loaded);
-
-      // Save the data back out to the path.
-      $Contents = self::Format($Data, $Options);
-      
-      $TmpFile = tempnam(PATH_CONF, 'config');
-      $Result = FALSE;
-      if (file_put_contents($TmpFile, $Contents) !== FALSE) {
-         chmod($TmpFile, 0775);
-         $Result = rename($TmpFile, $Path);
-      }
-      
-      return $Result;
+      return TRUE;
    }
    
    protected function _Sort(&$Data) {

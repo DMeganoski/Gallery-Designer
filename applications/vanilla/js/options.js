@@ -1,4 +1,20 @@
-jQuery(document).ready(function($) {   
+jQuery(document).ready(function($) {
+
+   // Discussion option dropdowns
+   $('ul.Options').livequery(function() {
+      $(this).menu({
+         showOnClick: 1,
+         hide: function() {
+            $(this).hide();
+            this.style.visibility = 'hidden';
+            // Only hide the "options" link if it's container is not class "Active"
+            if (!$(this).parents('li.Item ').hasClass('Active')) {
+               $(this).parents('ul.Options').hide();
+            }
+         }
+      });
+   });
+   
    // Handle the various option button clicks...
    
    // 1. "Dismiss" clicks
@@ -41,7 +57,7 @@ jQuery(document).ready(function($) {
             $.popup({}, XMLHttpRequest.responseText);
          },
          success: function(json) {
-            gdn.inform(json);
+            gdn.inform(json.StatusMessage);
             if (json.RedirectUrl)
               setTimeout("document.location='" + json.RedirectUrl + "';", 300);
          }

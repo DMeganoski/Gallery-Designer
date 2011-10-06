@@ -14,29 +14,17 @@ Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 class BookmarkedModule extends Gdn_Module {
    
    public function GetData($Limit = 10) {
-      $this->Data = FALSE;
-      if (Gdn::Session()->IsValid() && C('Vanilla.Modules.ShowBookmarkedModule', TRUE)) {
-         $BookmarkIDs = Gdn::SQL()
-            ->Select('DiscussionID')
-            ->From('UserDiscussion')
-            ->Where('UserID', Gdn::Session()->UserID)
-            ->Where('Bookmarked', 1)
-            ->Get()->ResultArray();
-         $BookmarkIDs = ConsolidateArrayValuesByKey($BookmarkIDs, 'DiscussionID');
-
-         if (count($BookmarkIDs)) {
-            $DiscussionModel = new DiscussionModel();
-            DiscussionModel::CategoryPermissions();
-
-            $DiscussionModel->SQL->WhereIn('d.DiscussionID', $BookmarkIDs);
-            
-            $this->Data = $DiscussionModel->Get(
-               0,
-               $Limit
-            );
-         } else {
-            $this->Data = FALSE;
-         }
+      $Session = Gdn::Session();
+      if ($Session->IsValid()) {
+         $DiscussionModel = new DiscussionModel();
+         $this->Data = $DiscussionModel->Get(
+            0,
+            $Limit,
+            array(
+               'w.Bookmarked' => '1',
+               'w.UserID' => $Session->UserID
+            )
+         );
       }
    }
 
@@ -45,12 +33,9 @@ class BookmarkedModule extends Gdn_Module {
    }
 
    public function ToString() {
-      if (!isset($this->Data))
-         $this->GetData();
-      
-      if (is_object($this->Data) && $this->Data->NumRows() > 0)
+      if (isset($this->Data) && is_object($this->Data) && $this->Data->NumRows() > 0)
          return parent::ToString();
-      
+
       return '';
    }
 }

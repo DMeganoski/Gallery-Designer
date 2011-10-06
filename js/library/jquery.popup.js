@@ -19,7 +19,7 @@ Copyright 2007 Chris Wanstrath [ chris@ozmm.org ]
     if (!settings.confrm)
       $.popup.loading(settings)
       
-    $.isFunction(data) ? data.call(this, settings) : $.popup.reveal(settings, data)
+    $.isFunction(data) ? data.call() : $.popup.reveal(settings, data)
   }
 
   $.fn.popup = function(options) {
@@ -57,7 +57,7 @@ Copyright 2007 Chris Wanstrath [ chris@ozmm.org ]
                   
                   $.popup.close(settings);
                   settings.afterConfirm(json, settings.sender);
-                  gdn.inform(json);
+                  gdn.inform(json.StatusMessage);
                   if (json.RedirectUrl)
                     setTimeout(function() { document.location.replace(json.RedirectUrl); }, 300);
 
@@ -210,7 +210,9 @@ Copyright 2007 Chris Wanstrath [ chris@ozmm.org ]
       // This is something other than json, so just put it into the popup directly
       $('#'+settings.popupId+' .Content').append(data);
     } else {
-      gdn.inform(json);
+      if (json.StatusMessage)
+         gdn.inform(json.StatusMessage);
+
       formSaved = json['FormSaved'];
       data = json['Data'];
 
@@ -247,7 +249,9 @@ Copyright 2007 Chris Wanstrath [ chris@ozmm.org ]
          },  
          success: function(json) {
             json = $.postParseJson(json);
-            gdn.inform(json);
+            
+            if (json.StatusMessage)
+               gdn.inform(json.StatusMessage);
          
             if (json.FormSaved == true) {
                if (json.RedirectUrl)

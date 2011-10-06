@@ -59,7 +59,7 @@ foreach ($this->AvailablePlugins as $PluginName => $PluginInfo) {
       $RowClass = $Css;
       if ($Alt) $RowClass .= ' Alt';
       ?>
-      <tr <?php echo 'id="'.Gdn_Format::Url(strtolower($PluginName)).'-plugin"', ' class="More '.$RowClass.'"'; ?>>
+      <tr class="More <?php echo $RowClass; ?>">
          <th><?php echo $ScreenName; ?></th>
          <td class="Alt"><?php echo Gdn_Format::Html(GetValue('Description', $PluginInfo, '')); ?></td>
       </tr>

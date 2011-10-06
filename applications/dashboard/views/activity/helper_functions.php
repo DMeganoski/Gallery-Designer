@@ -29,9 +29,6 @@ function WriteActivity($Activity, &$Sender, &$Session, $Comment) {
       $Title = UserAnchor($Author, 'Title Name');
       $Excerpt = Gdn_Format::Display($Excerpt);
    }
-   $Sender->EventArguments['Activity'] = &$Activity;
-   $Sender->EventArguments['CssClass'] = &$CssClass;
-   $Sender->FireEvent('BeforeActivity');
    ?>
 <li id="Activity_<?php echo $Activity->ActivityID; ?>" class="<?php echo $CssClass; ?>">
    <?php
@@ -54,8 +51,6 @@ function WriteActivity($Activity, &$Sender, &$Session, $Comment) {
          <?php
          if ($Activity->AllowComments == '1' && $Session->IsValid())
             echo '<span class="AddComment">'.Anchor(T('Activity.Comment', 'Comment'), '#CommentForm_'.$Activity->ActivityID, 'CommentOption').'</span>';
-         
-         $Sender->FireEvent('AfterMeta');
          ?>
       </div>
    </div>

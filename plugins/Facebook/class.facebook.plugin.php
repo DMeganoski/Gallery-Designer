@@ -117,7 +117,7 @@ class FacebookPlugin extends Gdn_Plugin {
              'Plugins.Facebook.Secret' => $Sender->Form->GetFormValue('Secret'));
 
          SaveToConfig($Settings);
-         $Sender->InformMessage(T("Your settings have been saved."));
+         $Sender->StatusMessage = T("Your settings have been saved.");
 
       } else {
          $Sender->Form->SetFormValue('ApplicationID', C('Plugins.Facebook.ApplicationID'));
@@ -275,10 +275,7 @@ class FacebookPlugin extends Gdn_Plugin {
       if ($Error)
          throw new Gdn_UserException($Error, 400);
 
-      $this->Structure();
-   }
 
-   public function Structure() {
       // Save the facebook provider type.
       Gdn::SQL()->Replace('UserAuthenticationProvider',
          array('AuthenticationSchemeAlias' => 'facebook', 'URL' => '...', 'AssociationSecret' => '...', 'AssociationHashMethod' => '...'),

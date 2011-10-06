@@ -8,315 +8,358 @@ You should have received a copy of the GNU General Public License along with Gar
 Contact Vanilla Forums Inc. at support [at] vanillaforums [dot] com
 */
 
-// Use this file to construct tables and views necessary for your application.
-// There are some examples below to get you started.
-
 if (!isset($Drop))
    $Drop = FALSE;
-
+   
 if (!isset($Explicit))
    $Explicit = TRUE;
 
-$SQL = Gdn::SQL();
-$Construct = Gdn::Structure();
-$Px = $Construct->DatabasePrefix();
+$SQL = $Database->SQL();
+$Construct = $Database->Structure();
 
-$Construct->Table('AddonType')
-   ->PrimaryKey('AddonTypeID')
-   ->Column('Label', 'varchar(50)')
-   ->Column('Visible', 'tinyint(1)', '1')
-   ->Set($Explicit, $Drop);
+// Role Table
+$Construct->Table('Role');
 
-$SQL->Replace('AddonType', array('Label' => 'Plugin', 'Visible' => '1'), array('AddonTypeID' => 1), TRUE);
-$SQL->Replace('AddonType', array('Label' => 'Theme', 'Visible' => '1'), array('AddonTypeID' => 2), TRUE);
-$SQL->Replace('AddonType', array('Label' => 'Style', 'Visible' => '0'), array('AddonTypeID' => 3), TRUE);
-$SQL->Replace('AddonType', array('Label' => 'Locale', 'Visible' => '1'), array('AddonTypeID' => 4), TRUE);
-$SQL->Replace('AddonType', array('Label' => 'Application', 'Visible' => '1'), array('AddonTypeID' => 5), TRUE);
-$SQL->Replace('AddonType', array('Label' => 'Core', 'Visible' => '1'), array('AddonTypeID' => 10), TRUE);
+$RoleTableExists = $Construct->TableExists();
 
-$Construct->Table('Addon');
-$Description2Exists = $Construct->ColumnExists('Description2');
-
-$Construct->PrimaryKey('AddonID')
-   ->Column('CurrentAddonVersionID', 'int', TRUE, 'key')
-   ->Column('AddonKey', 'varchar(50)', NULL, 'index')
-   ->Column('AddonTypeID', 'int', FALSE, 'key')
-   ->Column('InsertUserID', 'int', FALSE, 'key')
-   ->Column('UpdateUserID', 'int', TRUE)
+$Construct
+   ->PrimaryKey('RoleID')
    ->Column('Name', 'varchar(100)')
-   ->Column('Icon', 'varchar(200)', TRUE)
-   ->Column('Description', 'text', TRUE)
-   ->Column('Description2', 'text', NULL)
-   ->Column('Requirements', 'text', TRUE)
-   ->Column('CountComments', 'int', '0')
-   ->Column('CountDownloads', 'int', '0')
-   ->Column('Visible', 'tinyint(1)', '1')
-   ->Column('Vanilla2', 'tinyint(1)', '1')
-   ->Column('DateInserted', 'datetime')
-   ->Column('DateUpdated', 'datetime', TRUE)
-   ->Column('Checked', 'tinyint(1)', '0')
+   ->Column('Description', 'varchar(500)', TRUE)
+   ->Column('Sort', 'int', TRUE)
+   ->Column('Deletable', 'tinyint(1)', '1')
+   ->Column('CanSession', 'tinyint(1)', '1')
    ->Set($Explicit, $Drop);
 
-if (!$Description2Exists) {
-   $Construct->Query("update {$Px}Addon set Description2 = Description where Checked = 0");
+if (!$RoleTableExists || $Drop) {
+   // Define some roles.
+   // Note that every RoleID must be a power of two so that they can be combined as a bit-mask.
+   $RoleModel = Gdn::Factory('RoleModel');
+   $RoleModel->Database = $Database;
+   $RoleModel->SQL = $SQL;
+   $RoleModel->Define(array('Name' => 'Banned', 'RoleID' => 1, 'Sort' => '1', 'Deletable' => '1', 'CanSession' => '0', 'Description' => 'Banned users are not allowed to participate or sign in.'));
+   $RoleModel->Define(array('Name' => 'Guest', 'RoleID' => 2, 'Sort' => '2', 'Deletable' => '0', 'CanSession' => '0', 'Description' => 'Guests can only view content. Anyone browsing the site who is not signed in is considered to be a "Guest".'));
+   $RoleModel->Define(array('Name' => 'Applicant', 'RoleID' => 4, 'Sort' => '3', 'Deletable' => '0', 'CanSession' => '0', 'Description' => 'Users who have applied for membership, but have not yet been accepted. They have the same permissions as guests.'));
+   $RoleModel->Define(array('Name' => 'Member', 'RoleID' => 8, 'Sort' => '4', 'Deletable' => '1', 'CanSession' => '1', 'Description' => 'Members can participate in discussions.'));
+   $RoleModel->Define(array('Name' => 'Moderator', 'RoleID' => 32, 'Sort' => '5', 'Deletable' => '1', 'CanSession' => '1', 'Description' => 'Moderators have permission to edit most content.'));
+   $RoleModel->Define(array('Name' => 'Administrator', 'RoleID' => 16, 'Sort' => '6', 'Deletable' => '1', 'CanSession' => '1', 'Description' => 'Administrators have permission to do anything.'));
+   $RoleModel->Define(array('Name' => 'Confirm Email', 'RoleID' => 3, 'Sort' => '7', 'Deletable' => '1', 'CanSession' => '0', 'Description' => 'Users must confirm their emails before becoming full members. They get assigned to this role.'));
+   unset($RoleModel);
 }
 
-/*
-$Construct->Table('AddonComment')
-   ->PrimaryKey('AddonCommentID')
-   ->Column('AddonID', 'int', FALSE, 'key')
-   ->Column('InsertUserID', 'int', FALSE, 'key')
-   ->Column('Body', 'text')
-   ->Column('Format', 'varchar(20)', TRUE)
-   ->Column('DateInserted', 'datetime')
-   ->Set($Explicit, $Drop);
-*/
+// User Table
+$Construct->Table('User');
 
-$Construct->Table('AddonVersion')
-   ->PrimaryKey('AddonVersionID')
-   ->Column('AddonID', 'int', FALSE, 'key')
-   ->Column('File', 'varchar(200)', TRUE)
-   ->Column('Version', 'varchar(20)')
-   ->Column('TestedWith', 'text', NULL)
-   ->Column('FileSize', 'int', NULL)
-   ->Column('MD5', 'varchar(32)')
-   ->Column('Notes', 'text', NULL)
-   ->Column('Format', 'varchar(10)', 'Html')
-   ->Column('InsertUserID', 'int', FALSE, 'key')
+$PhotoIDExists = $Construct->ColumnExists('PhotoID');
+$PhotoExists = $Construct->ColumnExists('Photo');
+
+$Construct
+	->PrimaryKey('UserID')
+   ->Column('Name', 'varchar(50)', FALSE, 'key')
+   ->Column('Password', 'varbinary(100)') // keep this longer because of some imports.
+	->Column('HashMethod', 'varchar(10)', TRUE)
+   ->Column('Photo', 'varchar(255)', NULL)
+   ->Column('About', 'text', TRUE)
+   ->Column('Email', 'varchar(200)')
+   ->Column('ShowEmail', 'tinyint(1)', '0')
+   ->Column('Gender', array('m', 'f'), 'm')
+   ->Column('CountVisits', 'int', '0')
+   ->Column('CountInvitations', 'int', '0')
+   ->Column('CountNotifications', 'int', NULL)
+   ->Column('InviteUserID', 'int', TRUE)
+   ->Column('DiscoveryText', 'text', TRUE)
+   ->Column('Preferences', 'text', TRUE)
+   ->Column('Permissions', 'text', TRUE)
+   ->Column('Attributes', 'text', TRUE)
+   ->Column('DateSetInvitations', 'datetime', TRUE)
+   ->Column('DateOfBirth', 'datetime', TRUE)
+   ->Column('DateFirstVisit', 'datetime', TRUE)
+   ->Column('DateLastActive', 'datetime', TRUE)
    ->Column('DateInserted', 'datetime')
-   ->Column('DateReviewed', 'datetime', TRUE)
-   ->Column('Checked', 'tinyint(1)', '0')
+   ->Column('DateUpdated', 'datetime', TRUE)
+   ->Column('HourOffset', 'int', '0')
+	->Column('Score', 'float', NULL)
+   ->Column('Admin', 'tinyint(1)', '0')
    ->Column('Deleted', 'tinyint(1)', '0')
    ->Set($Explicit, $Drop);
 
-$Construct->Table('AddonPicture')
-   ->PrimaryKey('AddonPictureID')
-   ->Column('AddonID', 'int', FALSE, 'key')
-   ->Column('File', 'varchar(200)')
-   ->Column('DateInserted', 'datetime')
+// UserRole Table
+$Construct->Table('UserRole');
+
+$UserRoleExists = $Construct->TableExists();
+
+$Construct
+   ->Column('UserID', 'int', FALSE, 'primary')
+   ->Column('RoleID', 'int', FALSE, 'primary')
    ->Set($Explicit, $Drop);
 
-$Construct->Table('Download')
-   ->PrimaryKey('DownloadID')
-   ->Column('AddonID', 'int', FALSE, 'key')
-   ->Column('DateInserted', 'datetime')
-   ->Column('RemoteIp', 'varchar(50)', TRUE)
+if (!$UserRoleExists) {
+   // Assign the guest user to the guest role
+   $SQL->Replace('UserRole', array(), array('UserID' => 0, 'RoleID' => 2));
+   // Assign the admin user to admin role
+   $SQL->Replace('UserRole', array(), array('UserID' => 1, 'RoleID' => 16));
+}
+
+// User Meta Table
+$Construct->Table('UserMeta')
+   ->Column('UserID', 'int', FALSE, 'primary')
+   ->Column('Name', 'varchar(255)', FALSE, 'primary')
+   ->Column('Value', 'text', TRUE)
    ->Set($Explicit, $Drop);
 
-$Construct->Table('UpdateCheckSource')
-   ->PrimaryKey('SourceID')
-   ->Column('Location', 'varchar(255)', TRUE)
-   ->Column('DateInserted', 'datetime', TRUE)
-   ->Column('RemoteIp', 'varchar(50)', TRUE)
+// Create the authentication table.
+$Construct->Table('UserAuthentication')
+	->Column('ForeignUserKey', 'varchar(255)', FALSE, 'primary')
+	->Column('ProviderKey', 'varchar(64)', FALSE, 'primary')
+	->Column('UserID', 'int', FALSE, 'key')
+	->Set($Explicit, $Drop);
+	
+$Construct->Table('UserAuthenticationProvider')
+   ->Column('AuthenticationKey', 'varchar(64)', FALSE, 'primary')
+   ->Column('AuthenticationSchemeAlias', 'varchar(32)', FALSE)
+   ->Column('URL', 'varchar(255)', TRUE)
+   ->Column('AssociationSecret', 'text', FALSE)
+   ->Column('AssociationHashMethod', array('HMAC-SHA1','HMAC-PLAINTEXT'), FALSE)
+   ->Column('AuthenticateUrl', 'varchar(255)', TRUE)
+   ->Column('RegisterUrl', 'varchar(255)', TRUE)
+   ->Column('SignInUrl', 'varchar(255)', TRUE)
+   ->Column('SignOutUrl', 'varchar(255)', TRUE)
+   ->Column('PasswordUrl', 'varchar(255)', TRUE)
+   ->Column('ProfileUrl', 'varchar(255)', TRUE)
    ->Set($Explicit, $Drop);
 
-$Construct->Table('UpdateCheck')
-   ->PrimaryKey('UpdateCheckID')
-   ->Column('SourceID', 'int', FALSE, 'key')
-   ->Column('CountUsers', 'int', '0')
-   ->Column('CountDiscussions', 'int', '0')
-   ->Column('CountComments', 'int', '0')
-   ->Column('CountConversations', 'int', '0')
-   ->Column('CountConversationMessages', 'int', '0')
-   ->Column('DateInserted', 'datetime')
-   ->Column('RemoteIp', 'varchar(50)', TRUE)
+$Construct->Table('UserAuthenticationNonce')
+   ->Column('Nonce', 'varchar(200)', FALSE, 'primary')
+   ->Column('Token', 'varchar(128)', FALSE)
+   ->Column('Timestamp', 'timestamp', FALSE)
    ->Set($Explicit, $Drop);
 
-// Need to use this table instead of linking directly with the Addon table
-// because we might not have all of the addons being checked for.
-$Construct->Table('UpdateAddon')
-   ->PrimaryKey('UpdateAddonID')
-   ->Column('AddonID', 'int', FALSE, 'key')
-   ->Column('Name', 'varchar(255)', TRUE)
-   ->Column('Type', 'varchar(255)', TRUE)
-   ->Column('Version', 'varchar(255)', TRUE)
+$Construct->Table('UserAuthenticationToken')
+   ->Column('Token', 'varchar(128)', FALSE, 'primary')
+   ->Column('ProviderKey', 'varchar(64)', FALSE, 'primary')
+   ->Column('ForeignUserKey', 'varchar(255)', TRUE)
+   ->Column('TokenSecret', 'varchar(64)', FALSE)
+   ->Column('TokenType', array('request', 'access'), FALSE)
+   ->Column('Authorized', 'tinyint(1)', FALSE)
+   ->Column('Timestamp', 'timestamp', FALSE)
+   ->Column('Lifetime', 'int', FALSE)
    ->Set($Explicit, $Drop);
+   
+$Construct->Table('AnalyticsLocal')
+   ->Engine('InnoDB')
+   ->Column('TimeSlot', 'varchar(8)', FALSE, 'unique')
+   ->Column('Views', 'int', NULL)
+   ->Set(FALSE, FALSE);
 
-$Construct->Table('UpdateCheckAddon')
-   ->Column('UpdateCheckID', 'int', FALSE, 'key')
-   ->Column('UpdateAddonID', 'int', FALSE, 'key')
-   ->Set($Explicit, $Drop);
-
+// Only Create the permission table if we are using Garden's permission model.
 $PermissionModel = Gdn::PermissionModel();
 $PermissionModel->Database = $Database;
 $PermissionModel->SQL = $SQL;
+$PermissionTableExists = FALSE;
+if($PermissionModel instanceof PermissionModel) {
+   $PermissionTableExists = $Construct->TableExists('Permission');
 
-// Define some global addon permissions.
+	// Permission Table
+	$Construct->Table('Permission')
+		->PrimaryKey('PermissionID')
+		->Column('RoleID', 'int', 0, 'key')
+		->Column('JunctionTable', 'varchar(100)', TRUE) 
+		->Column('JunctionColumn', 'varchar(100)', TRUE)
+		->Column('JunctionID', 'int', TRUE)
+		// The actual permissions will be added by PermissionModel::Define()
+		->Set($Explicit, $Drop);
+}
+
+// Define the set of permissions that garden uses.
 $PermissionModel->Define(array(
-   'Addons.Addon.Add',
-   'Addons.Addon.Manage',
-   'Addons.Comments.Manage'
+   'Garden.Email.Manage',
+   'Garden.Settings.Manage',
+   'Garden.Routes.Manage',
+   'Garden.Messages.Manage',
+   'Garden.Applications.Manage',
+   'Garden.Plugins.Manage',
+   'Garden.Themes.Manage',
+   'Garden.SignIn.Allow' => 1,
+   'Garden.Registration.Manage',
+   'Garden.Applicants.Manage',
+   'Garden.Roles.Manage',
+   'Garden.Users.Add',
+   'Garden.Users.Edit',
+   'Garden.Users.Delete',
+   'Garden.Users.Approve',
+   'Garden.Activity.Delete',
+   'Garden.Activity.View' => 1,
+   'Garden.Profiles.View' => 1
    ));
 
-if (isset($$PermissionTableExists) && $PermissionTableExists) {
-   // Set the intial member permissions.
+if (!$PermissionTableExists) {
+
+   // Set initial guest permissions.
    $PermissionModel->Save(array(
-      'RoleID' => 8,
-      'Addons.Addon.Add' => 1
+      'RoleID' => 2,
+      'Garden.Activity.View' => 1,
+      'Garden.Profiles.View' => 1
       ));
 
-   // Set the initial administrator permissions.
+   // Set initial applicant permissions.
+   $PermissionModel->Save(array(
+      'RoleID' => 4,
+      'Garden.Activity.View' => 1,
+      'Garden.Profiles.View' => 1
+      ));
+
+   // Set initial member permissions.
+   $PermissionModel->Save(array(
+      'RoleID' => 8,
+      'Garden.SignIn.Allow' => 1,
+      'Garden.Activity.View' => 1,
+      'Garden.Profiles.View' => 1
+      ));
+
+   // Set initial moderator permissions.
+   $PermissionModel->Save(array(
+      'RoleID' => 32,
+      'Garden.SignIn.Allow' => 1,
+      'Garden.Activity.View' => 1,
+      'Garden.Profiles.View' => 1
+      ));
+
+   // Set initial admininstrator permissions.
    $PermissionModel->Save(array(
       'RoleID' => 16,
-      'Addons.Addon.Add' => 1,
-      'Addons.Addon.Manage' => 1,
-      'Addons.Comments.Manage' => 1
+      'Garden.Settings.Manage' => 1,
+      'Garden.Routes.Manage' => 1,
+      'Garden.Applications.Manage' => 1,
+      'Garden.Plugins.Manage' => 1,
+      'Garden.Themes.Manage' => 1,
+      'Garden.SignIn.Allow' => 1,
+      'Garden.Registration.Manage' => 1,
+      'Garden.Applicants.Manage' => 1,
+      'Garden.Roles.Manage' => 1,
+      'Garden.Users.Add' => 1,
+      'Garden.Users.Edit' => 1,
+      'Garden.Users.Delete' => 1,
+      'Garden.Users.Approve' => 1,
+      'Garden.Activity.Delete' => 1,
+      'Garden.Activity.View' => 1,
+      'Garden.Profiles.View' => 1
       ));
 }
 
-// Make sure that User.Permissions is blank so new permissions for users get applied.
-//$SQL->Update('User', array('Permissions' => ''))->Put(); // done in PermissionModel::Save()
+// Photo Table
+$Construct->Table('Photo');
+
+$PhotoTableExists = $Construct->TableExists('Photo');
+
+$Construct
+	->PrimaryKey('PhotoID')
+   ->Column('Name', 'varchar(255)')
+   ->Column('InsertUserID', 'int', TRUE, 'key')
+   ->Column('DateInserted', 'datetime')
+   ->Set($Explicit, $Drop);
+
+// Invitation Table
+$Construct->Table('Invitation')
+	->PrimaryKey('InvitationID')
+   ->Column('Email', 'varchar(200)')
+   ->Column('Code', 'varchar(50)')
+   ->Column('InsertUserID', 'int', TRUE, 'key')
+   ->Column('DateInserted', 'datetime')
+   ->Column('AcceptedUserID', 'int', TRUE)
+   ->Set($Explicit, $Drop);
+
+// ActivityType Table
+$Construct->Table('ActivityType')
+	->PrimaryKey('ActivityTypeID')
+   ->Column('Name', 'varchar(20)')
+   ->Column('AllowComments', 'tinyint(1)', '0')
+   ->Column('ShowIcon', 'tinyint(1)', '0')
+   ->Column('ProfileHeadline', 'varchar(255)')
+   ->Column('FullHeadline', 'varchar(255)')
+   ->Column('RouteCode', 'varchar(255)', TRUE)
+   ->Column('Notify', 'tinyint(1)', '0') // Add to RegardingUserID's notification list?
+   ->Column('Public', 'tinyint(1)', '1') // Should everyone be able to see this, or just the RegardingUserID?
+   ->Set($Explicit, $Drop);
 
 // Insert some activity types
 ///  %1 = ActivityName
-///  %2 = ActivityName Possessive
+///  %2 = ActivityName Possessive: Username
 ///  %3 = RegardingName
-///  %4 = RegardingName Possessive
+///  %4 = RegardingName Possessive: Username, his, her, your
 ///  %5 = Link to RegardingName's Wall
 ///  %6 = his/her
 ///  %7 = he/she
 ///  %8 = RouteCode & Route
+if ($SQL->GetWhere('ActivityType', array('Name' => 'SignIn'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'SignIn', 'FullHeadline' => '%1$s signed in.', 'ProfileHeadline' => '%1$s signed in.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'Join'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'Join', 'FullHeadline' => '%1$s joined.', 'ProfileHeadline' => '%1$s joined.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'JoinInvite'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'JoinInvite', 'FullHeadline' => '%1$s accepted %4$s invitation for membership.', 'ProfileHeadline' => '%1$s accepted %4$s invitation for membership.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'JoinApproved'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'JoinApproved', 'FullHeadline' => '%1$s approved %4$s membership application.', 'ProfileHeadline' => '%1$s approved %4$s membership application.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'JoinCreated'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'JoinCreated', 'FullHeadline' => '%1$s created an account for %4$s.', 'ProfileHeadline' => '%1$s created an account for %4$s.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'AboutUpdate'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'AboutUpdate', 'FullHeadline' => '%1$s updated %6$s profile.', 'ProfileHeadline' => '%1$s updated %6$s profile.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'WallComment'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'ShowIcon' => '1', 'Name' => 'WallComment', 'FullHeadline' => '%1$s wrote on %4$s %5$s.', 'ProfileHeadline' => '%1$s wrote:')); 
+if ($SQL->GetWhere('ActivityType', array('Name' => 'PictureChange'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'PictureChange', 'FullHeadline' => '%1$s changed %6$s profile picture.', 'ProfileHeadline' => '%1$s changed %6$s profile picture.'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'RoleChange'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '1', 'Name' => 'RoleChange', 'FullHeadline' => '%1$s changed %4$s permissions.', 'ProfileHeadline' => '%1$s changed %4$s permissions.', 'Notify' => '1'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'ActivityComment'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'ShowIcon' => '1', 'Name' => 'ActivityComment', 'FullHeadline' => '%1$s commented on %4$s %8$s.', 'ProfileHeadline' => '%1$s', 'RouteCode' => 'activity', 'Notify' => '1'));
+if ($SQL->GetWhere('ActivityType', array('Name' => 'Import'))->NumRows() == 0)
+   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'Import', 'FullHeadline' => '%1$s imported data.', 'ProfileHeadline' => '%1$s imported data.', 'Notify' => '1', 'Public' => '0'));
 
-// X added an addon
-if ($SQL->GetWhere('ActivityType', array('Name' => 'AddAddon'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'AddAddon', 'FullHeadline' => '%1$s uploaded a new %8$s.', 'ProfileHeadline' => '%1$s uploaded a new %8$s.', 'RouteCode' => 'addon', 'Public' => '1'));
-
-// X edited an addon
-if ($SQL->GetWhere('ActivityType', array('Name' => 'EditAddon'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'EditAddon', 'FullHeadline' => '%1$s edited an %8$s.', 'ProfileHeadline' => '%1$s edited an %8$s.', 'RouteCode' => 'addon', 'Public' => '1'));
-
-/*
-// People's comments on addons
-if ($SQL->GetWhere('ActivityType', array('Name' => 'AddonComment'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'AddonComment', 'FullHeadline' => '%1$s commented on %4$s %8$s.', 'ProfileHeadline' => '%1$s commented on %4$s %8$s.', 'RouteCode' => 'addon', 'Notify' => '1', 'Public' => '1'));
-
-// People mentioning others in addon comments
-if ($SQL->GetWhere('ActivityType', array('Name' => 'AddonCommentMention'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'AddonCommentMention', 'FullHeadline' => '%1$s mentioned %3$s in a %8$s.', 'ProfileHeadline' => '%1$s mentioned %3$s in a %8$s.', 'RouteCode' => 'comment', 'Notify' => '1', 'Public' => '0'));
-*/
-
-// People adding new language definitions
-if ($SQL->GetWhere('ActivityType', array('Name' => 'AddUserLanguage'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'AddUserLanguage', 'FullHeadline' => '%1$s added a new %8$s.', 'ProfileHeadline' => '%1$s added a new %8$s.', 'RouteCode' => 'language', 'Notify' => '0', 'Public' => '1'));
-
-// People editing language definitions
-if ($SQL->GetWhere('ActivityType', array('Name' => 'EditUserLanguage'))->NumRows() == 0)
-   $SQL->Insert('ActivityType', array('AllowComments' => '0', 'Name' => 'EditUserLanguage', 'FullHeadline' => '%1$s edited a %8$s.', 'ProfileHeadline' => '%1$s edited a %8$s.', 'RouteCode' => 'language', 'Notify' => '0', 'Public' => '1'));
-
-// Contains list of available languages for translating
-$Construct->Table('Language')
-   ->PrimaryKey('LanguageID')
-   ->Column('Name', 'varchar(255)')
-   ->Column('Code', 'varchar(10)')
-   ->Column('InsertUserID', 'int', FALSE, 'key')
-   ->Column('DateInserted', 'datetime')
-   ->Column('UpdateUserID', 'int', TRUE)
-   ->Column('DateUpdated', 'datetime', TRUE)
-   ->Set($Explicit, $Drop);
-
-// Contains relationships of who owns translations and who can edit translations (owner decides who can edit)
-$Construct->Table('UserLanguage')
-   ->PrimaryKey('UserLanguageID')
-   ->Column('UserID', 'int', FALSE, 'key')
-   ->Column('LanguageID', 'int', FALSE, 'key')
-   ->Column('Owner', 'tinyint(1)', '0')
-   ->Column('CountTranslations', 'int', '0') // The number of translations this UserLanguage contains
-   ->Column('CountDownloads', 'int', '0')
-   ->Column('CountLikes', 'int', '0')
-   ->Set($Explicit, $Drop);
-
-// Contains individual translations as well as source codes
-$Construct->Table('Translation')
-   ->PrimaryKey('TranslationID')
-   ->Column('UserLanguageID', 'int', FALSE, 'key')
-   ->Column('SourceTranslationID', 'int', TRUE, 'key') // This is the related TranslationID where LanguageID = 1 (the source codes for translations)
-   ->Column('Application', 'varchar(100)', TRUE)
-   ->Column('Value', 'text')
-   ->Column('InsertUserID', 'int', FALSE, 'key')
-   ->Column('DateInserted', 'datetime')
-   ->Column('UpdateUserID', 'int', TRUE)
-   ->Column('DateUpdated', 'datetime', TRUE)
-   ->Set($Explicit, $Drop);
-
-// Contains records of when actions were performed on userlanguages (ie. it is
-// downloaded or "liked"). These values are aggregated in
-// UserLanguage.CountLikes and UserLanguage.CountDownloads for faster querying,
-// but saved here for reporting.
-$Construct->Table('UserLanguageAction')
-   ->PrimaryKey('UserLanguageActionID')
-   ->Column('UserLanguageID', 'int', FALSE, 'key')
-   ->Column('Action', 'varchar(20)') // The action being performed (ie. "download" or "like")
-   ->Column('InsertUserID', 'int', TRUE, 'key') // Allows nulls because you do not need to be authenticated to download a userlanguage
+// Activity Table
+// Column($Name, $Type, $Length = '', $Null = FALSE, $Default = NULL, $KeyType = FALSE, $AutoIncrement = FALSE)
+$Construct->Table('Activity')
+	->PrimaryKey('ActivityID')
+   ->Column('CommentActivityID', 'int', TRUE, 'key')
+   ->Column('ActivityTypeID', 'int')
+   ->Column('ActivityUserID', 'int', TRUE, 'key')
+   ->Column('RegardingUserID', 'int', TRUE)
+   ->Column('Story', 'text', TRUE)
+   ->Column('Route', 'varchar(255)', TRUE)
+   ->Column('CountComments', 'int', '0')
+   ->Column('InsertUserID', 'int', TRUE, 'key')
    ->Column('DateInserted', 'datetime')
    ->Set($Explicit, $Drop);
 
-// Make sure the default "source" translation exists
-if ($SQL->GetWhere('Language', array('LanguageID' => 1))->NumRows() == 0)
-   $SQL->Insert('Language', array('Name' => 'Source Codes', 'Code' => 'SOURCE', 'InsertUserID' => 1, 'DateInserted' => '2009-10-19 12:00:00'));
+// Message Table
+$Construct->Table('Message')
+	->PrimaryKey('MessageID')
+   ->Column('Content', 'text')
+   ->Column('Format', 'varchar(20)', TRUE)
+   ->Column('AllowDismiss', 'tinyint(1)', '1')
+   ->Column('Enabled', 'tinyint(1)', '1')
+   ->Column('Application', 'varchar(255)', TRUE)
+   ->Column('Controller', 'varchar(255)', TRUE)
+   ->Column('Method', 'varchar(255)', TRUE)
+   ->Column('AssetTarget', 'varchar(20)', TRUE)
+	->Column('CssClass', 'varchar(20)', TRUE)
+   ->Column('Sort', 'int', TRUE)
+   ->Set($Explicit, $Drop);
 
-// Mark (UserID 1) owns the source translation
-if ($SQL->GetWhere('UserLanguage', array('LanguageID' => 1, 'UserID' => 1))->NumRows() == 0)
-   $SQL->Insert('UserLanguage', array('LanguageID' => 1, 'UserID' => 1, 'Owner' => '1'));
+$Prefix = $SQL->Database->DatabasePrefix;
 
-
-/*
-   Apr 26th, 2010
-   Changed all "enum" fields representing "bool" (0 or 1) to be tinyint.
-   For some reason mysql makes 0's "2" during this change. Change them back to "0".
-*/
-if (!$Construct->CaptureOnly) {
-	$SQL->Query("update GDN_AddonType set Visible = '0' where Visible = '2'");
-
-	$SQL->Query("update GDN_Addon set Visible = '0' where Visible = '2'");
-	$SQL->Query("update GDN_Addon set Vanilla2 = '0' where Vanilla2 = '2'");
-
-	$SQL->Query("update GDN_UserLanguage set Owner = '0' where Owner = '2'");
+if ($PhotoIDExists && !$PhotoExists) {
+   $Construct->Query("update {$Prefix}User u
+   join {$Prefix}Photo p
+      on u.PhotoID = p.PhotoID
+   set u.Photo = p.Name");
 }
 
-
-// Add AddonID column to discussion table for allowing discussions on addons.
-$Construct->Table('Discussion')
-   ->Column('AddonID', 'int', NULL)
-   ->Set();
-
-// Insert all of the existing comments into a new discussion for each addon
-$Construct->Table('AddonComment');
-$AddonCommentExists = $Construct->TableExists();
-$Construct->Reset();
-
-if ($AddonCommentExists) {
-   if ($SQL->Query('select AddonCommentID from GDN_AddonComment')->NumRows() > 0) {
-      // Create discussions for addons with comments
-      $SQL->Query("insert into GDN_Discussion
-      (AddonID, InsertUserID, UpdateUserID, LastCommentID, Name, Body, Format,
-      CountComments, DateInserted, DateUpdated, DateLastComment, LastCommentUserID)
-      select distinct a.AddonID, a.InsertUserID, a.UpdateuserID, 0, a.Name, a.Name,
-      ac.Format, a.CountComments, a.DateInserted, a.DateUpdated, a.DateUpdated, 0
-      from GDN_Addon a join GDN_AddonComment ac on a.AddonID = ac.AddonID");
-
-      // Copy the comments across to the comment table
-      $SQL->Query("insert into GDN_Comment
-      (DiscussionID, InsertUserID, Body, Format, DateInserted)
-      select d.DiscussionID, ac.InsertUserID, ac.Body, ac.Format, ac.DateInserted
-      from GDN_Discussion d join GDN_AddonComment ac on d.AddonID = ac.AddonID");
-
-      // Update the LastCommentID
-      $SQL->Query("update GDN_Discussion d
-         join (
-           select DiscussionID, max(CommentID) as LastCommentID
-           from GDN_Comment
-           group by DiscussionID
-         ) c
-           on d.DiscussionID = c.DiscussionID
-         set d.LastCommentID = c.LastCommentID");
-
-      // Update the LastCommentUserID
-      $SQL->Query("update GDN_Discussion d
-         join GDN_Comment c on d.LastCommentID = c.CommentID
-         set d.LastCommentUserID = c.InsertUserID");
-
-
-      // Delete the comments from the addon comments table
-      $SQL->Query('truncate table GDN_AddonComment');
-   }
+if ($PhotoIDExists) {
+   $Construct->Table('User')->DropColumn('PhotoID');
 }
+
+$Construct->Table('Tag')
+	->PrimaryKey('TagID')
+   ->Column('Name', 'varchar(255)', 'unique')
+   ->Column('InsertUserID', 'int', TRUE, 'key')
+   ->Column('DateInserted', 'datetime')
+   ->Engine('InnoDB')
+   ->Set($Explicit, $Drop);

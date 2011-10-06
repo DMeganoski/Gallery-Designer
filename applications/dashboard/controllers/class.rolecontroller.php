@@ -61,7 +61,7 @@ class RoleController extends DashboardController {
             // Go ahead and delete the Role
             $this->RoleModel->Delete($RoleID, $this->Form->GetValue('ReplacementRoleID'));
             $this->RedirectUrl = Url('dashboard/role');
-            $this->InformMessage(T('Deleting role...'));
+            $this->StatusMessage = T('Deleting role...');
          }
       }
       $this->Render();
@@ -101,7 +101,7 @@ class RoleController extends DashboardController {
          $UserModel = new UserModel();
          $UserModel->SaveRoles(0, $GuestRoles, FALSE);
 
-         $this->InformMessage(T("Saved"));
+         $this->StatusMessage = T("Saved");
       }
 
       $this->Render();
@@ -161,7 +161,7 @@ class RoleController extends DashboardController {
          // If the form has been posted back...
          // 2. Save the data (validation occurs within):
          if ($RoleID = $this->Form->Save()) {
-            $this->InformMessage(T('Your changes have been saved.'));
+            $this->StatusMessage = T('Your changes have been saved.');
             $this->RedirectUrl = Url('dashboard/role');
             // Reload the permission data.
             $this->SetData('PermissionData', $PermissionModel->GetPermissionsEdit($RoleID, $LimitToSuffix), true);

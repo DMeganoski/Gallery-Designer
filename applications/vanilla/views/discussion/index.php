@@ -1,9 +1,5 @@
 <?php if (!defined('APPLICATION')) exit();
 $Session = Gdn::Session();
-$DiscussionName = Gdn_Format::Text($this->Discussion->Name);;
-if ($DiscussionName == '')
-   $DiscussionName = T('Blank Discussion Topic');
-
 if (!function_exists('WriteComment'))
    include($this->FetchViewLocation('helper_functions', 'discussion'));
 
@@ -16,31 +12,36 @@ if ($Session->IsValid()) {
       array('title' => T($this->Discussion->Bookmarked == '1' ? 'Unbookmark' : 'Bookmark'))
    );
 }
-
-$PageClass = '';
-if($this->Pager->FirstPage()) 
-	$PageClass = 'FirstPage'; 
-	
 ?>
-<div class="Tabs HeadingTabs DiscussionTabs <?php echo $PageClass; ?>">
+<div class="Tabs HeadingTabs DiscussionTabs">
    <ul>
       <li><?php
-         if (C('Vanilla.Categories.Use') == TRUE) {
+         if (Gdn::Config('Vanilla.Categories.Use') === TRUE) {
             echo Anchor($this->Discussion->Category, 'categories/'.$this->Discussion->CategoryUrlCode);
          } else {
             echo Anchor(T('All Discussions'), 'discussions');
          }
       ?></li>
    </ul>
-   <div class="SubTab"><?php echo $DiscussionName; ?></div>
+   <div class="SubTab"><?php
+      $DiscussionName = Gdn_Format::Text($this->Discussion->Name);
+      if ($DiscussionName == '')
+         $DiscussionName = T('Blank Discussion Topic');
+         
+      echo $DiscussionName;
+   ?></div>
 </div>
-<?php $this->FireEvent('BeforeDiscussion'); ?>
-<ul class="MessageList Discussion <?php echo $PageClass; ?>">
+<?php
+   $this->FireEvent('BeforeDiscussion');
+   echo $this->RenderAsset('DiscussionBefore');
+?>
+<ul class="MessageList Discussion">
    <?php echo $this->FetchView('comments'); ?>
 </ul>
 <?php
-$this->FireEvent('AfterDiscussion');
+
 if($this->Pager->LastPage()) {
+   $this->AddDefinition('DiscussionID', $this->Data['Discussion']->DiscussionID);
    $LastCommentID = $this->AddDefinition('LastCommentID');
    if(!$LastCommentID || $this->Data['Discussion']->LastCommentID > $LastCommentID)
       $this->AddDefinition('LastCommentID', (int)$this->Data['Discussion']->LastCommentID);
@@ -69,7 +70,7 @@ if ($this->Discussion->Closed == '1') {
    ?>
    <div class="Foot">
       <?php
-      echo Anchor(T('Add a Comment'), SignInUrl($this->SelfUrl.(strpos($this->SelfUrl, '?') ? '&' : '?').'post#Form_Body'), 'TabLink'.(SignInPopup() ? ' SignInPopup' : ''));
+      echo Anchor(T('Add a Comment'), Gdn::Authenticator()->SignInUrl($this->SelfUrl.(strpos($this->SelfUrl, '?') ? '&' : '?').'post#Form_Body'), 'TabLink'.(SignInPopup() ? ' SignInPopup' : ''));
       ?> 
    </div>
    <?php 

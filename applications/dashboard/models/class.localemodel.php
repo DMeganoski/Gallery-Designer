@@ -22,7 +22,7 @@ class LocaleModel {
          $AvailableLocales = array();
          foreach ($LocaleInfoPaths as $InfoPath) {
             $LocaleInfo = Gdn::PluginManager()->ScanPluginFile($InfoPath, 'LocaleInfo');
-            $AvailableLocales[$LocaleInfo['Index']] = $LocaleInfo;
+            $AvailableLocales = array_merge($AvailableLocales, $LocaleInfo);
          }
          $this->_AvailableLocalePacks = $AvailableLocales;
       }

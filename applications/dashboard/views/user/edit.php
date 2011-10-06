@@ -28,14 +28,6 @@ echo $this->Form->Errors();
       ?>
    </li>
    <li>
-      <?php
-         echo $this->Form->CheckBox('Banned', T('Banned'), array('value' => '1'));
-      ?>
-   </li>
-</ul>
-<h3><?php echo T('Roles'); ?></h3>
-<ul>
-   <li>
       <strong><?php echo T('Check all roles that apply to this user:'); ?></strong>
       <?php echo $this->Form->CheckBoxList("RoleID", $this->RoleData, $this->UserRoleData, array('TextField' => 'Name', 'ValueField' => 'RoleID')); ?>
    </li>
@@ -61,6 +53,4 @@ echo $this->Form->Errors();
       </div>
    </li>
 </ul>
-<?php
-$this->FireEvent('AfterFormInputs');
-echo $this->Form->Close('Save');
+<?php echo $this->Form->Close('Save');

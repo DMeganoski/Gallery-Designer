@@ -8,6 +8,7 @@
 	 <div class="Banner">
 		<ul>
 		  {discussions_link}
+		  <!-- {activity_link} -->
 		  {profile_link}
 		  {inbox_link}
 		  {custom_menu}
@@ -18,6 +19,9 @@
 		</ul>
 	 </div>
 	 <div id="Body">
+		<div id="Panel">
+		  {asset name="Panel"}
+		</div>
 		<div id="Content">
 		  {asset name="Content"}
 		</div>

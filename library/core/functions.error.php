@@ -110,15 +110,11 @@ function Gdn_ExceptionHandler($Exception) {
             $MasterViewPaths = array();
             $MasterViewName = 'error.master.php';
             $MasterViewCss = 'error.css';
-
-            if (function_exists('Debug') && Debug()) {
-               $MasterViewName = 'deverror.master.php';
-            }
                
-            if (class_exists('Gdn', FALSE)) {
+            if(class_exists('Gdn', FALSE)) {
                $CurrentTheme = ''; // The currently selected theme
-               $CurrentTheme = C('Garden.Theme', '');
-               $MasterViewName = C('Garden.Errors.MasterView', $MasterViewName);
+               $CurrentTheme = Gdn::Config('Garden.Theme', '');
+               $MasterViewName = Gdn::Config('Garden.Errors.MasterView', $MasterViewName);
                $MasterViewCss = substr($MasterViewName, 0, strpos($MasterViewName, '.'));
                if ($MasterViewCss == '')
                   $MasterViewCss = 'error';
@@ -390,11 +386,9 @@ function NotFoundException($Code = 'Page') {
  * @return Exception
  */
 function PermissionException($Permission = NULL) {
-   if (!$Permission)
-      $Message = T('PermissionErrorMessage', "You don't have permission to do that.");
-   elseif ($Permission == 'Banned')
-      $Message = T("You've been banned.");
-   else
-      $Message = sprintf(T('You need the %s permission to do that.'), $Permission);
-   return new Exception($Message, 401);
+  if (!$Permission)
+     $Message = T('PermissionErrorMessage', "You don't have permission to do that.");
+  else
+     $Message = sprintf(T('You need the %s permission to do that.'), $Permission);
+  return new Exception($Message, 401);
 }
