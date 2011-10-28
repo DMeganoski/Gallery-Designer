@@ -5,7 +5,6 @@ $(document).ready(function() {
 /*--------------------------------------------------- Set up the page ---------------------------------------------*/
 	//start by hiding the box
 	$('.UploadBox').hide();
-	$('.ButtonBox').hide();
 	$('ul.TextList').hide();
 	/*-------------------------------------------- define some variables for data ---------------------------------*/
 	// Selected frame for background
@@ -21,52 +20,30 @@ $(document).ready(function() {
 	var currentProjectID = $('.Account').attr("projectid");
 	// image location for helper, on the design page
 	var imageLocation = $('img.Single').attr("src");
-	// gallery browse page item id
-	var browseID = $('.Gallery').attr("itemid");
-	// gallery browse page item id
-	var browsetype = $('.Gallery').attr("type");
 	// action variable for adding or removing items from the project.
 	// not currently implemented
 	var action = 'add';
-	// attempt at creating a button to remove images
-	$('img.Upload').hover(function() {
-		$(this).append('<div class="Close">X</div>');
-	});
-	// function for getting the url of the page. Designer page gets special treatment
-	var url = location.href;
-	var onDesigner = false;
-	$('#DesignBox').append(onDesigner);
-	if (url == "http://tinsdirect/designer") {
-		onDesigner = true;
-	} else {
-		onDesigner = false;
-	}
 	/*----------------------------------------------- Custom Functions --------------------------------------------*/
 	// helper for draggable items
 	function individualHelper( event ) {
 		return "<div class=\"DetailsWrapper Dragging\"><div id=\"FrameWrapper\" class=\"" + frameChoice + "Frame\"></div><img src=\"" + imageLocation + "\" class=\"Helper Individual\"></img></div>";
 	}
-	function browseHelper( src ) {
-		var imageLocation = $('img.Gallery').attr("src");
-		return "<img src=\"" + imageLocation + "\" class=\"Helper\"></img>";
-	}
 	// for submtting items from the gallery in the project
 	$.fn.doProjectSubmit = function( type, itemID ) {
-		$.post("/project/projectselect", {UserID: userID, ProjectID: currentProjectID, Type: type, Slug: itemID, Action: 'add'},
-		function(data) {
-			var verifyBox = $('.Verify');
-			$(verifyBox).queue(function() {
-				$(this).html("Item Added to Project.<br/>" + data);
-				$(this).show();
-				$(this).updateProjectBox( type );
-				$(this).fadeTo('200', '1');
-				$(this).delay('1000');
-				$(this).fadeTo('1600', '0.3');
-				$(this).hide('slow');
-				$(this).dequeue();
-	});
+			$.post("/project/projectselect", {UserID: userID, ProjectID: currentProjectID, Type: type, Slug: itemID, Action: 'add'},
+			function(data) {
+				$('.Verify').queue(function(x) {
+					$(this).html("Item Added to Project.<br/>");
+					$(this).show();
+					$(this).fadeTo('200', '1');
+					$(this).delay('1000');
+					$(this).fadeTo('1600', '0.3');
+					$(this).hide('slow');
+					x();
+				});
+			});
+			$(this).updateProjectBox( type );
 	}
-	)};
 	// for removing items from the project
 	$.fn.doProjectRemove = function(type, itemID, projectID) {
 		$.post("/project/projectselect", {UserID: userID, ProjectID: projectID, Type: type, Slug: itemID, Action: 'remove'},
@@ -91,7 +68,7 @@ $(document).ready(function() {
 	}
 	// for subitting frame choices
 	$.fn.doFrameSubmit = function() {
-		$.post("/project/frameselect", {UserID: userID, ProjectID: currentProjectID, Frame: frameChoice},
+		$.post("/project/frameselect", { UserID: userID, ProjectID: currentProjectID, Frame: frameChoice },
 		function(data) {
 		}
 	);
@@ -108,9 +85,8 @@ $(document).ready(function() {
 	$.fn.updateProjectBox = function(type) {
 		$.post("/project/getproject", {UserID: userID, TransientKey: transientKey, ProjectID: currentProjectID, Type: type },
 			function(data) {
-				var projectBox = $('.ProjectBox');
-				$(projectBox).slideUp().queue(function(n) {
-					$(this).html(data).slideDown();
+				$('.ProjectBox').slideUp().queue(function(n) {
+					$('.ProjectBox').html(data).slideDown();
 					n();
 				});
 		});
@@ -182,8 +158,10 @@ $(document).ready(function() {
 		var projectID = $(this).attr('projectid');
 		$(this).doProjectDelete(projectID);
 	});
-	$('.Selection').click(function() {
-		$(this).doProjectSubmit(itemSlug);
+	$('.Selection').live('click', function() {
+		var itemSlug = $(".DetailsWrapper #ImageWrapper").attr('itemslug');
+		var itemType = $(".DetailsWrapper #ImageWrapper").attr('itemtype');
+		$(this).doProjectSubmit(itemType, itemSlug);
 	});
 /*---------------------------------------- Used in Upload Box -------------------------------------------------------*/
 	// Button for toggling upload box display
@@ -200,6 +178,15 @@ $(document).ready(function() {
 	$('.UploadSubmit').live('click', function() {
 		var uploadID = $(this).attr("uploadid");
 		$(this).doProjectSubmit("uploads", uploadID);
+		// function for getting the url of the page. Designer page gets special treatment
+		var url = location.href;
+		var onDesigner = false;
+		$('#DesignBox').append(onDesigner);
+		if (url == "http://tinsdirect/designer") {
+			onDesigner = true;
+		} else {
+			onDesigner = false;
+		}
 		if (onDesigner) {
 			window.location = "/designer";
 		}
@@ -226,9 +213,9 @@ $(document).ready(function() {
 					.addClass( "ui-state-highlight" );
 
 					},
-					"drop": function() {
-						var itemType = $('.DetailsWrapper').attr("itemtype");
-						var itemSlug = $('.DetailsWrapper').attr("itemslug");
+					"drop": function( event, ui ) {
+						var itemType = $(ui.draggable).attr("itemtype");
+						var itemSlug = $(ui.draggable).attr("itemslug");
 						$(this).doFrameSubmit();
 						$(this).doProjectSubmit( itemType, itemSlug );
 						//$(this).doFrameSubmit();
@@ -239,6 +226,7 @@ $(document).ready(function() {
 					}
 
 			});
+			var src1 = $('img.Gallery').attr("src");
 	$("#ImageWrapper").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": individualHelper,
 			"start": function(event,ui) {
 				dragging = true;
@@ -248,19 +236,6 @@ $(document).ready(function() {
 			"stop": function() {
 				$('img.Helper').hide();
 				dragging = false;
-			}
-	});
-	var src = $('img.Gallery').attr("src");
-	$(".Gallery").draggable({"snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": browseHelper(src),
-			"start": function(event,ui) {
-				dragging = true;
-				//$('.ProjectBox').show()
-				//.updateProjectBox();
-			},
-			"stop": function() {
-				dragging = false;
-				$('img.Helper').hide();
-
 			}
 	});
 

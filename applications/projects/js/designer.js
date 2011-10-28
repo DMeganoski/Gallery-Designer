@@ -137,11 +137,6 @@ $(document).ready(function() {
 				$(this).css('left', data.left + "px");
 			}, "json");
 	});
-	$('.Slider').draggable({
-		"containment": "parent",
-		"axis": 'y',
-		"cursor": "move"
-	});
 	$('.SubmitProjectCheck').live('click', function() {
 		$(this).doProjectCommit();
 		});

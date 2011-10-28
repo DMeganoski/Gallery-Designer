@@ -42,6 +42,29 @@ p {
 root {
    display: block;
 }
+a.Button, .Button {
+	height: 27px;
+	cursor: pointer;
+	margin: 8px;
+	font-size: 11px;
+	padding: 4px;
+	background: url('images/buttonbg.png') repeat-x center left #F8F8F8;
+	color: darkBlue;
+	border: 1px solid #999;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0px 0px 2px #999;
+	-moz-box-shadow: 0px 0px 2px #999;
+	-webkit-box-shadow: 0px 0px 2px #999;
+	box-sizing: border-box;
+}
+a.Button {
+	margin: 10px 10px 8px;
+	padding: 5px;
+	display: inline-block;
+	float: right;
+}
 .ie div {
 	border-radius: 3px;
 	-moz-border-radius: 3px;

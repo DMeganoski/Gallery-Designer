@@ -7,16 +7,47 @@
 include(PATH_APPLICATIONS.DS.'galleries/views/helper/helper.php');
 ?>
 <script type="text/javascript">
-	$(document).ready(function() {
-		$("#ImageWrapper").draggable({ "snap": ".ProjectBox", "revert": "invalid", "opacity": "0.5", "cursor": 'move', "helper": myHelper,
+$(document).ready(function() {
+
+	var dragging = false;
+
+	$(".Project").droppable({
+			"over": function( event, ui ) {
+				$( this )
+					.addClass( "ui-state-highlight" );
+
+					},
+					"drop": function( event, ui ) {
+						var itemType = $(ui.draggable).attr("itemtype");
+						var itemSlug = $(ui.draggable).attr("itemslug");
+						$(this).doFrameSubmit();
+						$(this).doProjectSubmit( itemType, itemSlug );
+						//$(this).doFrameSubmit();
+						$(this).removeClass( "ui-state-highlight" );
+					},
+					"out": function() {
+						$(this).removeClass( "ui-state-highlight" );
+					}
+
+			});
+
+	function browseHelper( src ) {
+		return "<img src=\"" + src + "\" class=\"Helper\"></img>";
+	}
+
+	$("img.Gallery").draggable({"revert": "invalid", "opacity": "0.5", "cursor": 'move',
 			"start": function(event,ui) {
-				//$('td.Background').html("<img src=\"" + image + "\"></img>");
+				dragging = true;
+				//$('.ProjectBox').show()
+				//.updateProjectBox();
 			},
 			"stop": function() {
 				$('img.Helper').hide();
+				dragging = false;
+
 			}
 	});
-	}
+	});
 </script>
 <div class="Custom"><?php
 if (!is_a($AllFiles, Gdn_DataSet)) {
@@ -40,7 +71,7 @@ if (!is_a($AllFiles, Gdn_DataSet)) {
                 echo $PublicDir.$ActiveClass.DS.$Item->Slug.'M.jpg';
                 echo '" class="Gallery Image"';
 				echo 'page="/item'.DS.$Item->Slug.'"';
-				echo ' itemid="'.$Item->Slug.'" type="'.$Item->ClassLabel.'"/>';
+				echo ' itemslug="'.$Item->Slug.'" itemtype="'.$Item->ClassLabel.'"/>';
                 ?></a></li><?php
                 }?>
 </ul>

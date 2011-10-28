@@ -15,7 +15,7 @@
 				}
 		if ($Label == 'default') {
 			echo '<li'.($this->RequestMethod == '' ? ' class="Navigation Images '.$CSS.'"' : '').'>'
-					.'<a href="/info/'.$Label.'" class="TabButton">'.T($Label).'</a>';
+					.'<a href="/info/home" class="TabButton">'.T('default').'</a>';
 
 			?><ul class="Sublist"><?
 			$Categories = $this->GetCategories($Label);
@@ -27,7 +27,7 @@
 						$CatCSS = 'Depth';
 					}
 					if ($Category->CategoryLabel != 'home' && $Label != 'designer')
-					echo '<li>'.Anchor(T($Category->CategoryLabel), '/info'.DS.$Label.DS.$Category->CategoryLabel).'</li>';
+					echo '<li>'.Anchor(T($Category->CategoryLabel), '/info'.DS.$Category->CategoryLabel).'</li>';
 				}
 			}
 			?><li class="ClearFix"></li>

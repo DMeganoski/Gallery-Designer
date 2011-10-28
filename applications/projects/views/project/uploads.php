@@ -18,25 +18,22 @@ if ($IncludedUploads[0] != '') {
 		<td><?
 		foreach ($IncludedUploads as $Upload) {
 			$UploadData = $this->GalleryUploadModel->GetWhere(array('UploadKey' => $Upload))->FirstRow();
-			if (!empty($UploadData)) {
-				$TopPositions = $this->MyExplode($CurrentProject->TopPositions);
-				$TopPosition = $TopPositions[$UploadData->FileName];
-				$LeftPositions = $this->MyExplode($CurrentProject->LeftPositions);
-				$LeftPosition = $LeftPositions[$UploadData->FileName];
-				$this->UploadList[$UploadData->FileName] = array('top' => $TopPosition, 'left' => $LeftPosition);
-			}
-		}
-		foreach ($this->UploadList as $Upload => $Positions) {
-			if (!empty($UploadData)) {
-			$FileParts = pathinfo($Upload);
+			if (is_object($UploadData)) {
+			$FileParts = pathinfo($UploadData->FileName);
 			$BaseName = $FileParts['filename'];
 				?><div id="UploadWrapper">
-					<img src="/uploads/<? echo $BaseName ?>-Thumb.jpg" class="Upload" style="<? echo 'top: '.$Positions['top'].'; left: '.$Positions['left'] ?>"></img>
-					<button type="button" id="<? echo $Upload ?>" class="UploadRemove Button" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Remove</button>
-				</div>
-			<? }
+					<img src="/uploads/<? echo $BaseName ?>-Thumb.jpg" class="Upload"></img>
+					<button type="button" id="<? echo $UploadData->FileName ?>" class="UploadRemove Button" projectid="<? echo $this->CurrentProject->ProjectKey ?>">Remove</button>
+				</div><?
+			} else {
+				?><script type="text/javascript">
+
+						$(this).doProjectRemove('uploads',<? echo $UploadData->FileName ?>,<? echo $this->CurrentProject->ProjectKey ?>);
+
+				</script><?
+			}
 		}
-	?></table><?
+	?></td></table><?
 } else {
 	echo "<h2>No Uploads Used</h2>";
 }

@@ -9,22 +9,31 @@ $FileInfo = $this->FileData;
 <div id="Custom">
 	<div class="Large Picture">
 		<div class="Heading">
-			<h1><?php echo $FileInfo->Name.' ('.$FileInfo->Slug.')'; ?></h1>
-			<h2>You choose a frame if you like, then drag the image to your project box</h2>
-		</div><?php
-			echo "<div class=\"Verify\"></div>";
-			echo '<table><tr>';
-			echo '<td>Description: <td>';
-			echo '<td>'.$FileInfo->Description.'</td>';
-		echo '</tr></table>';
-			if (CheckPermission('Gallery.Items.Manage')) {
-			echo '<li class="Popup">';
-			echo '<a href="/item/edit/'.$FileInfo->Slug.'" class="NonTab Button">Edit</a></li>';
+			<h1><?php echo $FileInfo->Name.' ('.$FileInfo->Slug.')'; ?></h1><?
+			if (ItemController::$SelectedClass == 'backgrounds') {
+				?><h2>You choose a frame if you like, then drag the image to your project box</h2><?
+			} else {
+				?><h2>The Image of the product is draggable. You can drag the item to your project box.</h2><?
 			}
-			?>
-		<div class="DetailsWrapper" itemtype="<? echo $FileInfo->ClassLabel ?>" itemslug="<? echo $FileInfo->Slug ?>">
+		?></div>
+			<div class="Verify"></div>
+			<div class="ButtonBox">
+				<center>
+				<button type="button" name="pjSubmit" id="pjSubmit" onclick="" class="Selection Button">Use this in your current project</button>
+				<button type="button" name="pjSubmitNew" id="pjSubmitNew" onclick="" class="NewSelection Button">Use this in a new project</button><?
+				if (CheckPermission('Gallery.Items.Manage')) {
+					?><button onclick="window.location = '/item/edit/<? echo $FileInfo->Slug ?>'" class="NonTab Button">Edit</button><?
+				}
+				?></center>
+			</div>
+			<table><tr>
+			<td>Description: <td><?
+			echo '<td>'.$FileInfo->Description.'</td>';
+			?></tr></table>
+
+		<div class="DetailsWrapper">
 			<?php
-		echo '<div id="ImageWrapper"  file="'.$PublicDir.$FileInfo->ClassLabel.DS.$FileInfo->FileName.'">';
+		echo '<div id="ImageWrapper" itemtype="'.$FileInfo->ClassLabel.'" itemslug="'.$FileInfo->Slug.'">';
 		echo '<div id="FrameWrapper"></div>';
 		echo '<img src="'.$PublicDir.$FileInfo->ClassLabel.DS.$FileInfo->Slug.'L.jpg" class="Single"></img>';
 		echo '</div>';
@@ -32,9 +41,7 @@ $FileInfo = $this->FileData;
 		?>
 		</div>
 	</div><div class="ClearFix"></div>
-<center><button type="button" name="pjSubmit" id="pjSubmit" onclick="" class="Selection Button">Use this in your current project</button></center>
-<center><button type="button" name="pjSubmitNew" id="pjSubmitNew" onclick="" class="NewSelection Button">Use this in a new project</button></center>
-	</div><?php
+</div><?php
  if (C('Galleries.ShowFireEvents'))
 			$this->DisplayFireEvent('AfterItemDetails');
 
@@ -57,6 +64,6 @@ if (ItemController::$SelectedClass == 'backgrounds') { ?>
 		<?php
 		echo '</div>';
 } else {
-	echo $FileInfo->ClassLabel;
+
 }
 

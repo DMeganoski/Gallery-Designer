@@ -74,6 +74,7 @@ $Controller = $this->ControllerName;
 			//GalleryController::$Category = 'home';
 			$this->PrepareController();
 			$Session = Gdn::Session();
+			// make sure session is valid before allowing designing
 			if ($Session->IsValid()) {
 				$Admin = $Session->CheckPermission('Projects.Projects.Manage');
 				if ($Admin) {

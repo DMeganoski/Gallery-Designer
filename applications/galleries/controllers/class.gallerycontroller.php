@@ -36,8 +36,6 @@ class GalleryController extends GalleriesController {
 			$this->AddJsFile('/applications/projects/js/projectbox.js');
 			$this->AddCssFile('/applications/projects/design/projectbox.css');
 		}
-
-		$this->MasterView = 'default';
    }
 
    /**
@@ -51,19 +49,27 @@ class GalleryController extends GalleriesController {
     */
 
 	public function PrepareController() {
+		$this->AddModule("GalleryHeadModule");
+
 		$this->AddCssFile('gallery.css');
 		$this->AddCssFile('gallerycustom.css');
+
 		$this->AddJsFile('jquery.qtip.js');
 		$this->AddCssFile('jquery.qtip.css');
+
 		$this->AddJsFile('gallery.js');
 		$this->AddJsFile('gallerycustom.js');
 
 		$this->AddJsFile('jquery.ui.packed.js');
+		$this->AddJsFile('jquery.event.drag.js');
+
+		$this->AddJsFile('/applications/projects/js/projectbox.js');
+			$this->AddCssFile('/applications/projects/design/projectbox.css');
 
         //$GalleryHeadModule->GetData();
-		$this->AddModule('ProjectBoxModule');
-		$this->AddModule('GalleryHeadModule');
-		$this->AddModule('GallerySideModule');
+		//$this->AddModule('ProjectBoxModule');
+		//$this->AddModule('GalleryHeadModule');
+		//$this->AddModule('GallerySideModule');
 
 		$this->AddCssFile('fileupload.css');
 		$this->AddJsFile('fileupload.js');

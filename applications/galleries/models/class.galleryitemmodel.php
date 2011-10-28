@@ -121,7 +121,7 @@ class GalleryItemModel extends Gdn_Model {
     }
 
 	public function SplitFileName($FileName) {
-		if (substr($FileName, 6, 1) == 'L') {
+		if (substr($FileName, 6, 1) == 'X') {
 			$Item['FileName'] = $FileName;
 			$Item['ItemID'] = (substr($FileName, 3, 3));
 					if (!is_numeric($Item['ItemID'])) {

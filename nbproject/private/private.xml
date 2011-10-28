@@ -10,6 +10,10 @@
             <line>2128</line>
         </file>
         <file>
+            <url>applications/projects/modules/class.projectboxmodule.php</url>
+            <line>0</line>
+        </file>
+        <file>
             <url>plugins/Galleries/class.galleriesplugin.php</url>
             <line>66</line>
             <line>573</line>

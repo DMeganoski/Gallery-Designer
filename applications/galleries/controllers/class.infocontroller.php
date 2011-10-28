@@ -43,8 +43,11 @@ class InfoController extends GalleriesController {
 		$this->AddJsFile('jquery-ui-1.8.15.custom.min.js');
 
 		$this->AddJsFile('gallery.js');
+		$this->AddJsFile('gallerycustom.js');
 		$this->AddJsFile('loader.js');
+
 		$this->AddCssFile('gallery.css');
+		$this->AddCssFile('gallerycustom.css');
 		$this->AddCssFile('styles.css');
 		$this->AddJsFile('jquery.event.drag.js');
 

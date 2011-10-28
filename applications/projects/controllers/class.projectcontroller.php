@@ -35,7 +35,6 @@ class ProjectController extends ProjectsController {
 
 		}
 		$this->MasterView = 'default';
-		parent::Initialize();
 	}
 
    /**
@@ -142,7 +141,6 @@ class ProjectController extends ProjectsController {
 			}
 		} else {
 				echo "Must Be Signed in to start a project";
-
 		}
 	}
 
@@ -158,35 +156,52 @@ class ProjectController extends ProjectsController {
 		$UserID = $Request->Post('UserID');
 		$ProjectID = $Request->Post('ProjectID');
 		$Method = $Request->Post('Action');
-		/*echo $Type;
-		echo '<br/>';
-		echo $Identifier;
-		echo '<br/>';
-		echo $UserID;
-		echo '<br/>';
-		echo $ProjectID;
-		echo '<br/>';
-		echo $Method;
-		echo '<br/>';*/
-		if ($Type != 'uploads') {
-			if ($Method == 'add')
-				$Array = $this->_AddToSelection($ProjectID, $Type, $Identifier);
-			elseif ($Method == 'remove')
-				$Array = $this->_RemoveFromSelection($ProjectID, $Type, $Identifier);
-		} else {
-			if ($Method == 'add')
-				$Array = $this->_AddToIncluded($ProjectID, $Type, $Identifier);
-			elseif ($Method == 'remove')
-				$Array = $this->_RemoveFromIncluded($ProjectID, $Type, $Identifier);
-		}
-		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
-		$CurrentSelection = $this->MyExplode($CurrentProject->Selected);
-		if ($CurrentSelection[$Type] == $Identifier) {
-			echo "Updated Successfully";
-		} else {
-			echo "Something went wrong";
-		}
 
+		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
+		/*--------------------- Regular Provided Items -----------------------*/
+		if ($Type != 'uploads') { // if its one of the standard items...
+			// reset variables
+			$CurrentSelection = array();
+			$Success = false;
+			// loop to verify success
+			while ($Success === false) {
+				// add or remove according to method parameter
+				if ($Method == 'add')
+					$Return = $this->_AddToSelection($ProjectID, $Type, $Identifier);
+				elseif ($Method == 'remove')
+					$Return = $this->_RemoveFromSelection($ProjectID, $Type, $Identifier);
+
+				// Get data after save
+				$CurrentIncluded = $this->MyExplode($CurrentProject->Included);
+				// if the data is correct, exit loop
+				if ($CurrentIncluded[$Type] == $Identifier) {
+					$Success === TRUE;
+				} else {
+					$Success === FALSE;
+				}
+			} // end while success loop
+		/*--------------------------- Uploaded Items -----------------------------*/
+		} else { // else its one of the uploads...
+			// reset variables
+			$CurrentIncluded = array();
+			$Success = false;
+			// loop to verify success
+			while ($Success === false) {
+				// check method
+				if ($Method == 'add')
+					$Return = $this->_AddToIncluded($ProjectID, $Type, $Identifier);
+				elseif ($Method == 'remove')
+					$Return = $this->_RemoveFromIncluded($ProjectID, $Identifier);
+				// get data after save
+				$CurrentIncluded = $this->MyExplode($CurrentProject->Selected);
+				// if the data is correct, exit loop
+				if ($CurrentIncluded[$Type] == $Included[$Type]) {
+					$Success === TRUE;
+				} else {
+					$Success === FALSE;
+				}
+			} // end while success loop
+		}
 	}
 
 	/**
@@ -198,10 +213,33 @@ class ProjectController extends ProjectsController {
 		$Session = Gdn::Session();
 		$ProjectID = $Request->Post('ProjectID');
 		$FrameChoice = $Request->Post('Frame');
-		if ($FrameChoice != 'None')
-			$this->_AddToSelection($ProjectID, 'frame', $FrameChoice);
-		else
-			$this->_RemoveFromSelection($ProjectID, 'frame', $FrameChoice);
+
+
+
+		$CurrentSelection = array();
+			$Success = false;
+			// loop to verify success
+			while ($Success === false) {
+
+				if ($FrameChoice != 'None')
+					$this->_AddToSelection($ProjectID, 'frame', $FrameChoice);
+				else
+					$this->_RemoveFromSelection($ProjectID, 'frame', $FrameChoice);
+
+				// Get data after save
+				$CurrentSelection = $this->MyExplode($CurrentProject->Selection);
+				// if the data is correct, exit loop
+				if ($CurrentSelection['frame'] == $FrameChoice) {
+					$Success === TRUE;
+				} else {
+					$Success === FALSE;
+				}
+			} // end while success loop
+
+
+
+
+
 	}
 /*------------------------------- Private selection functions --------------------------*/
 
@@ -222,7 +260,7 @@ class ProjectController extends ProjectsController {
 				}
 			}
 			$NewArray[$Type] = $ItemSlug;
-			$Return = $this->_SaveSelection($ProjectID, $NewArray);
+			$Return = $this->_SaveSelection($ProjectID, $Type, $NewArray);
 			return $Return;
 	}
 
@@ -232,26 +270,30 @@ class ProjectController extends ProjectsController {
 	 */
 	private function _AddToIncluded($ProjectID, $Type, $UploadID) {
 
-		$this->_SaveIncluded($ProjectID, $UploadID);
+		$Return = $this->_SaveIncluded($ProjectID, $Type, $UploadID);
+		return $Return;
+
 	}
 
 	/**
 	 * Private function for saving an item to the project database.
 	 * Used by _AddToIncluded()
 	 */
-	private function _SaveIncluded($ProjectID, $UploadID) {
+	private function _SaveIncluded($ProjectID, $Type, $UploadID) {
 		$CurrentProject = $this->ProjectModel->GetSingle($ProjectID);
 		$CurrentSelection = $this->MyExplode($CurrentProject->Included);
 		$NewArray = array();
-			if (!empty($CurrentSelection)) {
+			if (is_array($CurrentSelection)) {
 				foreach ($CurrentSelection as $CurrentSlug) {
 					if (!empty($CurrentSlug)) {
 						$NewArray[] = $CurrentSlug;
 					}
 				}
+				$NewArray[] = $UploadID;
+			} else {
+				$NewArray[] = $UploadID;
 			}
-		$NewArray[] = $UploadID;
-		$Serialized = $this->MyImplode($NewArray);
+			$Serialized = $this->MyImplode($NewArray);
 			$this->ProjectModel->Update('Project', array(
 			'Included' => $Serialized
 			), array('ProjectKey' => $ProjectID));
@@ -264,16 +306,13 @@ class ProjectController extends ProjectsController {
 	 * Private function for saving an upload to the project database.
 	 * Used by _AddtoSelection()
 	 */
-	private function _SaveSelection($ProjectID, $Selection) {
+	private function _SaveSelection($ProjectID, $Type, $Selection) {
 
 
 		$Serialized = $this->MyImplode($Selection);
 			$this->ProjectModel->Update('Project', array(
 			'Selected' => $Serialized
 			), array('ProjectKey' => $ProjectID));
-
-		//Redirect('/project');
-			return $Serialized;
 
 	}
 
@@ -285,8 +324,7 @@ class ProjectController extends ProjectsController {
 
 		$Project = $this->ProjectModel->GetSingle($ProjectID);
 		$Selection = $this->MyExplode($Project->Selected);
-		$Found = array_search($ItemSlug, $Selection);
-		unset($Selection[$Found]);
+		unset($Selection[$Type]);
 		$Serialized = $this->MyImplode($Selection);
 		$this->ProjectModel->Update('Project', array(
 			'Selected' => $Serialized
@@ -301,9 +339,10 @@ class ProjectController extends ProjectsController {
 	private function _RemoveFromIncluded($ProjectID, $Upload) {
 		$Project = $this->ProjectModel->GetSingle($ProjectID);
 		$Included = $this->MyExplode($Project->Included);
-		$Found = array_search($Upload, $Included);
+		$UploadData = $this->GalleryUploadModel->GetWhere(array('FileName' => $Upload))->FirstRow();
+		$Found = array_search($UploadData->UploadKey, $Included);
 		unset($Included[$Found]);
-		$Serialized = $this->MySerialize($Included);
+		$Serialized = $this->MyImplode($Included);
 		$this->ProjectModel->Update('Project', array(
 			'Included' => $Serialized
 		), array('ProjectKey' => $ProjectID));

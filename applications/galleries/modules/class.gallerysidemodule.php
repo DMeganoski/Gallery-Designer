@@ -8,7 +8,7 @@ class GallerySideModule extends Gdn_Module {
       parent::__construct($Sender);
    }
 
-  
+
    public function AssetTarget() {
       return 'Panel';
    }
